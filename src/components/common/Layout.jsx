@@ -3,6 +3,7 @@ import { Outlet } from 'react-router-dom';
 import TopNav from './TopNav';
 import Sidebar from './Sidebar';
 import { Menu } from 'lucide-react';
+import BottomNav from './BottomNav';
 
 export default function Layout() {
     const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -32,6 +33,7 @@ export default function Layout() {
                     <Outlet />
                 </div>
             </main>
+            <BottomNav />
         </div>
     );
 }
