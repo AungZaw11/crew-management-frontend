@@ -1,6 +1,8 @@
 import React from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { Anchor, Search, SlidersHorizontal, ChevronDown, Bell } from 'lucide-react';
+import Logo from '../../assets/icons/Sungan Shipping Logo.png';
+
 
 export default function TopNav() {
     const location = useLocation();
@@ -11,9 +13,12 @@ export default function TopNav() {
         <header className="h-[80px] bg-surface border-b border-border flex items-center px-6 md:px-[60px] justify-between sticky top-0 z-50">
             <div className="flex items-center gap-10 md:gap-[86px] h-full">
                 {/* Logo */}
+
+
                 <div className="flex items-center gap-2 text-brand-navy font-bold text-xl tracking-tight">
-                    <Anchor className="w-6 h-6" />
-                    <span>SUNGAN</span>
+
+                    <img src={Logo} alt="SUNGAN Logo" className="w-15 h-15  object-contain" />
+
                 </div>
 
                 {/* Navigation Links */}

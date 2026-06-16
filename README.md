@@ -1,4 +1,4 @@
-# ⚓ Crew Management System - Frontend
+#  Crew Management System - Frontend
 
 
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
