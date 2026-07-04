@@ -53,34 +53,54 @@ export default function CrewList() {
         </div>
       </div>
 
-      {/* Stats Cards - Design အတိုင်း */}
+      {/* Stats Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Total Crews */}
-        <div className="bg-white rounded-xl border border-gray-200 p-5 shadow-sm">
-          <p className="text-sm text-text-light font-medium">Total Crews</p>
-          <p className="text-3xl font-bold text-text-main mt-1">
-            {totalCrews || 528}
-          </p>
+        <div className="bg-white rounded-xl border border-gray-200 p-5 shadow-sm flex items-center justify-between">
+          <div>
+            <p className="text-sm text-text-light font-medium">Total Crews</p>
+            <p className="text-3xl font-bold text-text-main mt-1">
+              {totalCrews || 528}
+            </p>
+          </div>
+          <div className="w-12 h-12 rounded-xl bg-brand-lighter flex items-center justify-center">
+            <Users size={24} className="text-brand" />
+          </div>
         </div>
 
         {/* On Board */}
-        <div className="bg-white rounded-xl border border-gray-200 p-5 shadow-sm">
-          <p className="text-sm text-text-light font-medium">On Board</p>
-          <p className="text-3xl font-bold text-text-main mt-1">528</p>
+        <div className="bg-white rounded-xl border border-gray-200 p-5 shadow-sm flex items-center justify-between">
+          <div>
+            <p className="text-sm text-text-light font-medium">On Board</p>
+            <p className="text-3xl font-bold text-text-main mt-1">528</p>
+          </div>
+          <div className="w-12 h-12 rounded-xl bg-green-50 flex items-center justify-center">
+            <Anchor size={24} className="text-accent-green" />
+          </div>
         </div>
 
         {/* Active Crews */}
-        <div className="bg-white rounded-xl border border-gray-200 p-5 shadow-sm">
-          <p className="text-sm text-text-light font-medium">Active Crews</p>
-          <p className="text-3xl font-bold text-text-main mt-1">528</p>
+        <div className="bg-white rounded-xl border border-gray-200 p-5 shadow-sm flex items-center justify-between">
+          <div>
+            <p className="text-sm text-text-light font-medium">Active Crews</p>
+            <p className="text-3xl font-bold text-text-main mt-1">528</p>
+          </div>
+          <div className="w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center">
+            <UserCheck size={24} className="text-brand-blue" />
+          </div>
         </div>
 
         {/* Compliance Issues */}
-        <div className="bg-white rounded-xl border border-gray-200 p-5 shadow-sm">
-          <p className="text-sm text-text-light font-medium">
-            Compliance Issues
-          </p>
-          <p className="text-3xl font-bold text-accent-red mt-1">24</p>
+        <div className="bg-white rounded-xl border border-gray-200 p-5 shadow-sm flex items-center justify-between">
+          <div>
+            <p className="text-sm text-text-light font-medium">
+              Compliance Issues
+            </p>
+            <p className="text-3xl font-bold text-accent-red mt-1">24</p>
+          </div>
+          <div className="w-12 h-12 rounded-xl bg-red-50 flex items-center justify-center">
+            <AlertCircle size={24} className="text-accent-red" />
+          </div>
         </div>
       </div>
 
