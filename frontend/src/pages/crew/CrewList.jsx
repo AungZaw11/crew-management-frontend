@@ -1,6 +1,8 @@
 // src/pages/crew/CrewList.jsx
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import * as XLSX from "xlsx";
+import { saveAs } from "file-saver";
 import {
   Download,
   Plus,
@@ -33,6 +35,55 @@ export default function CrewList() {
     if (success) fetchCrews(currentPage, 20, selectedRank);
   };
 
+  // ==================== EXPORT TO EXCEL ====================
+  const handleExportToExcel = () => {
+    // 1. Prepare data for export
+    const exportData = crews.map((member, index) => ({
+      No: member.no || String(index + 1).padStart(2, "0"),
+      "Boarding Vessel": member.vessel || "HS Glory",
+      Rank: member.rank || "Deck",
+      "Seaman Code": member.seamanCode || member.crew_code || "P006472",
+      Name: member.name || "Tun Tun",
+      Validity: member.validity || "Major Requirements",
+      Division: member.division || "Passport",
+      Type: member.type || member.rank,
+      Remaining: member.remaining !== undefined ? member.remaining : "-459",
+    }));
+
+    // 2. Create worksheet
+    const worksheet = XLSX.utils.json_to_sheet(exportData);
+
+    // 3. Set column widths
+    const columnWidths = [
+      { wch: 5 }, // No
+      { wch: 18 }, // Boarding Vessel
+      { wch: 12 }, // Rank
+      { wch: 15 }, // Seaman Code
+      { wch: 15 }, // Name
+      { wch: 20 }, // Validity
+      { wch: 15 }, // Division
+      { wch: 12 }, // Type
+      { wch: 12 }, // Remaining
+    ];
+    worksheet["!cols"] = columnWidths;
+
+    // 4. Create workbook
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Crew List");
+
+    // 5. Generate Excel file
+    const excelBuffer = XLSX.write(workbook, {
+      bookType: "xlsx",
+      type: "array",
+    });
+
+    // 6. Download file
+    const blob = new Blob([excelBuffer], {
+      type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    });
+    saveAs(blob, `Crew_List_${new Date().toISOString().split("T")[0]}.xlsx`);
+  };
+
   if (loading) return <LoadingSpinner />;
 
   return (
@@ -41,7 +92,10 @@ export default function CrewList() {
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold text-text-main">Crew Management</h1>
         <div className="flex gap-3">
-          <button className="flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-300 text-text-main hover:bg-gray-50 transition-colors text-sm font-medium">
+          <button
+            onClick={handleExportToExcel}
+            className="flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-300 text-text-main hover:bg-gray-50 transition-colors text-sm font-medium"
+          >
             <Download size={16} /> Export
           </button>
           <button

@@ -1,6 +1,8 @@
-// src/pages/crew/CrewList.jsx
+// src/pages/dashboard/Overview.jsx
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import * as XLSX from "xlsx";
+import { saveAs } from "file-saver";
 import {
   Download,
   Plus,
@@ -13,7 +15,7 @@ import {
 import { useCrew } from "../../context/CrewContext";
 import LoadingSpinner from "../../components/common/LoadingSpinner";
 
-export default function CrewList() {
+export default function Overview() {
   const navigate = useNavigate();
   const { crews, loading, totalCrews, pagination, fetchCrews, deleteCrew } =
     useCrew();
@@ -25,15 +27,50 @@ export default function CrewList() {
     fetchCrews(currentPage, 20, selectedRank);
   }, [currentPage, selectedRank]);
 
+  // ==================== EXPORT TO EXCEL ====================
+  const handleExportToExcel = () => {
+    if (crews.length === 0) {
+      alert("No data to export");
+      return;
+    }
+
+    const exportData = crews.map((member, index) => ({
+      No: member.no || String(index + 1).padStart(2, "0"),
+      "Boarding Vessel": member.vessel || "-",
+      Rank: member.rank || "-",
+      "Seaman Code": member.seamanCode || member.crew_code || "-",
+      Name: member.name || "-",
+      Validity: member.validity || "Major Requirements",
+      Division: member.division || "Passport",
+      Type: member.type || member.rank || "-",
+      Remaining: member.remaining !== undefined ? member.remaining : 0,
+      Note: member.note || "CRP",
+    }));
+
+    const worksheet = XLSX.utils.json_to_sheet(exportData);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Overview");
+
+    const excelBuffer = XLSX.write(workbook, {
+      bookType: "xlsx",
+      type: "array",
+    });
+    const blob = new Blob([excelBuffer], { type: "application/octet-stream" });
+    saveAs(blob, `Overview_${new Date().toISOString().split("T")[0]}.xlsx`);
+  };
+
   if (loading) return <LoadingSpinner />;
 
   return (
     <div className="flex flex-col gap-6 max-w-[1440px] mx-auto">
-      {/* Header - Overview */}
+      {/* Header */}
       <div className="flex justify-between items-center">
         <h1 className="text-xl font-medium text-text-main">Overview</h1>
         <div className="flex gap-4">
-          <button className="flex items-center gap-2 px-4 py-2 rounded-md border border-brand text-text-main hover:bg-brand-lighter transition-colors text-sm font-medium">
+          <button
+            onClick={handleExportToExcel}
+            className="flex items-center gap-2 px-4 py-2 rounded-md border border-brand text-text-main hover:bg-brand-lighter transition-colors text-sm font-medium"
+          >
             <Download size={16} /> Export
           </button>
           <button
@@ -45,7 +82,7 @@ export default function CrewList() {
         </div>
       </div>
 
-      {/* Summary Cards - Certificate, Contract, PPT */}
+      {/* Summary Cards */}
       <div className="flex gap-6 overflow-x-auto pb-2">
         {/* Certificate */}
         <div className="bg-white rounded-md border border-gray-200 p-6 shadow-card flex flex-col gap-4 flex-1 min-w-[300px]">
@@ -120,7 +157,7 @@ export default function CrewList() {
         </div>
       </div>
 
-      {/* Main Content Area */}
+      {/* Main Content */}
       <div className="bg-white rounded-md border border-gray-200 shadow-card flex flex-col">
         {/* Filter Bar */}
         <div className="p-4 border-b border-gray-200 flex flex-wrap items-center justify-between gap-4 bg-surface-alt rounded-t-md">
@@ -216,10 +253,7 @@ export default function CrewList() {
                     <td className="px-4 py-4 text-sm text-text-dark">
                       {member.name}
                     </td>
-                    <td
-                      className="px-4 py-4 text-sm text-text-dark max-w-[150px] truncate"
-                      title={member.validity}
-                    >
+                    <td className="px-4 py-4 text-sm text-text-dark max-w-[150px] truncate">
                       {member.validity || "Major Requirements"}
                     </td>
                     <td className="px-4 py-4 text-sm text-text-dark">
@@ -229,7 +263,11 @@ export default function CrewList() {
                       {member.type || member.rank}
                     </td>
                     <td
-                      className={`px-4 py-4 text-sm font-medium ${member.remaining < 0 ? "text-accent-red" : "text-text-dark"}`}
+                      className={`px-4 py-4 text-sm font-medium ${
+                        member.remaining < 0
+                          ? "text-accent-red"
+                          : "text-text-dark"
+                      }`}
                     >
                       {member.remaining || 0}
                     </td>
