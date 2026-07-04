@@ -105,7 +105,7 @@ export default function Sidebar({
     );
   }
 
-  // ==================== Desktop Sidebar ====================
+  // ===== Desktop Sidebar =====
   return (
     <motion.div
       initial={false}

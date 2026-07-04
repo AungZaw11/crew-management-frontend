@@ -69,7 +69,7 @@ export const CrewProvider = ({ children }) => {
         status: "active",
       };
       setCrews([...crews, newCrew]);
-      toast.success("✅ Crew created successfully");
+      toast.success(" Crew created successfully");
       return newCrew;
     } catch (err) {
       toast.error("❌ Failed to create crew");
@@ -86,10 +86,10 @@ export const CrewProvider = ({ children }) => {
         c.id === id ? { ...c, ...crewData } : c,
       );
       setCrews(updated);
-      toast.success("✅ Crew updated successfully");
+      toast.success("Crew updated successfully");
       return crewData;
     } catch (err) {
-      toast.error("❌ Failed to update crew");
+      toast.error(" Failed to update crew");
       return null;
     } finally {
       setLoading(false);
@@ -101,10 +101,10 @@ export const CrewProvider = ({ children }) => {
     try {
       const filtered = crews.filter((c) => c.id !== id);
       setCrews(filtered);
-      toast.success("✅ Crew deleted successfully");
+      toast.success("Crew deleted successfully");
       return true;
     } catch (err) {
-      toast.error("❌ Failed to delete crew");
+      toast.error("Failed to delete crew");
       return false;
     } finally {
       setLoading(false);

@@ -24,7 +24,7 @@ export default function Login() {
       if (response.data.status) {
         localStorage.setItem("token", response.data.data.token);
         localStorage.setItem("user", JSON.stringify(response.data.data.user));
-        toast.success("✅ Login successful!");
+        toast.success(" Login successful!");
         navigate("/crew");
       } else {
         toast.error("❌ " + (response.data.message || "Login failed"));
@@ -33,7 +33,7 @@ export default function Login() {
       const msg =
         err.response?.data?.message ||
         "Login failed. Please check your credentials.";
-      toast.error("❌ " + msg);
+      toast.error(msg);
     } finally {
       setLoading(false);
     }
