@@ -2,9 +2,7 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import api from "../services/api";
 
-// ==================== TRANSLATIONS ====================
 const translations = {
-  // ==================== ENGLISH ====================
   en: {
     // Common
     app_name: "Crew Management System",
@@ -30,10 +28,20 @@ const translations = {
     back: "Back",
     next: "Next",
     previous: "Previous",
+    showing: "Showing",
+    of: "of",
+    entries: "entries",
+    record_registered: "Record registered successfully.",
+    register_new: "Register New",
+    enter_details: "Enter the details below to add a new",
+    record: "record",
+    reset: "Reset",
+    save_record: "Save Record",
 
     // Navigation
     dashboard: "Dashboard",
     crew: "Crew",
+    "crew management": "Crew Management",
     register: "Register",
     payment: "Payment",
     settings: "Settings",
@@ -142,9 +150,102 @@ const translations = {
     deductions: "Deductions",
     currency: "Currency",
     payment_date: "Payment Date",
+
+    // Register Form Fields
+    license_name: "License / Competency Name",
+    grade_class: "Grade / Class",
+    license_number: "License Number",
+    issuing_authority: "Issuing Authority",
+    issue_date: "Issue Date",
+    expiry_date: "Expiry Date",
+    status: "Status",
+    crew_member: "Crew Member",
+    vessel: "Vessel",
+    department: "Department",
+    sign_on_date: "Sign-on Date",
+    expected_sign_off: "Expected Sign-off",
+    port_of_engagement: "Port of Engagement",
+    contract_type: "Contract Type",
+    outgoing_crew: "Outgoing Crew Member",
+    reliever_name: "Reliever Name",
+    reliever_rank: "Reliever Rank",
+    relief_port: "Relief Port",
+    planned_date: "Planned Date",
+    pay_period: "Pay Period",
+    incident_date: "Date of Incident",
+    location: "Location on Vessel",
+    accident_type: "Type of Accident",
+    severity: "Severity",
+    reported_by: "Reported By",
+    description: "Description",
+    action_taken: "Action Taken",
+    injury_date: "Date of Injury",
+    body_part: "Body Part Affected",
+    injury_type: "Injury Type",
+    treatment: "Treatment Provided",
+    days_off: "Days Off Work",
+    fit_date: "Fit-to-work Date",
+    notes: "Notes",
+    next_of_kin: "Next of Kin Name",
+    relationship: "Relationship",
+    contact_number: "Contact Number",
+    emergency_contact: "Set as Emergency Contact",
+    blood_type: "Blood Type",
+    last_exam: "Last Medical Exam",
+    fit_expiry: "Fit-to-work Expiry",
+    vaccinations: "Vaccinations",
+    allergies: "Allergies",
+    medical_notes: "Medical Notes",
+    vessel_type: "Vessel Type",
+    grt: "GRT (Gross Tonnage)",
+    company: "Company",
+    from_date: "From Date",
+    to_date: "To Date",
+    evaluation_period: "Evaluation Period",
+    evaluator: "Evaluator Name",
+    overall_rating: "Overall Rating (1-5)",
+    technical_rating: "Technical Skills Rating (1-5)",
+    teamwork_rating: "Teamwork Rating (1-5)",
+    recommendation: "Recommendation",
+    comments: "Comments",
+    certificate_name: "Certificate Name",
+    certificate_number: "Certificate Number",
+
+    // Personal Info Form (EN)
+    crew_code: "Crew Code",
+    position: "Position",
+    hire_date: "Hire Date",
+    name_korean: "Name (Korean)",
+    name_english: "Name (English)",
+    name_chinese: "Name (Chinese)",
+    address_1: "Address 1",
+    address_2: "Address 2",
+    mobile: "Mobile Number",
+    emergency_1: "Emergency Contact 1",
+    emergency_2: "Emergency Contact 2",
+    resident_id: "Resident Registration Number",
+    education_university: "Education (University)",
+    education_school: "Education (School)",
+    waist: "Waist",
+    safety_shoes: "Safety Shoes",
+    garments: "Garments",
+    drinking: "Drinking (Capacity)",
+    smoking: "Smoking",
+    long_service: "long service",
+    monthly_position: "Monthly Position",
+    chemical: "Chemical",
+    tanker: "Tanker",
+    watch_office: "Watch Office",
+    mariners_license: "Mariner's license",
+    telecom_license: "Telecommunications License",
+    physical_exam: "Physical Examination",
+    seaman_handbook: "Seaman's Handbook",
+    contract_period: "Employment Contract Period",
+    preview: "Preview",
+    choose_file: "Choose File",
+    select_option: "Select...",
   },
 
-  // ==================== KOREAN ====================
   kr: {
     // Common
     app_name: "승무원 관리 시스템",
@@ -170,10 +271,20 @@ const translations = {
     back: "뒤로",
     next: "다음",
     previous: "이전",
+    showing: "표시",
+    of: "/",
+    entries: "항목",
+    record_registered: "기록이 성공적으로 등록되었습니다.",
+    register_new: "새 등록",
+    enter_details: "새로운",
+    record: "기록을 추가하려면 아래 세부 정보를 입력하세요",
+    reset: "초기화",
+    save_record: "기록 저장",
 
     // Navigation
     dashboard: "대시보드",
     crew: "승무원",
+    "crew management": "승무원 관리",
     register: "등록",
     payment: "결제",
     settings: "설정",
@@ -282,10 +393,103 @@ const translations = {
     deductions: "공제",
     currency: "통화",
     payment_date: "결제일",
+
+    // Register Form Fields
+    license_name: "면허/자격증 명",
+    grade_class: "등급/클래스",
+    license_number: "면허 번호",
+    issuing_authority: "발급 기관",
+    issue_date: "발급일",
+    expiry_date: "만료일",
+    status: "상태",
+    crew_member: "승무원",
+    vessel: "선박",
+    department: "부서",
+    sign_on_date: "승선일",
+    expected_sign_off: "예정 하선일",
+    port_of_engagement: "승선 항구",
+    contract_type: "계약 유형",
+    outgoing_crew: "하선 승무원",
+    reliever_name: "교체 승무원 이름",
+    reliever_rank: "교체 승무원 직급",
+    relief_port: "교체 항구",
+    planned_date: "계획일",
+    pay_period: "급여 기간",
+    incident_date: "사고일",
+    location: "선박 내 위치",
+    accident_type: "사고 유형",
+    severity: "심각도",
+    reported_by: "보고자",
+    description: "설명",
+    action_taken: "조치 사항",
+    injury_date: "부상일",
+    body_part: "부상 부위",
+    injury_type: "부상 유형",
+    treatment: "치료 내용",
+    days_off: "휴업 일수",
+    fit_date: "업무 복귀일",
+    notes: "비고",
+    next_of_kin: "비상 연락처 이름",
+    relationship: "관계",
+    contact_number: "연락처",
+    emergency_contact: "비상 연락처로 설정",
+    blood_type: "혈액형",
+    last_exam: "최근 건강검진일",
+    fit_expiry: "업무 적합 만료일",
+    vaccinations: "예방접종",
+    allergies: "알레르기",
+    medical_notes: "의료 비고",
+    vessel_type: "선박 유형",
+    grt: "총톤수 (GRT)",
+    company: "회사",
+    from_date: "시작일",
+    to_date: "종료일",
+    evaluation_period: "평가 기간",
+    evaluator: "평가자",
+    overall_rating: "종합 평점 (1-5)",
+    technical_rating: "기술 능력 평점 (1-5)",
+    teamwork_rating: "팀워크 평점 (1-5)",
+    recommendation: "추천 사항",
+    comments: "의견",
+    certificate_name: "자격증 명",
+    certificate_number: "자격증 번호",
+
+    // Personal Info Form (KR)
+    crew_code: "승무원 코드",
+    position: "직위",
+    hire_date: "고용일",
+    name_korean: "이름 (한국어)",
+    name_english: "이름 (영어)",
+    name_chinese: "이름 (중국어)",
+    address_1: "주소 1",
+    address_2: "주소 2",
+    mobile: "휴대폰 번호",
+    emergency_1: "비상 연락처 1",
+    emergency_2: "비상 연락처 2",
+    resident_id: "주민등록번호",
+    education_university: "교육 (대학교)",
+    education_school: "교육 (학교)",
+    waist: "허리둘레",
+    safety_shoes: "안전화",
+    garments: "의복",
+    drinking: "음주 (용량)",
+    smoking: "흡연",
+    long_service: "장기 근속",
+    monthly_position: "월간 직위",
+    chemical: "화학물질",
+    tanker: "탱커",
+    watch_office: "당직",
+    mariners_license: "항해사 면허",
+    telecom_license: "통신 면허",
+    physical_exam: "건강검진",
+    seaman_handbook: "선원 수첩",
+    contract_period: "고용 계약 기간",
+    preview: "미리보기",
+    choose_file: "파일 선택",
+    select_option: "선택...",
   },
 };
 
-// ==================== LANGUAGE CONTEXT ====================
 const LanguageContext = createContext();
 
 export const useLanguage = () => {
@@ -297,43 +501,33 @@ export const useLanguage = () => {
 };
 
 export const LanguageProvider = ({ children }) => {
-  // Get language from localStorage or default to 'en'
   const [language, setLanguage] = useState(() => {
     const savedLanguage = localStorage.getItem("language");
     return savedLanguage || "en";
   });
 
-  // Translation function
   const t = (key) => {
     return translations[language]?.[key] || translations.en[key] || key;
   };
 
-  // Change language
   const changeLanguage = (lang) => {
     if (lang === "en" || lang === "kr") {
       setLanguage(lang);
       localStorage.setItem("language", lang);
 
-      // Update API default header
       if (api && api.defaults) {
         api.defaults.headers.language = lang;
       }
 
-      // Update HTML lang attribute
       document.documentElement.lang = lang;
-
       console.log(`🌐 Language changed to: ${lang.toUpperCase()}`);
     }
   };
 
-  // Set initial language on mount
   useEffect(() => {
-    // Update API default header
     if (api && api.defaults) {
       api.defaults.headers.language = language;
     }
-
-    // Update HTML lang attribute
     document.documentElement.lang = language;
   }, []);
 

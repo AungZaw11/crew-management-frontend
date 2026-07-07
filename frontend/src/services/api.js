@@ -18,9 +18,8 @@ api.interceptors.request.use(
     const token = localStorage.getItem("token");
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
-    }
+    } //  Language Header (EN or KR)
 
-    //  Language Header (EN or KR)
     const language = localStorage.getItem("language") || "en";
     config.headers.language = language;
     console.log(` Request Language: ${language}`);

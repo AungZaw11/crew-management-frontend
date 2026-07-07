@@ -27,7 +27,7 @@ export default function Sidebar({
 
   const navItems = [
     { icon: LayoutDashboard, label: t("dashboard"), path: "/dashboard" },
-    { icon: Users, label: t("crew"), path: "/crew" },
+    { icon: Users, label: t("crew management"), path: "/crew" },
     { icon: FileText, label: t("register"), path: "/register" },
     { icon: CreditCard, label: t("payment"), path: "/payment" },
     { icon: Settings, label: t("settings"), path: "/settings" },
