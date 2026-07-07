@@ -18,9 +18,11 @@ import {
 import { useCrew } from "../../context/CrewContext";
 import LoadingSpinner from "../../components/common/LoadingSpinner";
 import ActionMenu from "../../components/ui/ActionMenu";
+import { useLanguage } from "../../context/LanguageContext";
 
 export default function CrewList() {
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const { crews, loading, totalCrews, fetchCrews, deleteCrew } = useCrew();
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedRank, setSelectedRank] = useState("");
@@ -37,7 +39,6 @@ export default function CrewList() {
 
   // ==================== EXPORT TO EXCEL ====================
   const handleExportToExcel = () => {
-    // 1. Prepare data for export
     const exportData = crews.map((member, index) => ({
       No: member.no || String(index + 1).padStart(2, "0"),
       "Boarding Vessel": member.vessel || "HS Glory",
@@ -50,34 +51,27 @@ export default function CrewList() {
       Remaining: member.remaining !== undefined ? member.remaining : "-459",
     }));
 
-    // 2. Create worksheet
     const worksheet = XLSX.utils.json_to_sheet(exportData);
-
-    // 3. Set column widths
     const columnWidths = [
-      { wch: 5 }, // No
-      { wch: 18 }, // Boarding Vessel
-      { wch: 12 }, // Rank
-      { wch: 15 }, // Seaman Code
-      { wch: 15 }, // Name
-      { wch: 20 }, // Validity
-      { wch: 15 }, // Division
-      { wch: 12 }, // Type
-      { wch: 12 }, // Remaining
+      { wch: 5 },
+      { wch: 18 },
+      { wch: 12 },
+      { wch: 15 },
+      { wch: 15 },
+      { wch: 20 },
+      { wch: 15 },
+      { wch: 12 },
+      { wch: 12 },
     ];
     worksheet["!cols"] = columnWidths;
 
-    // 4. Create workbook
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, "Crew List");
 
-    // 5. Generate Excel file
     const excelBuffer = XLSX.write(workbook, {
       bookType: "xlsx",
       type: "array",
     });
-
-    // 6. Download file
     const blob = new Blob([excelBuffer], {
       type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
     });
@@ -90,29 +84,32 @@ export default function CrewList() {
     <div className="flex flex-col gap-6 max-w-[1440px] mx-auto px-4">
       {/* Header */}
       <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold text-text-main">Crew Management</h1>
+        <h1 className="text-2xl font-bold text-text-main">
+          {t("crew_management")}
+        </h1>
         <div className="flex gap-3">
           <button
             onClick={handleExportToExcel}
             className="flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-300 text-text-main hover:bg-gray-50 transition-colors text-sm font-medium"
           >
-            <Download size={16} /> Export
+            <Download size={16} /> {t("export")}
           </button>
           <button
             onClick={() => navigate("/crew/new")}
             className="flex items-center gap-2 px-4 py-2 rounded-lg bg-brand-dark text-white hover:bg-brand transition-colors text-sm font-medium"
           >
-            <Plus size={16} /> Add Crew
+            <Plus size={16} /> {t("add_crew")}
           </button>
         </div>
       </div>
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {/* Total Crews */}
         <div className="bg-white rounded-xl border border-gray-200 p-5 shadow-sm flex items-center justify-between">
           <div>
-            <p className="text-sm text-text-light font-medium">Total Crews</p>
+            <p className="text-sm text-text-light font-medium">
+              {t("total_crews")}
+            </p>
             <p className="text-3xl font-bold text-text-main mt-1">
               {totalCrews || 528}
             </p>
@@ -122,10 +119,11 @@ export default function CrewList() {
           </div>
         </div>
 
-        {/* On Board */}
         <div className="bg-white rounded-xl border border-gray-200 p-5 shadow-sm flex items-center justify-between">
           <div>
-            <p className="text-sm text-text-light font-medium">On Board</p>
+            <p className="text-sm text-text-light font-medium">
+              {t("on_board")}
+            </p>
             <p className="text-3xl font-bold text-text-main mt-1">528</p>
           </div>
           <div className="w-12 h-12 rounded-xl bg-green-50 flex items-center justify-center">
@@ -133,10 +131,11 @@ export default function CrewList() {
           </div>
         </div>
 
-        {/* Active Crews */}
         <div className="bg-white rounded-xl border border-gray-200 p-5 shadow-sm flex items-center justify-between">
           <div>
-            <p className="text-sm text-text-light font-medium">Active Crews</p>
+            <p className="text-sm text-text-light font-medium">
+              {t("active_crews")}
+            </p>
             <p className="text-3xl font-bold text-text-main mt-1">528</p>
           </div>
           <div className="w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center">
@@ -144,11 +143,10 @@ export default function CrewList() {
           </div>
         </div>
 
-        {/* Compliance Issues */}
         <div className="bg-white rounded-xl border border-gray-200 p-5 shadow-sm flex items-center justify-between">
           <div>
             <p className="text-sm text-text-light font-medium">
-              Compliance Issues
+              {t("compliance_issues")}
             </p>
             <p className="text-3xl font-bold text-accent-red mt-1">24</p>
           </div>
@@ -164,23 +162,23 @@ export default function CrewList() {
         <div className="p-4 border-b border-gray-200 flex flex-wrap items-center justify-between gap-3 bg-gray-50/50">
           <div className="flex flex-wrap items-center gap-3">
             <div className="flex items-center gap-2 bg-white border border-gray-200 rounded-lg px-3 py-2 cursor-pointer hover:border-brand transition-colors">
-              <span className="text-sm text-text-main">Vessel's Name</span>
+              <span className="text-sm text-text-main">{t("vessel_name")}</span>
               <ChevronDown size={14} className="text-text-light" />
             </div>
             <div className="flex items-center gap-2 bg-white border border-gray-200 rounded-lg px-3 py-2 cursor-pointer hover:border-brand transition-colors">
-              <span className="text-sm text-text-main">Crew Class</span>
+              <span className="text-sm text-text-main">{t("crew_class")}</span>
               <ChevronDown size={14} className="text-text-light" />
             </div>
             <div className="flex items-center gap-2 bg-white border border-gray-200 rounded-lg px-3 py-2 cursor-pointer hover:border-brand transition-colors">
-              <span className="text-sm text-text-main">Rank</span>
+              <span className="text-sm text-text-main">{t("rank")}</span>
               <ChevronDown size={14} className="text-text-light" />
             </div>
             <div className="flex items-center gap-2 bg-white border border-gray-200 rounded-lg px-3 py-2 cursor-pointer hover:border-brand transition-colors">
-              <span className="text-sm text-text-main">Sign On</span>
+              <span className="text-sm text-text-main">{t("sign_on")}</span>
               <ChevronDown size={14} className="text-text-light" />
             </div>
             <div className="flex items-center gap-2 bg-white border border-gray-200 rounded-lg px-3 py-2 cursor-pointer hover:border-brand transition-colors">
-              <span className="text-sm text-text-main">Name</span>
+              <span className="text-sm text-text-main">{t("name")}</span>
               <ChevronDown size={14} className="text-text-light" />
             </div>
             <div className="flex items-center gap-2 bg-white border border-gray-200 rounded-lg px-3 py-2">
@@ -198,7 +196,7 @@ export default function CrewList() {
                 className="w-4 h-4 rounded border-gray-300 text-brand focus:ring-brand"
               />
               <span className="text-sm text-text-main">
-                Include Period Contract
+                {t("include_period_contract")}
               </span>
             </label>
 
@@ -221,17 +219,25 @@ export default function CrewList() {
           <table className="w-full text-left border-collapse">
             <thead>
               <tr className="bg-gray-50/80 border-b border-gray-200 text-sm font-semibold text-text-main">
-                <th className="px-4 py-3 whitespace-nowrap">No</th>
-                <th className="px-4 py-3 whitespace-nowrap">Boarding Vessel</th>
-                <th className="px-4 py-3 whitespace-nowrap">Rank</th>
-                <th className="px-4 py-3 whitespace-nowrap">Seaman Code</th>
-                <th className="px-4 py-3 whitespace-nowrap">Name</th>
-                <th className="px-4 py-3 whitespace-nowrap">Validity</th>
-                <th className="px-4 py-3 whitespace-nowrap">Division</th>
-                <th className="px-4 py-3 whitespace-nowrap">Type</th>
-                <th className="px-4 py-3 whitespace-nowrap">Remaining</th>
+                <th className="px-4 py-3 whitespace-nowrap">
+                  {t("no") || "No"}
+                </th>
+                <th className="px-4 py-3 whitespace-nowrap">
+                  {t("boarding_vessel") || "Boarding Vessel"}
+                </th>
+                <th className="px-4 py-3 whitespace-nowrap">{t("rank")}</th>
+                <th className="px-4 py-3 whitespace-nowrap">
+                  {t("seaman_code") || "Seaman Code"}
+                </th>
+                <th className="px-4 py-3 whitespace-nowrap">{t("name")}</th>
+                <th className="px-4 py-3 whitespace-nowrap">{t("validity")}</th>
+                <th className="px-4 py-3 whitespace-nowrap">{t("division")}</th>
+                <th className="px-4 py-3 whitespace-nowrap">{t("type")}</th>
+                <th className="px-4 py-3 whitespace-nowrap">
+                  {t("remaining")}
+                </th>
                 <th className="px-4 py-3 whitespace-nowrap text-center">
-                  Actions
+                  {t("actions")}
                 </th>
               </tr>
             </thead>
@@ -242,7 +248,7 @@ export default function CrewList() {
                     colSpan="10"
                     className="px-4 py-8 text-center text-text-light"
                   >
-                    No crew members found
+                    {t("no_data")}
                   </td>
                 </tr>
               ) : (
@@ -278,11 +284,7 @@ export default function CrewList() {
                       {member.type || member.rank}
                     </td>
                     <td
-                      className={`px-4 py-3 text-sm font-semibold ${
-                        member.remaining < 0
-                          ? "text-accent-red"
-                          : "text-text-dark"
-                      }`}
+                      className={`px-4 py-3 text-sm font-semibold ${member.remaining < 0 ? "text-accent-red" : "text-text-dark"}`}
                     >
                       {member.remaining !== undefined
                         ? member.remaining
@@ -301,14 +303,15 @@ export default function CrewList() {
         {/* Pagination */}
         <div className="px-4 py-3 border-t border-gray-200 flex justify-between items-center">
           <p className="text-sm text-text-light">
-            Showing {crews.length} of {totalCrews} entries
+            {t("showing") || "Showing"} {crews.length} {t("of") || "of"}{" "}
+            {totalCrews} {t("entries") || "entries"}
           </p>
           <div className="flex items-center gap-1">
             <button
               className="px-3 py-1 rounded-lg border border-gray-200 text-sm text-text-main hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
               disabled
             >
-              Previous
+              {t("previous") || "Previous"}
             </button>
             <button className="px-3 py-1 rounded-lg bg-brand-dark text-white text-sm font-medium">
               1
@@ -324,7 +327,7 @@ export default function CrewList() {
               99
             </button>
             <button className="px-3 py-1 rounded-lg border border-gray-200 text-sm text-text-main hover:bg-gray-50">
-              Next
+              {t("next") || "Next"}
             </button>
           </div>
         </div>

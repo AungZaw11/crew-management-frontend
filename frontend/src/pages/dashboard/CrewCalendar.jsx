@@ -13,6 +13,8 @@ import {
 } from "lucide-react";
 import SummaryCard from "../../components/ui/SummaryCard";
 
+import { useLanguage } from "../../context/LanguageContext";
+
 const DAYS = [
   "Monday",
   "Tuesday",

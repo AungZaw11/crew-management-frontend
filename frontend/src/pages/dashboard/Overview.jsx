@@ -15,6 +15,7 @@ import {
 import DonutCard from "../../components/ui/DonutCard";
 import Pagination from "../../components/ui/Pagination";
 import { Link } from "react-router-dom";
+import { useLanguage } from "../../context/LanguageContext";
 
 const CERT_DATA = [
   { label: "Expire", value: 46, color: "#FE0001" },
@@ -107,6 +108,7 @@ const TABLE_DATA = [
 
 export default function Overview() {
   const navigate = useNavigate();
+  const { t } = useLanguage();
 
   // ==================== EXPORT TO EXCEL ====================
   const handleExportToExcel = () => {
@@ -140,22 +142,20 @@ export default function Overview() {
       {/* Header Row */}
       <div className="flex items-center justify-between opacity-0 animate-fade-in-up">
         <h1 className="text-xl font-medium text-text tracking-wide">
-          Overview
+          {t("overview")}
         </h1>
         <div className="flex items-center gap-4">
           <button
             onClick={handleExportToExcel}
             className="flex items-center gap-2 px-4 py-2 border border-brand-muted rounded-[6px] bg-surface text-sm text-text hover:bg-gray-50 transition-colors"
           >
-            <Download className="w-4 h-4" />
-            Export
+            <Download className="w-4 h-4" /> {t("export")}
           </button>
           <button
             onClick={() => navigate("/crew/new")}
             className="flex items-center gap-2 px-6 py-2 bg-brand-accent rounded-[6px] text-sm text-brand-light hover:bg-brand-navy transition-colors"
           >
-            <Plus className="w-4 h-4" />
-            Add Crew
+            <Plus className="w-4 h-4" /> {t("add_crew")}
           </button>
         </div>
       </div>
@@ -163,14 +163,14 @@ export default function Overview() {
       {/* Donut Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <DonutCard
-          title="Certificate"
+          title={t("certificate")}
           total={393}
           data={CERT_DATA}
           delay={0.1}
         />
         <DonutCard title="PPT" total={393} data={CERT_DATA} delay={0.2} />
         <DonutCard
-          title="Contract"
+          title={t("contract")}
           total={393}
           data={CONTRACT_DATA}
           delay={0.3}
@@ -183,12 +183,12 @@ export default function Overview() {
         <div className="p-4 border-b border-border flex flex-wrap items-center gap-4">
           <div className="flex items-center gap-2 px-3 py-2 border border-border rounded-[6px] bg-surface cursor-pointer hover:bg-gray-50">
             <span className="text-sm text-text tracking-wide">
-              Vessel's Name
+              {t("vessel_name")}
             </span>
             <ChevronDown className="w-4 h-4 text-text" />
           </div>
           <div className="flex items-center gap-2 px-3 py-2 border border-border rounded-[6px] bg-surface cursor-pointer hover:bg-gray-50">
-            <span className="text-sm text-text tracking-wide">Rank</span>
+            <span className="text-sm text-text tracking-wide">{t("rank")}</span>
             <ChevronDown className="w-4 h-4 text-text" />
           </div>
           <div className="flex items-center gap-3 px-3 py-2 border border-border rounded-[6px] bg-surface cursor-pointer hover:bg-gray-50">
@@ -200,7 +200,7 @@ export default function Overview() {
           <div className="flex items-center gap-2 ml-4">
             <CheckSquare className="w-5 h-5 text-text" />
             <span className="text-xs text-text tracking-wide">
-              Include the employee Period Contract
+              {t("include_period_contract")}
             </span>
           </div>
           <div className="flex items-center gap-2 ml-auto">
@@ -225,34 +225,34 @@ export default function Overview() {
             <thead>
               <tr className="bg-brand-light/64 border-b border-border">
                 <th className="py-3 px-4 text-sm font-medium text-black tracking-wide whitespace-nowrap">
-                  No
+                  {t("no") || "No"}
                 </th>
                 <th className="py-3 px-4 text-sm font-medium text-black tracking-wide whitespace-nowrap">
-                  Boarding Vessel
+                  {t("boarding_vessel") || "Boarding Vessel"}
                 </th>
                 <th className="py-3 px-4 text-sm font-medium text-black tracking-wide whitespace-nowrap">
-                  Rank
+                  {t("rank")}
                 </th>
                 <th className="py-3 px-4 text-sm font-medium text-black tracking-wide whitespace-nowrap">
-                  Seaman Code
+                  {t("seaman_code") || "Seaman Code"}
                 </th>
                 <th className="py-3 px-4 text-sm font-medium text-black tracking-wide whitespace-nowrap">
-                  Name
+                  {t("name")}
                 </th>
                 <th className="py-3 px-4 text-sm font-medium text-black tracking-wide whitespace-nowrap">
-                  Validity
+                  {t("validity")}
                 </th>
                 <th className="py-3 px-4 text-sm font-medium text-black tracking-wide whitespace-nowrap">
-                  Division
+                  {t("division")}
                 </th>
                 <th className="py-3 px-4 text-sm font-medium text-black tracking-wide whitespace-nowrap">
-                  Type
+                  {t("type")}
                 </th>
                 <th className="py-3 px-4 text-sm font-medium text-black tracking-wide whitespace-nowrap">
-                  Remaining
+                  {t("remaining")}
                 </th>
                 <th className="py-3 px-4 text-sm font-medium text-black tracking-wide whitespace-nowrap">
-                  Note
+                  {t("note")}
                 </th>
               </tr>
             </thead>

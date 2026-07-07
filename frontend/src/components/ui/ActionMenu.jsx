@@ -10,6 +10,8 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
 
+import { useLanguage } from "../../context/LanguageContext";
+
 export default function ActionMenu({ crewId, onDelete }) {
   const [isOpen, setIsOpen] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);

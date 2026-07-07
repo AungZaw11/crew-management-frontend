@@ -9,6 +9,8 @@ import {
   Users,
 } from "lucide-react";
 
+import { useLanguage } from "../../context/LanguageContext";
+
 export default function Settings() {
   const [activeTab, setActiveTab] = useState("general");
   const tabs = [

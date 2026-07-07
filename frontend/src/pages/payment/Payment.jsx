@@ -2,6 +2,8 @@
 import React, { useState } from "react";
 import { CreditCard, Plus, Download, Filter, ChevronDown } from "lucide-react";
 
+import { useLanguage } from "../../context/LanguageContext";
+
 export default function Payment() {
   const [selectedPeriod, setSelectedPeriod] = useState("This Month");
 

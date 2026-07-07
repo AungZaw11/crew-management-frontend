@@ -1,4 +1,4 @@
-// src/pages/dashboard/Overview.jsx
+// src/pages/dashboard/Dashboard.jsx
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import * as XLSX from "xlsx";
@@ -14,9 +14,11 @@ import {
 } from "lucide-react";
 import { useCrew } from "../../context/CrewContext";
 import LoadingSpinner from "../../components/common/LoadingSpinner";
+import { useLanguage } from "../../context/LanguageContext";
 
-export default function Overview() {
+export default function Dashboard() {
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const { crews, loading, totalCrews, pagination, fetchCrews, deleteCrew } =
     useCrew();
   const [searchTerm, setSearchTerm] = useState("");
@@ -62,22 +64,22 @@ export default function Overview() {
   if (loading) return <LoadingSpinner />;
 
   return (
-    <div className="flex flex-col gap-6 max-w-[1440px] mx-auto">
+    <div className="flex flex-col gap-6 max-w-[1440px] mx-autop px-4">
       {/* Header */}
       <div className="flex justify-between items-center">
-        <h1 className="text-xl font-medium text-text-main">Overview</h1>
+        <h1 className="text-2xl font-bold text-text-main">{t("overview")}</h1>
         <div className="flex gap-4">
           <button
             onClick={handleExportToExcel}
             className="flex items-center gap-2 px-4 py-2 rounded-md border border-brand text-text-main hover:bg-brand-lighter transition-colors text-sm font-medium"
           >
-            <Download size={16} /> Export
+            <Download size={16} /> {t("export")}
           </button>
           <button
             onClick={() => navigate("/crew/new")}
             className="flex items-center gap-2 px-4 py-2 rounded-md bg-brand-dark text-white hover:bg-brand transition-colors text-sm font-medium"
           >
-            <Plus size={16} /> Add Crew
+            <Plus size={16} /> {t("add_crew")}
           </button>
         </div>
       </div>
@@ -87,22 +89,24 @@ export default function Overview() {
         {/* Certificate */}
         <div className="bg-white rounded-md border border-gray-200 p-6 shadow-card flex flex-col gap-4 flex-1 min-w-[300px]">
           <div className="flex justify-between items-center">
-            <h3 className="text-brand font-semibold text-lg">Certificate</h3>
+            <h3 className="text-brand font-semibold text-lg">
+              {t("certificate")}
+            </h3>
             <button className="text-brand-light text-sm font-medium hover:underline">
-              See All →
+              {t("see_all")}
             </button>
           </div>
           <div className="flex gap-4">
             <div className="flex-1 bg-gradient-to-b from-surface-alt to-brand-lighter rounded border border-gray-200 p-4 flex flex-col items-center justify-center">
               <span className="text-text-main text-sm font-medium">72</span>
               <span className="text-accent-red font-bold text-xl mt-1">
-                Expire
+                {t("expire")}
               </span>
             </div>
             <div className="flex-1 bg-surface-alt rounded border border-gray-200 p-4 flex flex-col items-center justify-center">
               <span className="text-text-main text-sm font-medium">24</span>
               <span className="text-accent-orange font-bold text-xl mt-1">
-                30 Days
+                {t("days")}
               </span>
             </div>
           </div>
@@ -111,22 +115,24 @@ export default function Overview() {
         {/* Contract */}
         <div className="bg-white rounded-md border border-gray-200 p-6 shadow-card flex flex-col gap-4 flex-1 min-w-[300px]">
           <div className="flex justify-between items-center">
-            <h3 className="text-brand font-semibold text-lg">Contract</h3>
+            <h3 className="text-brand font-semibold text-lg">
+              {t("contract")}
+            </h3>
             <button className="text-brand-light text-sm font-medium hover:underline">
-              See All →
+              {t("see_all")}
             </button>
           </div>
           <div className="flex gap-4">
             <div className="flex-1 bg-gradient-to-b from-surface-alt to-brand-lighter rounded border border-gray-200 p-4 flex flex-col items-center justify-center">
               <span className="text-text-main text-sm font-medium">72</span>
               <span className="text-accent-red font-bold text-xl mt-1">
-                Expire
+                {t("expire")}
               </span>
             </div>
             <div className="flex-1 bg-surface-alt rounded border border-gray-200 p-4 flex flex-col items-center justify-center">
               <span className="text-text-main text-sm font-medium">24</span>
               <span className="text-accent-orange font-bold text-xl mt-1">
-                30 Days
+                {t("days")}
               </span>
             </div>
           </div>
@@ -135,22 +141,22 @@ export default function Overview() {
         {/* PPT */}
         <div className="bg-white rounded-md border border-gray-200 p-6 shadow-card flex flex-col gap-4 flex-1 min-w-[300px]">
           <div className="flex justify-between items-center">
-            <h3 className="text-brand font-semibold text-lg">PPT</h3>
+            <h3 className="text-brand font-semibold text-lg">{t("ppt")}</h3>
             <button className="text-brand-light text-sm font-medium hover:underline">
-              See All →
+              {t("see_all")}
             </button>
           </div>
           <div className="flex gap-4">
             <div className="flex-1 bg-gradient-to-b from-surface-alt to-brand-lighter rounded border border-gray-200 p-4 flex flex-col items-center justify-center">
               <span className="text-text-main text-sm font-medium">72</span>
               <span className="text-accent-red font-bold text-xl mt-1">
-                Expire
+                {t("expire")}
               </span>
             </div>
             <div className="flex-1 bg-surface-alt rounded border border-gray-200 p-4 flex flex-col items-center justify-center">
               <span className="text-text-main text-sm font-medium">24</span>
               <span className="text-accent-orange font-bold text-xl mt-1">
-                30 Days
+                {t("days")}
               </span>
             </div>
           </div>
@@ -163,11 +169,11 @@ export default function Overview() {
         <div className="p-4 border-b border-gray-200 flex flex-wrap items-center justify-between gap-4 bg-surface-alt rounded-t-md">
           <div className="flex flex-wrap items-center gap-4">
             <div className="flex items-center gap-3 bg-white border border-gray-200 rounded-md px-3 py-2 cursor-pointer hover:bg-gray-50 transition-colors">
-              <span className="text-sm text-text-main">Vessel's Name</span>
+              <span className="text-sm text-text-main">{t("vessel_name")}</span>
               <ChevronDown size={14} className="text-text-main" />
             </div>
             <div className="flex items-center gap-3 bg-white border border-gray-200 rounded-md px-3 py-2 cursor-pointer hover:bg-gray-50 transition-colors">
-              <span className="text-sm text-text-main">Rank</span>
+              <span className="text-sm text-text-main">{t("rank")}</span>
               <ChevronDown size={14} className="text-text-main" />
             </div>
             <div className="flex items-center gap-3 bg-white border border-gray-200 rounded-md px-3 py-2 cursor-pointer hover:bg-gray-50 transition-colors">
@@ -182,7 +188,7 @@ export default function Overview() {
             <label className="flex items-center gap-2 cursor-pointer hover:text-brand transition-colors">
               <CheckSquare size={18} className="text-text-main" />
               <span className="text-sm text-text-main">
-                Include the employee Period Contract
+                {t("include_period_contract")}
               </span>
             </label>
 
@@ -205,17 +211,25 @@ export default function Overview() {
           <table className="w-full text-left border-collapse">
             <thead>
               <tr className="bg-brand-lighter/60 border-b border-gray-200 text-sm font-medium text-black">
-                <th className="px-4 py-4 whitespace-nowrap">No</th>
-                <th className="px-4 py-4 whitespace-nowrap">Boarding Vessel</th>
-                <th className="px-4 py-4 whitespace-nowrap">Rank</th>
-                <th className="px-4 py-4 whitespace-nowrap">Seaman Code</th>
-                <th className="px-4 py-4 whitespace-nowrap">Name</th>
-                <th className="px-4 py-4 whitespace-nowrap">Validity</th>
-                <th className="px-4 py-4 whitespace-nowrap">Division</th>
-                <th className="px-4 py-4 whitespace-nowrap">Type</th>
-                <th className="px-4 py-4 whitespace-nowrap">Remaining</th>
+                <th className="px-4 py-4 whitespace-nowrap">
+                  {t("no") || "No"}
+                </th>
+                <th className="px-4 py-4 whitespace-nowrap">
+                  {t("boarding_vessel") || "Boarding Vessel"}
+                </th>
+                <th className="px-4 py-4 whitespace-nowrap">{t("rank")}</th>
+                <th className="px-4 py-4 whitespace-nowrap">
+                  {t("seaman_code") || "Seaman Code"}
+                </th>
+                <th className="px-4 py-4 whitespace-nowrap">{t("name")}</th>
+                <th className="px-4 py-4 whitespace-nowrap">{t("validity")}</th>
+                <th className="px-4 py-4 whitespace-nowrap">{t("division")}</th>
+                <th className="px-4 py-4 whitespace-nowrap">{t("type")}</th>
+                <th className="px-4 py-4 whitespace-nowrap">
+                  {t("remaining")}
+                </th>
                 <th className="px-4 py-4 whitespace-nowrap text-center">
-                  Note
+                  {t("note")}
                 </th>
               </tr>
             </thead>
@@ -226,7 +240,7 @@ export default function Overview() {
                     colSpan="10"
                     className="px-4 py-8 text-center text-text-light"
                   >
-                    No crew members found
+                    {t("no_data")}
                   </td>
                 </tr>
               ) : (
@@ -263,11 +277,7 @@ export default function Overview() {
                       {member.type || member.rank}
                     </td>
                     <td
-                      className={`px-4 py-4 text-sm font-medium ${
-                        member.remaining < 0
-                          ? "text-accent-red"
-                          : "text-text-dark"
-                      }`}
+                      className={`px-4 py-4 text-sm font-medium ${member.remaining < 0 ? "text-accent-red" : "text-text-dark"}`}
                     >
                       {member.remaining || 0}
                     </td>

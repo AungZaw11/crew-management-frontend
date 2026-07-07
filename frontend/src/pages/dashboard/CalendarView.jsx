@@ -7,6 +7,21 @@ import {
 } from "lucide-react";
 import DonutCard from "../../components/ui/DonutCard";
 
+import { useLanguage } from '../../context/LanguageContext';
+
+export default function MyComponent() {
+  const { t, language, setLanguage } = useLanguage();
+
+  return (
+    <div>
+      <h1>{t('dashboard')}</h1>
+      <p>Current language: {language}</p>
+      <button onClick={() => setLanguage('en')}>English</button>
+      <button onClick={() => setLanguage('kr')}>한국어</button>
+    </div>
+  );
+}
+
 const CERT_DATA = [
   { label: "Expire", value: 46, color: "#FE0001" },
   { label: "30 Days", value: 98, color: "#FFB44F" },

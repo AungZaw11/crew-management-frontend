@@ -5,6 +5,8 @@ import { Download, Plus, Edit2, Trash2, Upload } from "lucide-react";
 import { useCrew } from "../../context/CrewContext";
 import LoadingSpinner from "../../components/common/LoadingSpinner";
 
+import { useLanguage } from "../../context/LanguageContext";
+
 function Field({
   name,
   label,

@@ -10,6 +10,7 @@ import {
   Anchor,
 } from "lucide-react";
 import suganLogo from "../../assets/icons/Logo.png";
+import { useLanguage } from "../../context/LanguageContext";
 
 export default function BottomNav() {
   const location = useLocation();

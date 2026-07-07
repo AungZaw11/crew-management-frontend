@@ -3,6 +3,20 @@ import { NavLink, useLocation } from 'react-router-dom';
 import { Anchor, Search, SlidersHorizontal, ChevronDown, Bell } from 'lucide-react';
 import Logo from '../../assets/icons/Sungan Shipping Logo.png';
 
+import { useLanguage } from '../../context/LanguageContext';
+
+export default function MyComponent() {
+  const { t, language, setLanguage } = useLanguage();
+
+  return (
+    <div>
+      <h1>{t('dashboard')}</h1>
+      <p>Current language: {language}</p>
+      <button onClick={() => setLanguage('en')}>English</button>
+      <button onClick={() => setLanguage('kr')}>한국어</button>
+    </div>
+  );
+}
 
 export default function TopNav() {
     const location = useLocation();

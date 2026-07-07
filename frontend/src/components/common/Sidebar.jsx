@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { motion } from "framer-motion";
 import suganLogo from "../../assets/icons/Logo.png";
+import { useLanguage } from "../../context/LanguageContext";
 
 export default function Sidebar({
   collapsed,
@@ -22,13 +23,14 @@ export default function Sidebar({
   onClose,
 }) {
   const location = useLocation();
+  const { t } = useLanguage();
 
   const navItems = [
-    { icon: LayoutDashboard, label: "Dashboard", path: "/dashboard" },
-    { icon: Users, label: "Crew Management", path: "/crew" },
-    { icon: FileText, label: "Register", path: "/register" },
-    { icon: CreditCard, label: "Payment", path: "/payment" },
-    { icon: Settings, label: "Settings", path: "/settings" },
+    { icon: LayoutDashboard, label: t("dashboard"), path: "/dashboard" },
+    { icon: Users, label: t("crew"), path: "/crew" },
+    { icon: FileText, label: t("register"), path: "/register" },
+    { icon: CreditCard, label: t("payment"), path: "/payment" },
+    { icon: Settings, label: t("settings"), path: "/settings" },
   ];
 
   const isActive = (path) => {
@@ -44,7 +46,6 @@ export default function Sidebar({
     window.location.href = "/login";
   };
 
-  // ==================== Mobile Sidebar ====================
   if (isMobile) {
     return (
       <div className="bg-brand-dark h-full flex flex-col w-full rounded-r-[20px] relative">
@@ -55,7 +56,6 @@ export default function Sidebar({
           <X size={20} />
         </button>
 
-        {/* Mobile Logo */}
         <div className="h-20 flex items-center justify-center border-b border-white/10 px-4">
           <div className="flex items-center gap-2">
             <div className="w-10 h-10 bg-white rounded-md flex items-center justify-center overflow-hidden">
@@ -98,21 +98,20 @@ export default function Sidebar({
             className="flex items-center gap-3 px-4 py-3 rounded-lg text-white/70 hover:bg-white/10 hover:text-white transition-colors w-full"
           >
             <LogOut size={20} />
-            <span className="font-medium">Logout</span>
+            <span className="font-medium">{t("sign_out")}</span>
           </button>
         </div>
       </div>
     );
   }
 
-  // ===== Desktop Sidebar =====
+  // ==================== Desktop Sidebar ====================
   return (
     <motion.div
       initial={false}
       animate={{ width: collapsed ? 80 : 256 }}
       className="bg-brand-dark min-h-screen flex flex-col rounded-r-[30px] relative z-20 transition-all duration-300 ease-in-out flex-shrink-0"
     >
-      {/* Toggle Button */}
       <button
         onClick={() => setCollapsed(!collapsed)}
         className="absolute -right-3 top-8 bg-white rounded-full p-1 shadow-md text-brand-dark hover:bg-gray-50 z-30 hidden sm:block"
@@ -120,7 +119,6 @@ export default function Sidebar({
         {collapsed ? <ChevronRight size={16} /> : <ChevronLeft size={16} />}
       </button>
 
-      {/* Desktop Logo */}
       <div className="h-20 flex items-center justify-center border-b border-white/10 px-4">
         {!collapsed ? (
           <div className="flex items-center gap-3">
@@ -193,7 +191,7 @@ export default function Sidebar({
           }`}
         >
           <LogOut size={20} className="flex-shrink-0" />
-          {!collapsed && <span className="font-medium">Logout</span>}
+          {!collapsed && <span className="font-medium">{t("sign_out")}</span>}
         </button>
       </div>
     </motion.div>

@@ -15,6 +15,21 @@ import {
   CheckCircle2,
 } from "lucide-react";
 
+import { useLanguage } from '../../context/LanguageContext';
+
+export default function MyComponent() {
+  const { t, language, setLanguage } = useLanguage();
+
+  return (
+    <div>
+      <h1>{t('dashboard')}</h1>
+      <p>Current language: {language}</p>
+      <button onClick={() => setLanguage('en')}>English</button>
+      <button onClick={() => setLanguage('kr')}>한국어</button>
+    </div>
+  );
+}
+
 function FormField({
   label,
   type = "text",

@@ -1,11 +1,11 @@
 // src/components/common/Header.jsx
-import React, { useState } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Search, Bell, Menu, X, LogOut } from 'lucide-react';
-import { toast } from 'react-toastify';
-import { useLanguage } from '../../context/LanguageContext';
-import LanguageSwitcher from '../ui/LanguageSwitcher';
-import api from '../../services/api';
+import React, { useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Search, Bell, Menu, X, LogOut } from "lucide-react";
+import { toast } from "react-toastify";
+import { useLanguage } from "../../context/LanguageContext";
+import LanguageSwitcher from "../ui/LanguageSwitcher";
+import api from "../../services/api";
 
 export default function Header({ onMobileMenuToggle, isMobileMenuOpen }) {
   const location = useLocation();
@@ -15,44 +15,48 @@ export default function Header({ onMobileMenuToggle, isMobileMenuOpen }) {
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
 
   const navLinks = [
-    { path: '/dashboard', label: t('dashboard') },
-    { path: '/crew', label: t('crew') },
-    { path: '/register', label: t('register') },
-    { path: '/payment', label: t('payment') },
-    { path: '/settings', label: t('settings') },
+    { path: "/dashboard", label: t("dashboard") },
+    { path: "/crew", label: t("crew") },
+    { path: "/register", label: t("register") },
+    { path: "/payment", label: t("payment") },
+    { path: "/settings", label: t("settings") },
   ];
 
   const isActive = (path) => {
-    return location.pathname === path || location.pathname.startsWith(path + '/');
+    return (
+      location.pathname === path || location.pathname.startsWith(path + "/")
+    );
   };
 
   // ==================== LOGOUT ====================
   const handleLogout = async () => {
     setShowLogoutConfirm(false);
     try {
-      const user = JSON.parse(localStorage.getItem('user') || '{}');
-      
-      const response = await api.post('/logout', {
-        user_id: user?.id || '',
-        device_id: '',
+      const user = JSON.parse(localStorage.getItem("user") || "{}");
+
+      const response = await api.post("/logout", {
+        user_id: user?.id || "",
+        device_id: "",
       });
 
       if (response.data?.status) {
-        toast.success( (response.data.message || t('logout_success') || 'Logout successful!'));
+        toast.success(
+          response.data.message || t("logout_success") || "Logout successful!",
+        );
       }
     } catch (error) {
-      console.error('Logout Error:', error);
-      toast.error(' Logout failed');
+      console.error("Logout Error:", error);
+      toast.error(" Logout failed");
     } finally {
       // Clear local storage
-      localStorage.removeItem('token');
-      localStorage.removeItem('user');
-      localStorage.removeItem('expire_date');
-      
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+      localStorage.removeItem("expire_date");
+
       // Language stays in localStorage
       // localStorage.removeItem('language');
-      
-      navigate('/login');
+
+      navigate("/login");
     }
   };
 
@@ -68,10 +72,12 @@ export default function Header({ onMobileMenuToggle, isMobileMenuOpen }) {
             {isMobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
           </button>
 
-          <Link to="/" className="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
-            
+          <Link
+            to="/"
+            className="flex items-center gap-1.5 sm:gap-2 flex-shrink-0"
+          >
             <span className="text-brand-dark font-bold text-sm sm:text-base md:text-lg tracking-wide hidden xs:block">
-              {t('app_name')}
+              {t("app_name")}
             </span>
           </Link>
 
@@ -81,7 +87,7 @@ export default function Header({ onMobileMenuToggle, isMobileMenuOpen }) {
                 key={link.path}
                 to={link.path}
                 className={`hover:text-brand transition-colors ${
-                  isActive(link.path) ? 'text-brand font-semibold' : ''
+                  isActive(link.path) ? "text-brand font-semibold" : ""
                 }`}
               >
                 {link.label}
@@ -94,10 +100,13 @@ export default function Header({ onMobileMenuToggle, isMobileMenuOpen }) {
         <div className="flex items-center gap-1.5 sm:gap-2 md:gap-3 lg:gap-4">
           {/* Search - Desktop */}
           <div className="relative hidden lg:block">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-text-light" size={16} />
+            <Search
+              className="absolute left-3 top-1/2 -translate-y-1/2 text-text-light"
+              size={16}
+            />
             <input
               type="text"
-              placeholder={t('search') + '...'}
+              placeholder={t("search") + "..."}
               className="pl-9 pr-4 py-1.5 bg-surface-alt border border-gray-200 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-brand/20 focus:border-brand w-32 xl:w-48 2xl:w-64 transition-all"
             />
           </div>
@@ -119,15 +128,6 @@ export default function Header({ onMobileMenuToggle, isMobileMenuOpen }) {
           {/* Language Switcher */}
           <LanguageSwitcher />
 
-          {/* Logout Button */}
-          <button
-            onClick={() => setShowLogoutConfirm(true)}
-            className="text-text-main hover:text-red-500 transition-colors p-1.5 hidden sm:block"
-            title={t('sign_out')}
-          >
-            <LogOut size={18} className="sm:w-5 sm:h-5" />
-          </button>
-
           {/* Avatar */}
           <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-brand-lighter border border-gray-200 overflow-hidden cursor-pointer flex-shrink-0">
             <img
@@ -142,10 +142,13 @@ export default function Header({ onMobileMenuToggle, isMobileMenuOpen }) {
         {searchOpen && (
           <div className="absolute top-full left-0 right-0 bg-surface-alt border-b border-gray-200 p-3 lg:hidden animate-fade-in-up">
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-text-light" size={16} />
+              <Search
+                className="absolute left-3 top-1/2 -translate-y-1/2 text-text-light"
+                size={16}
+              />
               <input
                 type="text"
-                placeholder={t('search') + '...'}
+                placeholder={t("search") + "..."}
                 className="w-full pl-9 pr-4 py-2 border border-gray-200 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-brand/20 focus:border-brand"
                 autoFocus
               />
@@ -153,34 +156,6 @@ export default function Header({ onMobileMenuToggle, isMobileMenuOpen }) {
           </div>
         )}
       </header>
-
-      {/* Logout Confirmation Modal */}
-      {showLogoutConfirm && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-          <div className="bg-white rounded-lg shadow-xl p-6 max-w-sm w-full mx-4">
-            <h3 className="text-lg font-semibold text-text-main mb-2">
-              {t('sign_out')}
-            </h3>
-            <p className="text-sm text-text-light mb-6">
-              Are you sure you want to sign out?
-            </p>
-            <div className="flex gap-3 justify-end">
-              <button
-                onClick={() => setShowLogoutConfirm(false)}
-                className="px-4 py-2 rounded-md border border-gray-200 text-text-main hover:bg-gray-50 transition-colors text-sm font-medium"
-              >
-                {t('cancel') || 'Cancel'}
-              </button>
-              <button
-                onClick={handleLogout}
-                className="px-4 py-2 rounded-md bg-red-500 text-white hover:bg-red-600 transition-colors text-sm font-medium"
-              >
-                {t('sign_out')}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </>
   );
 }

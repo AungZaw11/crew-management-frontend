@@ -1,5 +1,6 @@
 // src/components/ui/SummaryCard.jsx
 import React from "react";
+import { useLanguage } from "../../context/LanguageContext";
 
 export default function SummaryCard({ data }) {
   return (
