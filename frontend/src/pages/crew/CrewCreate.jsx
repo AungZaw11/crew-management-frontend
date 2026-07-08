@@ -1,12 +1,12 @@
-// src/pages/crew/CrewForm.jsx
-import React, { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+// src/pages/crew/CrewCreate.jsx
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useCrew } from "../../context/CrewContext";
 import { useLanguage } from "../../context/LanguageContext";
-import LoadingSpinner from "../../components/common/LoadingSpinner";
 import { SubHeader } from "../../components/crew/SubHeader";
 import { TabPills, TAB_KEYS } from "../../components/crew/TabPills";
 import PersonalInfoForm from "../../components/crew/PersonalInfoForm";
+import { QualificationCreateForm } from "../../components/crew/QualificationCreateForm";
 
 function OtherTab({ tabName }) {
   return (
@@ -16,19 +16,12 @@ function OtherTab({ tabName }) {
   );
 }
 
-export default function CrewForm() {
-  const { id } = useParams();
+export default function CrewCreate() {
   const navigate = useNavigate();
   const { t } = useLanguage();
-  const { getCrewById, createCrew, updateCrew } = useCrew();
-  const [crewMember, setCrewMember] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState(TAB_KEYS[0]);
-
-  const isNewMode = id === "new" || !id;
-  const isEditing = true;
-
-  const emptyCrew = {
+  const { createCrew } = useCrew();
+  const [activeTab, setActiveTab] = useState(TAB_KEYS[0]); // "personal_info"
+  const [crewMember, setCrewMember] = useState({
     crew_code: "",
     rank: "",
     hire_date: "",
@@ -48,7 +41,7 @@ export default function CrewForm() {
     religion: "",
     education_university: "",
     education_school: "",
-    vessel: "",
+    vessel: "Sun Rio",
     waist: "",
     safety_shoes: "",
     garments: "",
@@ -65,28 +58,7 @@ export default function CrewForm() {
     physical_exam: "",
     seaman_handbook: "",
     contract_period: "",
-  };
-
-  useEffect(() => {
-    const loadCrew = async () => {
-      if (isNewMode) {
-        setCrewMember(emptyCrew);
-        setLoading(false);
-        return;
-      }
-
-      if (id) {
-        const data = await getCrewById(id);
-        if (data) {
-          setCrewMember(data);
-        } else {
-          navigate("/crew");
-        }
-      }
-      setLoading(false);
-    };
-    loadCrew();
-  }, [id]);
+  });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -98,14 +70,10 @@ export default function CrewForm() {
 
   const handleSave = async () => {
     try {
-      if (isNewMode) {
-        await createCrew(crewMember);
-      } else {
-        await updateCrew(id, crewMember);
-      }
+      await createCrew(crewMember);
       navigate("/crew");
     } catch (error) {
-      console.error("Failed to save crew:", error);
+      console.error("Failed to create crew:", error);
     }
   };
 
@@ -121,28 +89,41 @@ export default function CrewForm() {
     navigate("/crew/new");
   };
 
-  if (loading) return <LoadingSpinner />;
-  if (!crewMember)
-    return <div className="text-center py-10">Crew not found</div>;
+  const handleQualificationSave = () => {
+    console.log("✅ Qualification saved!");
+  };
 
- 
-  const crewLabel = isNewMode
-    ? t("new_person") || "New Person"  
-    : `${crewMember.name_kor || ""} [${crewMember.crew_code || ""}] - ${crewMember.rank || ""} - ${crewMember.vessel || ""}`;
+  const handleQualificationCancel = () => {
+    console.log("❌ Qualification cancelled!");
+  };
 
-  const renderTabContent = () => {
-    if (activeTab === TAB_KEYS[0]) {
-      return (
-        <PersonalInfoForm
-          crewMember={crewMember}
-          isEditing={isEditing}
-          onChange={handleChange}
-          onSave={handleSave}
-          onCancel={handleCancel}
-        />
-      );
+  const crewLabel = t("add_new_crew") || "Add New Crew";
+
+  // ===== RENDER TAB CONTENT =====
+  const renderContent = () => {
+    switch (activeTab) {
+      case TAB_KEYS[0]: // personal_info
+        return (
+          <PersonalInfoForm
+            crewMember={crewMember}
+            isEditing={true}
+            onChange={handleChange}
+            onSave={handleSave}
+            onCancel={handleCancel}
+          />
+        );
+
+      case TAB_KEYS[1]: // qualifications
+        return (
+          <QualificationCreateForm
+            onSave={handleQualificationSave}
+            onCancel={handleQualificationCancel}
+          />
+        );
+
+      default:
+        return <OtherTab tabName={activeTab} />;
     }
-    return <OtherTab tabName={activeTab} />;
   };
 
   return (
@@ -151,12 +132,13 @@ export default function CrewForm() {
         onBack={handleBack}
         onAddNew={handleAddNew}
         crewLabel={crewLabel}
-        showAddNew={!isNewMode}
+        showAddNew={false}
       />
 
+      {/* Show TabPills in Add Crew mode too */}
       <TabPills activeTab={activeTab} setActiveTab={setActiveTab} />
 
-      <div className="flex-1 bg-white">{renderTabContent()}</div>
+      <div className="flex-1 bg-white">{renderContent()}</div>
     </div>
   );
 }

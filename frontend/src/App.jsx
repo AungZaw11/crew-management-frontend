@@ -9,11 +9,14 @@ import Dashboard from "./pages/dashboard/Dashboard";
 import Overview from "./pages/dashboard/Overview";
 import CrewList from "./pages/crew/CrewList";
 import CrewCalendar from "./pages/dashboard/CrewCalendar";
-import CrewProfile from "./pages/crew/CrewProfile";
+import CrewDetail from "./pages/crew/CrewDetail";
+import CrewCreate from "./pages/crew/CrewCreate";
 import Payment from "./pages/payment/Payment";
 import Settings from "./pages/settings/Settings";
 import Register from "./pages/auth/Register";
-import CrewForm from "./pages/crew/CrewForm";
+import QualificationForm from "./pages/crew/forms/QualificationForm";
+import AppointmentForm from "./pages/crew/forms/AppointmentForm";
+
 export default function App() {
   const token = localStorage.getItem("token");
 
@@ -30,6 +33,7 @@ export default function App() {
       <CrewProvider>
         <Routes>
           <Route path="/" element={<Navigate to="/dashboard" replace />} />
+
           <Route
             path="/dashboard"
             element={
@@ -38,6 +42,7 @@ export default function App() {
               </Layout>
             }
           />
+
           <Route
             path="/overview"
             element={
@@ -46,6 +51,8 @@ export default function App() {
               </Layout>
             }
           />
+
+          {/* Crew Routes */}
           <Route
             path="/crew"
             element={
@@ -54,6 +61,7 @@ export default function App() {
               </Layout>
             }
           />
+
           <Route
             path="/crew/calendar"
             element={
@@ -63,22 +71,42 @@ export default function App() {
             }
           />
 
+          {/* Add New Crew - No tabs, just Personal Info Form */}
           <Route
             path="/crew/new"
             element={
               <Layout>
-                <CrewForm />
+                <CrewCreate />
               </Layout>
             }
           />
           <Route
-            path="/crew/:id"
+            path="/crew/:id/qualification/new"
             element={
               <Layout>
-                <CrewProfile />
+                <QualificationForm />
               </Layout>
             }
           />
+          <Route
+            path="/crew/:id/appointment/new"
+            element={
+              <Layout>
+                <AppointmentForm />
+              </Layout>
+            }
+          />
+
+          {/* Crew Detail - With all tabs */}
+          <Route
+            path="/crew/:id"
+            element={
+              <Layout>
+                <CrewDetail />
+              </Layout>
+            }
+          />
+
           <Route
             path="/payment"
             element={
@@ -87,6 +115,7 @@ export default function App() {
               </Layout>
             }
           />
+
           <Route
             path="/register"
             element={
@@ -95,6 +124,7 @@ export default function App() {
               </Layout>
             }
           />
+
           <Route
             path="/settings"
             element={
