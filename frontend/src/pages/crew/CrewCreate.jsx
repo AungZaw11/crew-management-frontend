@@ -7,6 +7,7 @@ import { SubHeader } from "../../components/crew/SubHeader";
 import { TabPills, TAB_KEYS } from "../../components/crew/TabPills";
 import PersonalInfoForm from "../../components/crew/PersonalInfoForm";
 import { QualificationCreateForm } from "../../components/crew/QualificationCreateForm";
+import AppointmentForm from "./forms/AppointmentForm"; // ← AppointmentForm ကို import လုပ်ပါ
 
 function OtherTab({ tabName }) {
   return (
@@ -20,7 +21,7 @@ export default function CrewCreate() {
   const navigate = useNavigate();
   const { t } = useLanguage();
   const { createCrew } = useCrew();
-  const [activeTab, setActiveTab] = useState(TAB_KEYS[0]); // "personal_info"
+  const [activeTab, setActiveTab] = useState(TAB_KEYS[0]);
   const [crewMember, setCrewMember] = useState({
     crew_code: "",
     rank: "",
@@ -121,6 +122,9 @@ export default function CrewCreate() {
           />
         );
 
+      case TAB_KEYS[2]: // appointment
+        return <AppointmentForm />;
+
       default:
         return <OtherTab tabName={activeTab} />;
     }
@@ -133,9 +137,9 @@ export default function CrewCreate() {
         onAddNew={handleAddNew}
         crewLabel={crewLabel}
         showAddNew={false}
+        isNew={true}
       />
 
-      {/* Show TabPills in Add Crew mode too */}
       <TabPills activeTab={activeTab} setActiveTab={setActiveTab} />
 
       <div className="flex-1 bg-white">{renderContent()}</div>

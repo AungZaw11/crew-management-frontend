@@ -102,7 +102,6 @@ export default function CrewDetail() {
               tabName="Qualification"
               crewId={id}
               onAddNew={() => {
-                // ✅ ဒီမှာ ပြင်ပါ - မှန်ကန်တဲ့ path ကိုသွားပါ
                 navigate(`/crew/${id}/qualification/new`);
               }}
               onDelete={(rowId) => {
