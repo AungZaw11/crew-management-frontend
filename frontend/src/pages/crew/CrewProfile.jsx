@@ -5,7 +5,7 @@ import { useCrew } from "../../context/CrewContext";
 import { useLanguage } from "../../context/LanguageContext";
 import LoadingSpinner from "../../components/common/LoadingSpinner";
 import { SubHeader } from "../../components/crew/SubHeader";
-import { TabPills, TABS } from "../../components/crew/TabPills";
+import { TabPills, TAB_KEYS } from "../../components/crew/TabPills"; // ← TAB_KEYS ကို import လုပ်ပါ
 import PersonalInfoForm from "../../components/crew/PersonalInfoForm";
 
 function OtherTab({ tabName }) {
@@ -20,13 +20,61 @@ export default function CrewProfile() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { t } = useLanguage();
-  const { getCrewById } = useCrew();
+  const { getCrewById, createCrew, updateCrew } = useCrew();
   const [crewMember, setCrewMember] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState("Personal Info");
+  const [activeTab, setActiveTab] = useState(TAB_KEYS[0]); 
+
+  const isNewMode = id === "new";
+  const isEditing = isNewMode || true;
+
+  const emptyCrew = {
+    crew_code: "",
+    rank: "",
+    hire_date: "",
+    name_kor: "",
+    name_eng: "",
+    name_chinese: "",
+    address: "",
+    address_kor: "",
+    phone: "",
+    mobile: "",
+    email: "",
+    emergency_1: "",
+    emergency_2: "",
+    resident_id: "",
+    birth_date: "",
+    nationality: "",
+    religion: "",
+    education_university: "",
+    education_school: "",
+    vessel: "Sun Rio",
+    waist: "",
+    safety_shoes: "",
+    garments: "",
+    drinking: "",
+    smoking: "",
+    monthly_position: "",
+    chemical: "",
+    tanker: "",
+    watch_office: "",
+    note: "",
+    mariners_license: "",
+    passport: "",
+    telecom_license: "",
+    physical_exam: "",
+    seaman_handbook: "",
+    contract_period: "",
+  };
 
   useEffect(() => {
     const loadCrew = async () => {
+      if (isNewMode) {
+        setCrewMember(emptyCrew);
+        setLoading(false);
+        return;
+      }
+
       if (id) {
         const data = await getCrewById(id);
         if (data) {
@@ -40,6 +88,31 @@ export default function CrewProfile() {
     loadCrew();
   }, [id]);
 
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setCrewMember((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleSave = async () => {
+    try {
+      if (isNewMode) {
+        await createCrew(crewMember);
+      } else {
+        await updateCrew(id, crewMember);
+      }
+      navigate("/crew");
+    } catch (error) {
+      console.error("Failed to save crew:", error);
+    }
+  };
+
+  const handleCancel = () => {
+    navigate("/crew");
+  };
+
   const handleBack = () => {
     navigate("/crew");
   };
@@ -52,12 +125,22 @@ export default function CrewProfile() {
   if (!crewMember)
     return <div className="text-center py-10">Crew not found</div>;
 
-  const crewLabel = `${crewMember.name_kor || ""} [${crewMember.crew_code || ""}] - ${crewMember.rank || ""} - ${crewMember.vessel || ""}`;
+  const crewLabel = isNewMode
+    ? t("add_new_crew") || "Add New Crew"
+    : `${crewMember.name_kor || ""} [${crewMember.crew_code || ""}] - ${crewMember.rank || ""} - ${crewMember.vessel || ""}`;
 
   const renderTabContent = () => {
     switch (activeTab) {
-      case "Personal Info":
-        return <PersonalInfoForm crewMember={crewMember} isEditing={false} />;
+      case TAB_KEYS[0]: 
+        return (
+          <PersonalInfoForm
+            crewMember={crewMember}
+            isEditing={isEditing}
+            onChange={handleChange}
+            onSave={handleSave}
+            onCancel={handleCancel}
+          />
+        );
       default:
         return <OtherTab tabName={activeTab} />;
     }
@@ -69,7 +152,7 @@ export default function CrewProfile() {
         onBack={handleBack}
         onAddNew={handleAddNew}
         crewLabel={crewLabel}
-        showAddNew={true}
+        showAddNew={!isNewMode}
       />
 
       <TabPills activeTab={activeTab} setActiveTab={setActiveTab} />

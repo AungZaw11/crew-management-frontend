@@ -4,7 +4,7 @@ import api from "../services/api";
 
 const translations = {
   en: {
-    // Common
+    // ===== COMMON =====
     app_name: "Crew Management System",
     sign_in: "Sign In",
     sign_out: "Sign Out",
@@ -38,7 +38,7 @@ const translations = {
     reset: "Reset",
     save_record: "Save Record",
 
-    // Navigation
+    // ===== NAVIGATION =====
     dashboard: "Dashboard",
     crew: "Crew",
     "crew management": "Crew Management",
@@ -48,7 +48,7 @@ const translations = {
     overview: "Overview",
     calendar: "Calendar",
 
-    // Login
+    // ===== LOGIN =====
     user_name: "User Name",
     password: "Password",
     remember_me: "Remember Me",
@@ -56,7 +56,7 @@ const translations = {
     login_success: "Login successful!",
     login_failed: "Login failed. Please check your credentials.",
 
-    // Crew
+    // ===== CREW =====
     crew_management: "Crew Management",
     total_crews: "Total Crews",
     on_board: "On Board",
@@ -74,7 +74,7 @@ const translations = {
     actions: "Actions",
     view_details: "View Details",
 
-    // Certificate / Summary
+    // ===== CERTIFICATE / SUMMARY =====
     certificate: "Certificate",
     contract: "Contract",
     ppt: "PPT",
@@ -86,7 +86,7 @@ const translations = {
     sign_on: "Sign On",
     include_period_contract: "Include Period Contract",
 
-    // Dashboard
+    // ===== DASHBOARD =====
     dashboard_overview: "Dashboard Overview",
     total_crew: "Total Crew",
     active_on_board: "Active on Board",
@@ -96,14 +96,14 @@ const translations = {
     recent_activity: "Recent Activity",
     upcoming_tasks: "Upcoming Tasks",
 
-    // Footer
+    // ===== FOOTER =====
     all_rights_reserved: "All rights reserved.",
     privacy_policy: "Privacy Policy",
     terms: "Terms",
     support: "Support",
     version: "Version",
 
-    // Messages
+    // ===== MESSAGES =====
     logout_success: "Logout successful!",
     logout_failed: "Logout failed.",
     crew_created: "Crew created successfully.",
@@ -111,10 +111,9 @@ const translations = {
     crew_deleted: "Crew deleted successfully.",
     crew_not_found: "Crew not found.",
     confirm_delete: "Are you sure you want to delete?",
-    confirm_delete_message:
-      "Do you really want to delete this records? This process cannot be undone.",
+    confirm_delete_message: "Do you really want to delete this records? This process cannot be undone.",
 
-    // Profile
+    // ===== PROFILE =====
     profile: "Profile",
     personal_info: "Personal Information",
     contact_info: "Contact Information",
@@ -124,8 +123,9 @@ const translations = {
     email: "Email",
     birth_date: "Birth Date",
     nationality: "Nationality",
+    religion: "Religion",
 
-    // Appointment
+    // ===== APPOINTMENT =====
     appointment: "Appointment",
     replacement: "Replacement",
     family: "Family",
@@ -137,7 +137,7 @@ const translations = {
     qualification: "Qualification",
     accident: "Accident",
 
-    // Payment
+    // ===== PAYMENT =====
     payroll: "Payroll",
     payment_info: "Payment Information",
     bank_name: "Bank Name",
@@ -151,7 +151,7 @@ const translations = {
     currency: "Currency",
     payment_date: "Payment Date",
 
-    // Register Form Fields
+    // ===== REGISTER FORM FIELDS =====
     license_name: "License / Competency Name",
     grade_class: "Grade / Class",
     license_number: "License Number",
@@ -211,15 +211,15 @@ const translations = {
     certificate_name: "Certificate Name",
     certificate_number: "Certificate Number",
 
-    // Personal Info Form (EN)
+    // ===== PERSONAL INFO FORM (EN) =====
     crew_code: "Crew Code",
     position: "Position",
     hire_date: "Hire Date",
     name_korean: "Name (Korean)",
     name_english: "Name (English)",
     name_chinese: "Name (Chinese)",
-    address_1: "Address 1",
-    address_2: "Address 2",
+    address_eng: "Address (English)",
+    address_korean: "Address (Korean)",
     mobile: "Mobile Number",
     emergency_1: "Emergency Contact 1",
     emergency_2: "Emergency Contact 2",
@@ -231,23 +231,51 @@ const translations = {
     garments: "Garments",
     drinking: "Drinking (Capacity)",
     smoking: "Smoking",
-    long_service: "long service",
+    long_service: "Long Service",
     monthly_position: "Monthly Position",
     chemical: "Chemical",
     tanker: "Tanker",
     watch_office: "Watch Office",
-    mariners_license: "Mariner's license",
+    mariners_license: "Mariner's License",
     telecom_license: "Telecommunications License",
     physical_exam: "Physical Examination",
     seaman_handbook: "Seaman's Handbook",
     contract_period: "Employment Contract Period",
     preview: "Preview",
     choose_file: "Choose File",
-    select_option: "Select...",
+    passport: "Passport",
+     new_person: "New Person",
+    add_new_crew: "Add New Crew", 
+
+    // ===== PLACEHOLDERS =====
+    select_option: "Please select",
+    select_position: "Please select position",
+    select_nationality: "Please select nationality",
+    enter_license: "Enter license number",
+    enter_passport: "Enter passport number",
+    enter_telecom: "Enter telecom license",
+    enter_physical: "Enter physical exam date",
+    enter_handbook: "Enter handbook number",
+    enter_contract: "Enter contract period",
+
+    // ===== TAB PILLS =====
+    tab_personal_info: "Personal Info",
+    tab_qualifications: "Qualifications",
+    tab_appointment: "Appointment",
+    tab_replacement: "Replacement",
+    tab_payment: "Payment",
+    tab_family: "Family",
+    tab_injury: "Injury",
+    tab_health: "Health",
+    tab_experiences: "Experiences",
+    tab_evaluation: "Evaluation",
+    tab_certificates: "Certificates",
+    tab_accident: "Accident",
+    crew_profile_sections: "Crew profile sections",
   },
 
   kr: {
-    // Common
+    // ===== COMMON =====
     app_name: "승무원 관리 시스템",
     sign_in: "로그인",
     sign_out: "로그아웃",
@@ -281,7 +309,7 @@ const translations = {
     reset: "초기화",
     save_record: "기록 저장",
 
-    // Navigation
+    // ===== NAVIGATION =====
     dashboard: "대시보드",
     crew: "승무원",
     "crew management": "승무원 관리",
@@ -291,7 +319,7 @@ const translations = {
     overview: "개요",
     calendar: "달력",
 
-    // Login
+    // ===== LOGIN =====
     user_name: "사용자 이름",
     password: "비밀번호",
     remember_me: "로그인 상태 유지",
@@ -299,7 +327,7 @@ const translations = {
     login_success: "로그인 성공!",
     login_failed: "로그인 실패. 자격 증명을 확인하세요.",
 
-    // Crew
+    // ===== CREW =====
     crew_management: "승무원 관리",
     total_crews: "전체 승무원",
     on_board: "승선 중",
@@ -317,7 +345,7 @@ const translations = {
     actions: "작업",
     view_details: "상세 보기",
 
-    // Certificate / Summary
+    // ===== CERTIFICATE / SUMMARY =====
     certificate: "자격증",
     contract: "계약",
     ppt: "PPT",
@@ -329,7 +357,7 @@ const translations = {
     sign_on: "승선",
     include_period_contract: "계약 기간 포함",
 
-    // Dashboard
+    // ===== DASHBOARD =====
     dashboard_overview: "대시보드 개요",
     total_crew: "전체 승무원",
     active_on_board: "승선 중",
@@ -339,14 +367,14 @@ const translations = {
     recent_activity: "최근 활동",
     upcoming_tasks: "예정된 작업",
 
-    // Footer
+    // ===== FOOTER =====
     all_rights_reserved: "모든 권리 보유.",
     privacy_policy: "개인정보 처리방침",
     terms: "이용약관",
     support: "지원",
     version: "버전",
 
-    // Messages
+    // ===== MESSAGES =====
     logout_success: "로그아웃 성공!",
     logout_failed: "로그아웃 실패.",
     crew_created: "승무원이 성공적으로 생성되었습니다.",
@@ -354,10 +382,9 @@ const translations = {
     crew_deleted: "승무원이 성공적으로 삭제되었습니다.",
     crew_not_found: "승무원을 찾을 수 없습니다.",
     confirm_delete: "삭제하시겠습니까?",
-    confirm_delete_message:
-      "이 기록을 정말 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.",
+    confirm_delete_message: "이 기록을 정말 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.",
 
-    // Profile
+    // ===== PROFILE =====
     profile: "프로필",
     personal_info: "개인 정보",
     contact_info: "연락처 정보",
@@ -367,8 +394,9 @@ const translations = {
     email: "이메일",
     birth_date: "생년월일",
     nationality: "국적",
+    religion: "종교",
 
-    // Appointment
+    // ===== APPOINTMENT =====
     appointment: "임명",
     replacement: "교체",
     family: "가족",
@@ -380,7 +408,7 @@ const translations = {
     qualification: "자격",
     accident: "사고",
 
-    // Payment
+    // ===== PAYMENT =====
     payroll: "급여",
     payment_info: "결제 정보",
     bank_name: "은행명",
@@ -394,7 +422,7 @@ const translations = {
     currency: "통화",
     payment_date: "결제일",
 
-    // Register Form Fields
+    // ===== REGISTER FORM FIELDS =====
     license_name: "면허/자격증 명",
     grade_class: "등급/클래스",
     license_number: "면허 번호",
@@ -454,15 +482,15 @@ const translations = {
     certificate_name: "자격증 명",
     certificate_number: "자격증 번호",
 
-    // Personal Info Form (KR)
+    // ===== PERSONAL INFO FORM (KR) =====
     crew_code: "승무원 코드",
     position: "직위",
     hire_date: "고용일",
     name_korean: "이름 (한국어)",
     name_english: "이름 (영어)",
     name_chinese: "이름 (중국어)",
-    address_1: "주소 1",
-    address_2: "주소 2",
+    address_eng: "주소 (영어)",
+    address_korean: "주소 (한국어)",
     mobile: "휴대폰 번호",
     emergency_1: "비상 연락처 1",
     emergency_2: "비상 연락처 2",
@@ -486,7 +514,35 @@ const translations = {
     contract_period: "고용 계약 기간",
     preview: "미리보기",
     choose_file: "파일 선택",
-    select_option: "선택...",
+    passport: "여권",
+
+    // ===== PLACEHOLDERS =====
+    select_option: "선택하세요",
+    select_position: "직급을 선택하세요",
+    select_nationality: "국적을 선택하세요",
+    enter_license: "면허 번호를 입력하세요",
+    enter_passport: "여권 번호를 입력하세요",
+    enter_telecom: "통신 면허를 입력하세요",
+    enter_physical: "건강검진 일자를 입력하세요",
+    enter_handbook: "선원 수첩 번호를 입력하세요",
+    enter_contract: "계약 기간을 입력하세요",
+
+    // ===== TAB PILLS =====
+    tab_personal_info: "개인 정보",
+    tab_qualifications: "자격",
+    tab_appointment: "임명",
+    tab_replacement: "교체",
+    tab_payment: "결제",
+    tab_family: "가족",
+    tab_injury: "부상",
+    tab_health: "건강",
+    tab_experiences: "경력",
+    tab_evaluation: "평가",
+    tab_certificates: "자격증",
+    tab_accident: "사고",
+    crew_profile_sections: "승무원 프로필 섹션",
+      new_person: "새 직원", 
+    add_new_crew: "새 승무원 추가",
   },
 };
 

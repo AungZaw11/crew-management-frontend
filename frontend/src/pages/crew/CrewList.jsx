@@ -14,32 +14,73 @@ import {
   Anchor,
   UserCheck,
   AlertCircle,
+  Search,
 } from "lucide-react";
 import { useCrew } from "../../context/CrewContext";
 import LoadingSpinner from "../../components/common/LoadingSpinner";
 import ActionMenu from "../../components/ui/ActionMenu";
+import Pagination from "../../components/ui/Pagination";
 import { useLanguage } from "../../context/LanguageContext";
 
 export default function CrewList() {
   const navigate = useNavigate();
   const { t } = useLanguage();
   const { crews, loading, totalCrews, fetchCrews, deleteCrew } = useCrew();
+  
+  // States
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedRank, setSelectedRank] = useState("");
-  const [currentPage, setCurrentPage] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(10); // ← Overview အတိုင်း 10 ထားပါ
 
+  // Fetch all crews (not paginated from API)
   useEffect(() => {
-    fetchCrews(currentPage, 20, selectedRank);
-  }, [currentPage, selectedRank]);
+    fetchCrews(0, 1000, selectedRank); // ← Get all data at once
+  }, [selectedRank]);
 
+  // Filter crews by search term
+  const filteredCrews = crews.filter((member) => {
+    const search = searchTerm.toLowerCase();
+    return (
+      (member.name || "").toLowerCase().includes(search) ||
+      (member.crew_code || "").toLowerCase().includes(search) ||
+      (member.vessel || "").toLowerCase().includes(search)
+    );
+  });
+
+  // Get current page data (Overview style)
+  const getCurrentPageData = () => {
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    return filteredCrews.slice(startIndex, endIndex);
+  };
+
+  const currentData = getCurrentPageData();
+  const totalItems = filteredCrews.length;
+  const totalPages = Math.ceil(totalItems / itemsPerPage);
+
+  // Handle page change
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
+
+  // Handle delete
   const handleDelete = async (id) => {
     const success = await deleteCrew(id);
-    if (success) fetchCrews(currentPage, 20, selectedRank);
+    if (success) {
+      fetchCrews(0, 1000, selectedRank); // ← Refresh data
+    }
+  };
+
+  // Handle search
+  const handleSearch = (e) => {
+    setSearchTerm(e.target.value);
+    setCurrentPage(1); // ← Reset to first page when searching
   };
 
   // ==================== EXPORT TO EXCEL ====================
   const handleExportToExcel = () => {
-    const exportData = crews.map((member, index) => ({
+    const exportData = currentData.map((member, index) => ({
       No: member.no || String(index + 1).padStart(2, "0"),
       "Boarding Vessel": member.vessel || "HS Glory",
       Rank: member.rank || "Deck",
@@ -156,6 +197,8 @@ export default function CrewList() {
         </div>
       </div>
 
+      
+
       {/* Filter Bar & Table Card */}
       <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
         {/* Filter Bar */}
@@ -242,7 +285,7 @@ export default function CrewList() {
               </tr>
             </thead>
             <tbody>
-              {crews.length === 0 ? (
+              {currentData.length === 0 ? (
                 <tr>
                   <td
                     colSpan="10"
@@ -252,9 +295,9 @@ export default function CrewList() {
                   </td>
                 </tr>
               ) : (
-                crews.map((member, i) => (
+                currentData.map((member, i) => (
                   <tr
-                    key={member.id}
+                    key={member.id || i}
                     className={`border-b border-gray-100 hover:bg-gray-50/50 transition-colors ${
                       i % 2 === 0 ? "bg-white" : "bg-gray-50/30"
                     }`}
@@ -284,7 +327,11 @@ export default function CrewList() {
                       {member.type || member.rank}
                     </td>
                     <td
-                      className={`px-4 py-3 text-sm font-semibold ${member.remaining < 0 ? "text-accent-red" : "text-text-dark"}`}
+                      className={`px-4 py-3 text-sm font-semibold ${
+                        member.remaining < 0 || (member.remaining !== undefined && member.remaining < 0)
+                          ? "text-accent-red"
+                          : "text-text-dark"
+                      }`}
                     >
                       {member.remaining !== undefined
                         ? member.remaining
@@ -300,36 +347,17 @@ export default function CrewList() {
           </table>
         </div>
 
-        {/* Pagination */}
+        {/* Pagination - Overview style */}
         <div className="px-4 py-3 border-t border-gray-200 flex justify-between items-center">
           <p className="text-sm text-text-light">
-            {t("showing") || "Showing"} {crews.length} {t("of") || "of"}{" "}
-            {totalCrews} {t("entries") || "entries"}
+            {t("showing") || "Showing"} {currentData.length} {t("of") || "of"}{" "}
+            {totalItems} {t("entries") || "entries"}
           </p>
-          <div className="flex items-center gap-1">
-            <button
-              className="px-3 py-1 rounded-lg border border-gray-200 text-sm text-text-main hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
-              disabled
-            >
-              {t("previous") || "Previous"}
-            </button>
-            <button className="px-3 py-1 rounded-lg bg-brand-dark text-white text-sm font-medium">
-              1
-            </button>
-            <button className="px-3 py-1 rounded-lg border border-gray-200 text-sm text-text-main hover:bg-gray-50">
-              2
-            </button>
-            <button className="px-3 py-1 rounded-lg border border-gray-200 text-sm text-text-main hover:bg-gray-50">
-              3
-            </button>
-            <span className="px-2 text-text-light">...</span>
-            <button className="px-3 py-1 rounded-lg border border-gray-200 text-sm text-text-main hover:bg-gray-50">
-              99
-            </button>
-            <button className="px-3 py-1 rounded-lg border border-gray-200 text-sm text-text-main hover:bg-gray-50">
-              {t("next") || "Next"}
-            </button>
-          </div>
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={handlePageChange}
+          />
         </div>
       </div>
     </div>

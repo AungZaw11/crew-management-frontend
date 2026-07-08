@@ -1,11 +1,11 @@
 // src/pages/crew/CrewForm.jsx
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import { useCrew } from "../../context/CrewContext";
 import { useLanguage } from "../../context/LanguageContext";
-import { toast } from "react-toastify";
+import LoadingSpinner from "../../components/common/LoadingSpinner";
 import { SubHeader } from "../../components/crew/SubHeader";
-import { TabPills, TABS } from "../../components/crew/TabPills";
+import { TabPills, TAB_KEYS } from "../../components/crew/TabPills";
 import PersonalInfoForm from "../../components/crew/PersonalInfoForm";
 
 function OtherTab({ tabName }) {
@@ -17,38 +17,100 @@ function OtherTab({ tabName }) {
 }
 
 export default function CrewForm() {
+  const { id } = useParams();
   const navigate = useNavigate();
   const { t } = useLanguage();
-  const { addCrew } = useCrew();
-  const [loading, setLoading] = useState(false);
-  const [activeTab, setActiveTab] = useState("Personal Info");
-  const [formData, setFormData] = useState({
+  const { getCrewById, createCrew, updateCrew } = useCrew();
+  const [crewMember, setCrewMember] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState(TAB_KEYS[0]);
+
+  const isNewMode = id === "new" || !id;
+  const isEditing = true;
+
+  const emptyCrew = {
     crew_code: "",
+    rank: "",
+    hire_date: "",
     name_kor: "",
     name_eng: "",
-    rank: "",
-    nationality: "Myanmar",
-    phone: "",
-    email: "",
+    name_chinese: "",
     address: "",
+    address_kor: "",
+    phone: "",
+    mobile: "",
+    email: "",
+    emergency_1: "",
+    emergency_2: "",
+    resident_id: "",
     birth_date: "",
-    hire_date: "",
+    nationality: "",
+    religion: "",
+    education_university: "",
+    education_school: "",
     vessel: "",
+    waist: "",
+    safety_shoes: "",
+    garments: "",
+    drinking: "",
+    smoking: "",
+    monthly_position: "",
+    chemical: "",
+    tanker: "",
+    watch_office: "",
     note: "",
-  });
+    mariners_license: "",
+    passport: "",
+    telecom_license: "",
+    physical_exam: "",
+    seaman_handbook: "",
+    contract_period: "",
+  };
 
-  const handleChange = (field, value) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
+  useEffect(() => {
+    const loadCrew = async () => {
+      if (isNewMode) {
+        setCrewMember(emptyCrew);
+        setLoading(false);
+        return;
+      }
+
+      if (id) {
+        const data = await getCrewById(id);
+        if (data) {
+          setCrewMember(data);
+        } else {
+          navigate("/crew");
+        }
+      }
+      setLoading(false);
+    };
+    loadCrew();
+  }, [id]);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setCrewMember((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
   const handleSave = async () => {
-    setLoading(true);
-    const result = await addCrew(formData);
-    if (result) {
-      toast.success("✅ Crew registered successfully!");
+    try {
+      if (isNewMode) {
+        await createCrew(crewMember);
+      } else {
+        await updateCrew(id, crewMember);
+      }
       navigate("/crew");
+    } catch (error) {
+      console.error("Failed to save crew:", error);
     }
-    setLoading(false);
+  };
+
+  const handleCancel = () => {
+    navigate("/crew");
   };
 
   const handleBack = () => {
@@ -56,41 +118,44 @@ export default function CrewForm() {
   };
 
   const handleAddNew = () => {
-    // Already on add new page
+    navigate("/crew/new");
   };
 
+  if (loading) return <LoadingSpinner />;
+  if (!crewMember)
+    return <div className="text-center py-10">Crew not found</div>;
+
+ 
+  const crewLabel = isNewMode
+    ? t("new_person") || "New Person"  
+    : `${crewMember.name_kor || ""} [${crewMember.crew_code || ""}] - ${crewMember.rank || ""} - ${crewMember.vessel || ""}`;
+
   const renderTabContent = () => {
-    switch (activeTab) {
-      case "Personal Info":
-        return (
-          <PersonalInfoForm
-            crewMember={formData}
-            isEditing={true}
-            onChange={handleChange}
-            onSave={handleSave}
-            onCancel={handleBack}
-          />
-        );
-      default:
-        return <OtherTab tabName={activeTab} />;
+    if (activeTab === TAB_KEYS[0]) {
+      return (
+        <PersonalInfoForm
+          crewMember={crewMember}
+          isEditing={isEditing}
+          onChange={handleChange}
+          onSave={handleSave}
+          onCancel={handleCancel}
+        />
+      );
     }
+    return <OtherTab tabName={activeTab} />;
   };
 
   return (
     <div className="flex flex-col bg-white min-h-screen">
-      {/* SubHeader - New Person */}
       <SubHeader
         onBack={handleBack}
         onAddNew={handleAddNew}
-        crewLabel="New Person"
-        isNew={true}
-        showAddNew={false}
+        crewLabel={crewLabel}
+        showAddNew={!isNewMode}
       />
 
-      {/* TabPills - 12 Tabs */}
       <TabPills activeTab={activeTab} setActiveTab={setActiveTab} />
 
-      {/* Tab Content */}
       <div className="flex-1 bg-white">{renderTabContent()}</div>
     </div>
   );

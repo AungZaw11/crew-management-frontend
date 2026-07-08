@@ -1,88 +1,11 @@
 // src/components/crew/PersonalInfoForm.jsx
-import React from "react";
-import { ChevronDown, CheckSquare, User } from "lucide-react";
+import React, { useState, useRef } from "react";
+import { User, CheckSquare, Upload, X } from "lucide-react";
 import { useLanguage } from "../../context/LanguageContext";
+import FormField from "../ui/FormField";
+import toastHelper from "../../utils/toastHelper";
 
-function Field({
-  label,
-  value,
-  placeholder,
-  type = "text",
-  suffix,
-  className,
-  isEditing = true,
-  options = [],
-  onChange,
-  name,
-}) {
-  const { t } = useLanguage();
-
-  const handleChange = (e) => {
-    if (onChange) {
-      onChange(name || label, e.target.value);
-    }
-  };
-
-  return (
-    <div className={`flex flex-col gap-1.5 ${className || ""}`}>
-      <label className="text-sm text-black">{label}</label>
-      <div className="relative">
-        {isEditing ? (
-          type === "select" ? (
-            <select
-              value={value || ""}
-              onChange={handleChange}
-              className="h-10 w-full rounded border border-gray-200 bg-[#FBFDFF] px-4 pr-9 text-sm text-[#3C5065] placeholder:text-gray-400 focus:border-[#002F67] focus:outline-none focus:ring-1 focus:ring-[#002F67] appearance-none"
-            >
-              <option value="">{t("select_option") || "Select..."}</option>
-              {options.map((opt) => (
-                <option key={opt} value={opt}>
-                  {opt}
-                </option>
-              ))}
-            </select>
-          ) : type === "date" ? (
-            <input
-              type="date"
-              value={value || ""}
-              onChange={handleChange}
-              className="h-10 w-full rounded border border-gray-200 bg-[#FBFDFF] px-4 pr-9 text-sm text-[#3C5065] placeholder:text-gray-400 focus:border-[#002F67] focus:outline-none focus:ring-1 focus:ring-[#002F67]"
-            />
-          ) : type === "textarea" ? (
-            <textarea
-              value={value || ""}
-              onChange={handleChange}
-              rows={3}
-              className="h-auto w-full rounded border border-gray-200 bg-[#FBFDFF] px-4 pr-9 text-sm text-[#3C5065] placeholder:text-gray-400 focus:border-[#002F67] focus:outline-none focus:ring-1 focus:ring-[#002F67]"
-            />
-          ) : (
-            <input
-              type="text"
-              value={value || ""}
-              onChange={handleChange}
-              placeholder={placeholder}
-              className="h-10 w-full rounded border border-gray-200 bg-[#FBFDFF] px-4 pr-9 text-sm text-[#3C5065] placeholder:text-gray-400 focus:border-[#002F67] focus:outline-none focus:ring-1 focus:ring-[#002F67]"
-            />
-          )
-        ) : (
-          <div className="h-10 w-full rounded border border-gray-200 bg-gray-50 px-4 py-2 text-sm text-[#3C5065] flex items-center">
-            {value || <span className="text-gray-400">—</span>}
-          </div>
-        )}
-
-        {type === "select" && isEditing && (
-          <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#3C5065]" />
-        )}
-        {suffix && (
-          <span className="absolute right-0 top-1/2 flex h-full -translate-y-1/2 items-center border-l border-[#E3E8ED] px-4 text-sm text-black">
-            {suffix}
-          </span>
-        )}
-      </div>
-    </div>
-  );
-}
-
+// ==================== SECTION HEADER ====================
 function SectionHeader({ title }) {
   return (
     <div className="flex items-center bg-[#EFF6FF] px-6 py-2.5">
@@ -91,6 +14,7 @@ function SectionHeader({ title }) {
   );
 }
 
+// ==================== MAIN COMPONENT ====================
 export default function PersonalInfoForm({
   crewMember = {},
   isEditing = true,
@@ -99,68 +23,233 @@ export default function PersonalInfoForm({
   onCancel,
 }) {
   const { t } = useLanguage();
+  const [errors, setErrors] = useState({});
+  const [avatarPreview, setAvatarPreview] = useState(null);
+  const [avatarFile, setAvatarFile] = useState(null);
+  const fileInputRef = useRef(null);
+
+  // ===== FILE UPLOAD HANDLER =====
+  const handleFileUpload = (event) => {
+    const file = event.target.files[0];
+    
+    if (!file) return;
+
+    // Check file type
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/jpg'];
+    const fileExtension = file.name.split('.').pop().toLowerCase();
+    const allowedExtensions = ['jpg', 'jpeg', 'png', 'webp'];
+
+    if (!allowedTypes.includes(file.type) && !allowedExtensions.includes(fileExtension)) {
+      toastHelper.error('Only JPG, PNG, JPEG, and WEBP files are allowed!');
+      event.target.value = '';
+      return;
+    }
+
+    // Check file size (5MB = 5 * 1024 * 1024 bytes)
+    const maxSize = 5 * 1024 * 1024;
+    if (file.size > maxSize) {
+      toastHelper.error('File size must be less than 5MB!');
+      event.target.value = '';
+      return;
+    }
+
+    // File is valid, create preview
+    setAvatarFile(file);
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      setAvatarPreview(e.target.result);
+      toastHelper.success('Image uploaded successfully!');
+    };
+    reader.readAsDataURL(file);
+
+    // Trigger onChange for parent component
+    if (onChange) {
+      onChange({
+        target: {
+          name: 'avatar',
+          value: file
+        }
+      });
+    }
+  };
+
+  // ===== REMOVE AVATAR =====
+  const handleRemoveAvatar = () => {
+    setAvatarPreview(null);
+    setAvatarFile(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+    toastHelper.info('Avatar removed');
+  };
+
+  // ===== VALIDATION FUNCTION =====
+  const validate = () => {
+    const newErrors = {};
+    const errorMessages = [];
+
+    const requiredFields = [
+      { key: 'crew_code', label: 'Crew Code' },
+      { key: 'rank', label: 'Position' },
+      { key: 'hire_date', label: 'Hire Date' },
+      { key: 'address', label: 'Address' },
+      { key: 'phone', label: 'Phone Number' },
+      { key: 'mobile', label: 'Mobile Number' },
+      { key: 'email', label: 'Email Address' },
+      { key: 'birth_date', label: 'Birth Date' },
+      { key: 'nationality', label: 'Nationality' },
+      { key: 'vessel', label: 'Boarding Vessel' },
+      { key: 'resident_id', label: 'Resident Number' },
+    ];
+
+    let hasError = false;
+
+    requiredFields.forEach((field) => {
+      const value = crewMember[field.key];
+      if (!value || value.trim() === '') {
+        newErrors[field.key] = `${field.label} is required`;
+        errorMessages.push(`${field.label} is required`);
+        hasError = true;
+      }
+    });
+
+    if (crewMember.email && !/\S+@\S+\.\S+/.test(crewMember.email)) {
+      newErrors.email = 'Please enter a valid email address';
+      errorMessages.push('Please enter a valid email address');
+      hasError = true;
+    }
+
+    setErrors(newErrors);
+
+    if (hasError) {
+      toastHelper.validation(newErrors);
+    }
+
+    return !hasError;
+  };
+
+  // ===== HANDLE SAVE =====
+  const handleSave = () => {
+    if (validate()) {
+      const toastId = toastHelper.loading('Saving crew...');
+      
+      try {
+        onSave();
+        toastHelper.updateLoadingToSuccess(toastId, 'Crew saved successfully!');
+      } catch (error) {
+        toastHelper.updateLoadingToError(toastId, 'Failed to save crew');
+      }
+    } else {
+      const firstError = document.querySelector('.border-red-500');
+      if (firstError) {
+        firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        firstError.focus();
+      }
+    }
+  };
 
   return (
     <div className="flex-1 bg-white px-6 py-8 md:px-10">
       <div className="overflow-hidden rounded-md border border-gray-200 bg-white shadow-[0px_4px_4px_rgba(79,129,189,0.25)]">
+        
         {/* ===== Personal Information ===== */}
         <SectionHeader title={t("personal_info") || "Personal Information"} />
         <div className="flex flex-col gap-8 border-b border-gray-200 p-6 lg:flex-row">
           {/* Avatar */}
           <div className="flex flex-col items-center gap-3">
-            <div className="flex h-[162px] w-[140px] items-center justify-center rounded bg-gray-200">
-              <User className="h-16 w-16 text-gray-400" />
+            <div className="relative flex h-[162px] w-[140px] items-center justify-center rounded bg-gray-200 overflow-hidden">
+              {avatarPreview ? (
+                <img 
+                  src={avatarPreview} 
+                  alt="Avatar" 
+                  className="h-full w-full object-cover"
+                />
+              ) : (
+                <User className="h-16 w-16 text-gray-400" />
+              )}
+              {isEditing && avatarPreview && (
+                <button
+                  onClick={handleRemoveAvatar}
+                  className="absolute top-1 right-1 p-1 bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              )}
             </div>
             {isEditing && (
-              <button className="rounded-md border border-[#3C5065] px-6 py-1.5 text-xs font-semibold text-[#3C5065] hover:bg-slate-50">
-                {t("choose_file") || "Choose File"}
-              </button>
+              <div className="flex flex-col items-center gap-2">
+                <input
+                  type="file"
+                  ref={fileInputRef}
+                  onChange={handleFileUpload}
+                  accept=".jpg,.jpeg,.png,.webp"
+                  className="hidden"
+                  id="avatar-upload"
+                />
+                <label
+                  htmlFor="avatar-upload"
+                  className="flex items-center gap-2 rounded-md border border-[#3C5065] px-4 py-1.5 text-xs font-semibold text-[#3C5065] hover:bg-slate-50 cursor-pointer transition-colors"
+                >
+                  <Upload className="w-3 h-3" />
+                  {t("choose_file") || "Choose File"}
+                </label>
+                <p className="text-[10px] text-gray-400">
+                  JPG, PNG, WEBP (Max 5MB)
+                </p>
+              </div>
             )}
           </div>
 
           {/* Fields */}
           <div className="grid flex-1 grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
-            <Field
+            <FormField
               label={t("crew_code") || "Crew Code"}
               value={crewMember.crew_code}
               onChange={onChange}
               name="crew_code"
               isEditing={isEditing}
+              required={true}
+              error={errors.crew_code}
             />
-            <Field
-              label={t("name_korean") || "Name (Korean)"}
-              value={crewMember.name_kor || "캬우 소 아웅"}
-              onChange={onChange}
-              name="name_kor"
-              isEditing={isEditing}
-            />
-            <Field
-              label={t("name_english") || "Name (English)"}
-              value={crewMember.name_eng || "Mg Mg"}
-              onChange={onChange}
-              name="name_eng"
-              isEditing={isEditing}
-            />
-            <Field
+            <FormField
               label={t("position") || "Position"}
-              value={crewMember.rank || "Pilot"}
+              value={crewMember.rank || ""}
               onChange={onChange}
               name="rank"
               type="select"
               options={["Pilot", "Chief Officer", "Able Seaman", "Engineer"]}
+              placeholder={t("select_position") || "Please select position"}
               isEditing={isEditing}
+              required={true}
+              error={errors.rank}
             />
-            <Field
+            <FormField
               label={t("hire_date") || "Hire Date"}
-              value={crewMember.hire_date || "2025-05-11"}
+              value={crewMember.hire_date || ""}
               onChange={onChange}
               name="hire_date"
               type="date"
               isEditing={isEditing}
+              required={true}
+              error={errors.hire_date}
             />
-            <Field
+            <FormField
+              label={t("name_korean") || "Name (Korean)"}
+              value={crewMember.name_kor || ""}
+              onChange={onChange}
+              name="name_kor"
+              isEditing={isEditing}
+            />
+            <FormField
+              label={t("name_english") || "Name (English)"}
+              value={crewMember.name_eng || ""}
+              onChange={onChange}
+              name="name_eng"
+              isEditing={isEditing}
+            />
+            <FormField
               label={t("name_chinese") || "Name (Chinese)"}
-              value="觉梭昂"
+              value=""
               onChange={onChange}
               name="name_chinese"
               isEditing={isEditing}
@@ -172,63 +261,75 @@ export default function PersonalInfoForm({
         <SectionHeader title={t("contact_info") || "Contact Information"} />
         <div className="border-b border-gray-200 p-6">
           <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-            <Field
-              label={t("address_1") || "Address 1"}
-              value={crewMember.address}
+            <FormField
+              label={t("address_eng") || "Address (English)"}
+              value={crewMember.address || ""}
               onChange={onChange}
               name="address"
               isEditing={isEditing}
+              required={true}
+              error={errors.address}
             />
-            <Field
-              label={t("address_2") || "Address 2"}
-              value=""
+            <FormField
+              label={t("address_korean") || "Address (Korean)"}
+              value={crewMember.address_kor || ""}
               onChange={onChange}
-              name="address_2"
+              name="address_kor"  
               isEditing={isEditing}
-            />
+              required={true}
+              error={errors.address_kor}
+            /> 
           </div>
           <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
-            <Field
+            <FormField
               label={t("phone") || "Phone Number"}
-              value={crewMember.phone || "+95 987 654 321"}
+              value={crewMember.phone || ""}
               onChange={onChange}
               name="phone"
               isEditing={isEditing}
+              required={true}
+              error={errors.phone}
             />
-            <Field
+            <FormField
               label={t("mobile") || "Mobile Number"}
-              value="+95 987 654 321"
+              value={crewMember.mobile || ""}
               onChange={onChange}
               name="mobile"
               isEditing={isEditing}
+              required={true}
+              error={errors.mobile}
             />
-            <Field
+            <FormField
               label={t("email") || "Email Address"}
-              value={crewMember.email || "kyawsoe1@gmail.com"}
+              value={crewMember.email || ""}
               onChange={onChange}
               name="email"
               isEditing={isEditing}
+              required={true}
+              error={errors.email}
             />
-            <Field
+            <FormField
               label={t("emergency_1") || "Emergency Contact 1"}
-              value="+95 999 888 777"
+              value=""
               onChange={onChange}
               name="emergency_1"
               isEditing={isEditing}
             />
-            <Field
+            <FormField
               label={t("emergency_2") || "Emergency Contact 2"}
-              value="+95 999 888 777"
+              value=""
               onChange={onChange}
               name="emergency_2"
               isEditing={isEditing}
             />
-            <Field
+            <FormField
               label={t("resident_id") || "Resident Registration Number"}
-              value="011 4412"
+              value=""
               onChange={onChange}
               name="resident_id"
+              required={true}
               isEditing={isEditing}
+              error={errors.resident_id}
             />
           </div>
         </div>
@@ -237,52 +338,59 @@ export default function PersonalInfoForm({
         <SectionHeader title={t("details_info") || "Details Information"} />
         <div className="p-6">
           <div className="grid grid-cols-1 gap-x-8 gap-y-6 md:grid-cols-2 xl:grid-cols-3">
-            <Field
+            <FormField
               label={t("birth_date") || "Birth Date"}
-              value={crewMember.birth_date}
+              value={crewMember.birth_date || ""}
               onChange={onChange}
               name="birth_date"
               type="date"
               isEditing={isEditing}
+              required={true}
+              error={errors.birth_date}
             />
-            <Field
+            <FormField
               label={t("nationality") || "Nationality"}
-              value={crewMember.nationality || "Myanmar"}
+              value={crewMember.nationality || ""}
               onChange={onChange}
               name="nationality"
               type="select"
               options={["Myanmar", "Korean", "Other"]}
+              placeholder={t("select_nationality") || "Please select nationality"}
               isEditing={isEditing}
+              required={true}
+              error={errors.nationality}
             />
-            <Field
+            <FormField
               label={t("religion") || "Religion"}
               value=""
               onChange={onChange}
-              name="religion"
+              name="Religion"
               isEditing={isEditing}
             />
-            <Field
+            <FormField
               label={t("education_university") || "Education(University)"}
-              value="011 4412"
+              value=""
               onChange={onChange}
               name="education_university"
               isEditing={isEditing}
             />
-            <Field
+            <FormField
               label={t("education_school") || "Education(School)"}
               value=""
               onChange={onChange}
               name="education_school"
               isEditing={isEditing}
             />
-            <Field
+            <FormField
               label={t("boarding_vessel") || "Boarding Vessel"}
-              value={crewMember.vessel || "Sun Rio"}
+              value={crewMember.vessel || ""}
               onChange={onChange}
               name="vessel"
+              required={true}
               isEditing={isEditing}
+              error={errors.vessel}
             />
-            <Field
+            <FormField
               label={t("waist") || "Waist"}
               suffix="inch"
               value=""
@@ -290,7 +398,7 @@ export default function PersonalInfoForm({
               name="waist"
               isEditing={isEditing}
             />
-            <Field
+            <FormField
               label={t("safety_shoes") || "Safety Shoes"}
               suffix="mm"
               value=""
@@ -298,21 +406,21 @@ export default function PersonalInfoForm({
               name="safety_shoes"
               isEditing={isEditing}
             />
-            <Field
+            <FormField
               label={t("garments") || "Garments"}
               value=""
               onChange={onChange}
               name="garments"
               isEditing={isEditing}
             />
-            <Field
+            <FormField
               label={t("drinking") || "Drinking (Capacity)"}
               value=""
               onChange={onChange}
               name="drinking"
               isEditing={isEditing}
             />
-            <Field
+            <FormField
               label={t("smoking") || "Smoking"}
               value=""
               onChange={onChange}
@@ -325,35 +433,35 @@ export default function PersonalInfoForm({
                 {t("long_service") || "long service"}
               </label>
             </div>
-            <Field
+            <FormField
               label={t("monthly_position") || "Monthly Position"}
               value=""
               onChange={onChange}
               name="monthly_position"
               isEditing={isEditing}
             />
-            <Field
+            <FormField
               label={t("chemical") || "Chemical"}
               value=""
               onChange={onChange}
               name="chemical"
               isEditing={isEditing}
             />
-            <Field
+            <FormField
               label={t("tanker") || "Tanker"}
               value=""
               onChange={onChange}
               name="tanker"
               isEditing={isEditing}
             />
-            <Field
+            <FormField
               label={t("watch_office") || "Watch Office"}
               value=""
               onChange={onChange}
               name="watch_office"
               isEditing={isEditing}
             />
-            <Field
+            <FormField
               label={t("note") || "Note"}
               value={crewMember.note}
               onChange={onChange}
@@ -368,47 +476,57 @@ export default function PersonalInfoForm({
         {/* ===== Documents ===== */}
         <div className="border-t border-gray-200 bg-[#FBFDFF] p-6">
           <div className="grid grid-cols-1 gap-x-8 gap-y-6 md:grid-cols-2 xl:grid-cols-3">
-            <Field
-              label={t("mariners_license") || "Mariner's license"}
-              value=""
+            <FormField
+              label={t("mariners_license") || "Mariner's License"}
+              value={crewMember.mariners_license || ""}
               onChange={onChange}
               name="mariners_license"
               isEditing={isEditing}
+              required={false}
+              error={errors.mariners_license}
+              placeholder={t("enter_license") || "Enter license number"}
             />
-            <Field
+            <FormField
               label={t("passport") || "Passport"}
-              value={crewMember.passport || "MJ 652214"}
+              value={crewMember.passport || ""}
               onChange={onChange}
               name="passport"
               isEditing={isEditing}
+              required={false}
+              error={errors.passport}
+              placeholder={t("enter_passport") || "Enter passport number"}
             />
-            <Field
+            <FormField
               label={t("telecom_license") || "Telecommunications License"}
               value=""
               onChange={onChange}
               name="telecom_license"
               isEditing={isEditing}
+              placeholder={t("enter_telecom") || "Enter telecom license"}
             />
-            <Field
+            <FormField
               label={t("physical_exam") || "Physical Examination"}
-              value="[Medical] (2026-07-14) [DAA] (2025-02-22)"
+              value=""
               onChange={onChange}
               name="physical_exam"
               isEditing={isEditing}
+              placeholder={t("enter_physical") || "Enter physical exam date"}
             />
-            <Field
+            <FormField
               label={t("seaman_handbook") || "Seaman's Handbook"}
-              value="[SB(PN)] PA0245257 (2028-02-24)[SB(MM)] 61149 (2028-05-09)"
+              value=""
               onChange={onChange}
               name="seaman_handbook"
               isEditing={isEditing}
+              placeholder={t("enter_handbook") || "Enter handbook number"}
             />
-            <Field
+            <FormField
               label={t("contract_period") || "Employment Contract Period"}
-              value="2026-03-07 - 2026-07-31"
+              value=""
               onChange={onChange}
               name="contract_period"
               isEditing={isEditing}
+              placeholder={t("enter_contract") || "Enter contract period"}
             />
           </div>
         </div>
@@ -416,10 +534,7 @@ export default function PersonalInfoForm({
 
       {/* ===== Action Bar ===== */}
       {isEditing && (
-        <div className="mt-8 flex flex-wrap items-center justify-between gap-4">
-          <button className="rounded-md border border-[#3C5065] bg-[#E5E7EB] px-8 py-2.5 text-xs font-semibold text-[#3C5065] hover:bg-gray-300">
-            {t("preview") || "Preview"}
-          </button>
+        <div className="mt-8 flex flex-wrap items-center justify-end gap-4">
           <div className="flex items-center gap-4">
             <button
               onClick={onCancel}
@@ -428,7 +543,7 @@ export default function PersonalInfoForm({
               {t("cancel") || "Cancel"}
             </button>
             <button
-              onClick={onSave}
+              onClick={handleSave}
               className="rounded-md bg-[#002F67] px-10 py-2.5 text-sm font-medium text-white hover:bg-[#00397e]"
             >
               {t("save") || "Save"}

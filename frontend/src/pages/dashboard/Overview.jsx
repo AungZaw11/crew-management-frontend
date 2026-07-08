@@ -1,5 +1,5 @@
 // src/pages/dashboard/Overview.jsx
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
@@ -109,6 +109,26 @@ const TABLE_DATA = [
 export default function Overview() {
   const navigate = useNavigate();
   const { t } = useLanguage();
+  
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(10);
+  const totalItems = TABLE_DATA.length;
+  const totalPages = Math.ceil(totalItems / itemsPerPage);
+
+  // Get current page data
+  const getCurrentPageData = () => {
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    return TABLE_DATA.slice(startIndex, endIndex);
+  };
+
+  const currentData = getCurrentPageData();
+
+  // Handle page change
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
 
   // ==================== EXPORT TO EXCEL ====================
   const handleExportToExcel = () => {
@@ -257,7 +277,7 @@ export default function Overview() {
               </tr>
             </thead>
             <tbody>
-              {TABLE_DATA.map((row, index) => (
+              {currentData.map((row, index) => (
                 <tr
                   key={index}
                   className={`border-b border-border/50 hover:bg-gray-50 transition-colors ${index % 2 === 1 ? "bg-surface-off" : "bg-surface"}`}
@@ -296,8 +316,17 @@ export default function Overview() {
           </table>
         </div>
 
-        <div className="p-4 flex justify-end">
-          <Pagination />
+        {/* Pagination */}
+        <div className="p-4 border-t border-border flex justify-between items-center">
+          <p className="text-sm text-text-light">
+            {t("showing") || "Showing"} {currentData.length} {t("of") || "of"}{" "}
+            {totalItems} {t("entries") || "entries"}
+          </p>
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={handlePageChange}
+          />
         </div>
       </div>
     </div>
