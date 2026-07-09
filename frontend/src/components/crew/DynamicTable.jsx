@@ -23,16 +23,16 @@ export default function DynamicTable({
   const [totalPages, setTotalPages] = useState(1);
   const [totalItems, setTotalItems] = useState(0);
 
-  // ===== CHECKBOX STATE =====
+  
   const [selectedRows, setSelectedRows] = useState([]);
   const [selectAll, setSelectAll] = useState(false);
 
-  // ===== GET DEMO DATA =====
+  
   const getDemoData = () => {
     return DEMO_ROWS[tabName] || [];
   };
 
-  // ===== FETCH DATA FROM API =====
+ 
   const fetchData = async (page = 1) => {
     setLoading(true);
     setError(null);
@@ -56,7 +56,7 @@ export default function DynamicTable({
       }
 
       const endpoint = getEndpoint(tabName);
-      console.log(`🔴 Fetching: /crew/${crewId}/${endpoint}`);
+      console.log(` Fetching: /crew/${crewId}/${endpoint}`);
 
       const response = await api.get(`/crew/${crewId}/${endpoint}`, {
         params: {
@@ -94,7 +94,6 @@ export default function DynamicTable({
     }
   };
 
-  // ===== GET API ENDPOINT =====
   const getEndpoint = (tab) => {
     const endpoints = {
       Appointment: "appointments",

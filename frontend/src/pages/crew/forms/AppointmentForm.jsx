@@ -3,15 +3,13 @@ import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { ChevronDown } from "lucide-react";
 import { useLanguage } from "../../../context/LanguageContext";
-import { SubHeader } from "../../../components/crew/SubHeader";
 
-// ===== DEPLOYMENT DIVISION OPTIONS =====
+// ===== OPTIONS =====
 const DEPLOYMENT_DIVISION_OPTIONS = [
   { value: "sign_on", label: "Sign On" },
   { value: "sign_off", label: "Sign Off" },
 ];
 
-// ===== DEPLOYMENT CONTENT - SIGN ON =====
 const SIGN_ON_CONTENT_OPTIONS = [
   { value: "probation", label: "Probation" },
   { value: "rejoining", label: "Re-Joining" },
@@ -20,7 +18,6 @@ const SIGN_ON_CONTENT_OPTIONS = [
   { value: "paid_leave", label: "Paid Leave (Passenger Ship)" },
 ];
 
-// ===== DEPLOYMENT CONTENT - SIGN OFF =====
 const SIGN_OFF_CONTENT_OPTIONS = [
   { value: "transfer", label: "Transfer" },
   { value: "etc", label: "ETC" },
@@ -37,7 +34,6 @@ const SIGN_OFF_CONTENT_OPTIONS = [
   { value: "sold", label: "SOLD" },
 ];
 
-// ===== RANK OPTIONS =====
 const RANK_OPTIONS = [
   { value: "20", label: "Master" },
   { value: "19", label: "Chief Officer" },
@@ -100,7 +96,6 @@ const RANK_OPTIONS = [
   { value: "86", label: "DAMPER" },
 ];
 
-// ===== SHIP NAME OPTIONS =====
 const SHIP_NAME_OPTIONS = [
   "ORIENTAL STAR",
   "FROM K",
@@ -120,11 +115,9 @@ const SHIP_NAME_OPTIONS = [
   "HS GLORY",
 ];
 
-// ===== LABOR CONTRACT OPTIONS =====
 const CONTRACT_OPTIONS = [
   { value: "permanent", label: "Permanent" },
   { value: "day_worker", label: "Day Worker" },
-  { value: "ratio", label: "Ratio" },
 ];
 
 function FieldLabel({ children, required = false }) {
@@ -164,7 +157,6 @@ export default function AppointmentForm() {
   const handleSave = async () => {
     try {
       console.log("Saving appointment:", formData);
-      // Add your API call here
       navigate(`/crew/${id}`);
     } catch (error) {
       console.error("Failed to save:", error);
@@ -175,34 +167,21 @@ export default function AppointmentForm() {
     navigate(`/crew/${id}`);
   };
 
-  const handleBack = () => {
-    navigate(`/crew/${id}`);
-  };
-
-  const crewLabel = t("new_appointment") || "New Appointment";
-
-  // ===== Check if Sign On or Sign Off =====
   const isSignOn = formData.division === "sign_on";
   const isSignOff = formData.division === "sign_off";
 
-  // ===== Get Content Options based on Division =====
   const getContentOptions = () => {
     if (isSignOn) return SIGN_ON_CONTENT_OPTIONS;
     if (isSignOff) return SIGN_OFF_CONTENT_OPTIONS;
-    return []; // No options when nothing selected
+    return [];
   };
 
   const contentOptions = getContentOptions();
 
   return (
     <div className="flex flex-col bg-white min-h-screen">
-      <SubHeader
-        onBack={handleBack}
-        onAddNew={() => {}}
-        crewLabel={crewLabel}
-        showAddNew={false}
-      />
-
+      {/* ===== SUBHEADER ဖယ်ရှားပြီး ===== */}
+      
       <div className="flex-1 bg-white px-6 py-8 md:px-10">
         <div className="mx-auto max-w-[1152px]">
           <div className="flex items-center rounded-t-md border border-gray-200 bg-[#FBFDFF] px-6 py-3.5">
@@ -213,7 +192,7 @@ export default function AppointmentForm() {
 
           <div className="rounded-b-md border border-t-0 border-gray-200 bg-white p-6 md:p-7">
             <div className="grid grid-cols-1 gap-x-16 gap-y-7 md:grid-cols-2">
-              {/* Deployment Division - Required - Select Box */}
+              {/* Deployment Division - Required */}
               <div className="flex flex-col gap-2.5">
                 <FieldLabel required={true}>
                   {t("deployment_division") || "Deployment Division"}
@@ -239,7 +218,7 @@ export default function AppointmentForm() {
                 </div>
               </div>
 
-              {/* Deployment Content - Required - Conditional Select Box */}
+              {/* Deployment Content */}
               <div className="flex flex-col gap-2.5">
                 <FieldLabel required={true}>
                   {t("deployment_content") || "Deployment Content"}
@@ -274,7 +253,7 @@ export default function AppointmentForm() {
                 )}
               </div>
 
-              {/* Ship Name - Required - Select Box */}
+              {/* Ship Name */}
               <div className="flex flex-col gap-2.5">
                 <FieldLabel required={true}>
                   {t("ship_name") || "Ship's Name"}
@@ -300,7 +279,7 @@ export default function AppointmentForm() {
                 </div>
               </div>
 
-              {/* Rank - Required - Select Box */}
+              {/* Rank */}
               <div className="flex flex-col gap-2.5">
                 <FieldLabel required={true}>
                   {t("rank") || "Rank"}
@@ -326,9 +305,7 @@ export default function AppointmentForm() {
                 </div>
               </div>
 
-              {/* ===== CONDITIONAL DATE FIELDS ===== */}
-              
-              {/* Boarding Date - Show only when Sign On or nothing selected */}
+              {/* Boarding Date - Sign On only */}
               {(isSignOn || !formData.division) && (
                 <div className="flex flex-col gap-2.5">
                   <FieldLabel required={isSignOn}>
@@ -345,7 +322,7 @@ export default function AppointmentForm() {
                 </div>
               )}
 
-              {/* Leaving Date - Show only when Sign Off */}
+              {/* Leaving Date - Sign Off only */}
               {isSignOff && (
                 <div className="flex flex-col gap-2.5">
                   <FieldLabel required={true}>
@@ -362,7 +339,6 @@ export default function AppointmentForm() {
                 </div>
               )}
 
-              
               {/* Place */}
               <div className="flex flex-col gap-2.5">
                 <FieldLabel>

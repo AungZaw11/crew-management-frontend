@@ -3,7 +3,6 @@ import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { ChevronDown } from "lucide-react";
 import { useLanguage } from "../../../context/LanguageContext";
-import { SubHeader } from "../../../components/crew/SubHeader";
 
 // ===== DEPLOYMENT DIVISION OPTIONS =====
 const DEPLOYMENT_DIVISION_OPTIONS = [
@@ -169,8 +168,6 @@ export default function ReplacementForm() {
     navigate(`/crew/${id}`);
   };
 
-  const crewLabel = t("new_replacement") || "New Replacement";
-
   // ===== Check if Sign On or Sign Off =====
   const isSignOn = formData.division === "sign_on";
   const isSignOff = formData.division === "sign_off";
@@ -186,13 +183,8 @@ export default function ReplacementForm() {
 
   return (
     <div className="flex flex-col bg-white min-h-screen">
-      <SubHeader
-        onBack={handleBack}
-        onAddNew={() => {}}
-        crewLabel={crewLabel}
-        showAddNew={false}
-      />
-
+      {/* ===== SUBHEADER ဖယ်ရှားပြီး ===== */}
+      
       <div className="flex-1 bg-white px-6 py-8 md:px-10">
         <div className="mx-auto max-w-[1152px]">
           <div className="flex items-center rounded-t-md border border-gray-200 bg-[#FBFDFF] px-6 py-3.5">
