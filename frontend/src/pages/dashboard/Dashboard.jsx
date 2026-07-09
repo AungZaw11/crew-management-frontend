@@ -178,7 +178,7 @@ function CrewPieChart({ totalCrews, signOn, signOff, t }) {
 }
 
 // ===== EXPIRED CONTRACTS TABLE (Dynamic) =====
-function ExpiredContractsTable({ expiredData, loading, t }) {
+function ExpiredContractsTable({ expiredData, loading, t, onSeeAll }) {
   if (loading) {
     return (
       <div className="flex h-[478px] items-center justify-center rounded-md border border-[#E2E8F0] bg-white">
@@ -187,6 +187,7 @@ function ExpiredContractsTable({ expiredData, loading, t }) {
     );
   }
 
+  // ===== Data မရှိရင်လည်း See All ပါ =====
   if (!expiredData || expiredData.length === 0) {
     return (
       <div className="flex h-[478px] flex-col rounded-md border border-[#E2E8F0] bg-white">
@@ -197,6 +198,12 @@ function ExpiredContractsTable({ expiredData, loading, t }) {
               {t("expired_contracts") || "Expired Contracts"}
             </h2>
           </div>
+          <button
+            onClick={onSeeAll}
+            className="flex items-center gap-1 rounded bg-[#3C5065] px-3 py-1.5 text-xs font-bold text-[#EFF6FF] hover:bg-[#4a6077] transition-colors"
+          >
+            {t("see_all") || "See All"} <ArrowRight size={14} />
+          </button>
         </div>
         <div className="flex flex-1 items-center justify-center text-[#64748B]">
           {t("no_data") || "No expired contracts"}
@@ -205,6 +212,7 @@ function ExpiredContractsTable({ expiredData, loading, t }) {
     );
   }
 
+  // ===== Data ရှိရင်လည်း See All ပါ =====
   return (
     <div className="flex h-[478px] flex-col rounded-md border border-[#E2E8F0] bg-white">
       <div className="flex items-center justify-between border-b border-[#F1F5F9] bg-[#EFF6FF] px-5 py-4">
@@ -214,7 +222,10 @@ function ExpiredContractsTable({ expiredData, loading, t }) {
             {t("expired_contracts") || "Expired Contracts"}
           </h2>
         </div>
-        <button className="flex items-center gap-1 rounded bg-[#3C5065] px-3 py-1.5 text-xs font-bold text-[#EFF6FF]">
+        <button
+          onClick={onSeeAll}
+          className="flex items-center gap-1 rounded bg-[#3C5065] px-3 py-1.5 text-xs font-bold text-[#EFF6FF] hover:bg-[#4a6077] transition-colors"
+        >
           {t("see_all") || "See All"} <ArrowRight size={14} />
         </button>
       </div>
@@ -246,7 +257,7 @@ function ExpiredContractsTable({ expiredData, loading, t }) {
 }
 
 // ===== EXPIRE SOON TABLE (Dynamic) =====
-function ExpireSoonTable({ expireSoonData, loading, t }) {
+function ExpireSoonTable({ expireSoonData, loading, t, onSeeAll }) {
   if (loading) {
     return (
       <div className="flex h-[400px] items-center justify-center rounded-md border border-[#E2E8F0] bg-white">
@@ -255,6 +266,7 @@ function ExpireSoonTable({ expireSoonData, loading, t }) {
     );
   }
 
+  // ===== Data မရှိရင်လည်း See All ပါ =====
   if (!expireSoonData || expireSoonData.length === 0) {
     return (
       <div className="flex flex-col rounded-md border border-[#E2E8F0] bg-white">
@@ -265,6 +277,12 @@ function ExpireSoonTable({ expireSoonData, loading, t }) {
               {t("expire_soon") || "Expire Soon"}
             </h2>
           </div>
+          <button
+            onClick={onSeeAll}
+            className="flex items-center gap-1 rounded bg-[#3C5065] px-3 py-1.5 text-xs font-bold text-[#EFF6FF] hover:bg-[#4a6077] transition-colors"
+          >
+            {t("see_all") || "See All"} <ArrowRight size={14} />
+          </button>
         </div>
         <div className="flex h-[200px] items-center justify-center text-[#64748B]">
           {t("no_data") || "No expire soon records"}
@@ -273,6 +291,7 @@ function ExpireSoonTable({ expireSoonData, loading, t }) {
     );
   }
 
+  // ===== Data ရှိရင်လည်း See All ပါ =====
   return (
     <div className="flex flex-col rounded-md border border-[#E2E8F0] bg-white">
       <div className="flex items-center justify-between border-b border-[#F1F5F9] bg-[#EFF6FF] px-5 py-4">
@@ -282,7 +301,10 @@ function ExpireSoonTable({ expireSoonData, loading, t }) {
             {t("expire_soon") || "Expire Soon"}
           </h2>
         </div>
-        <button className="flex items-center gap-1 rounded bg-[#3C5065] px-3 py-1.5 text-xs font-bold text-[#EFF6FF]">
+        <button
+          onClick={onSeeAll}
+          className="flex items-center gap-1 rounded bg-[#3C5065] px-3 py-1.5 text-xs font-bold text-[#EFF6FF] hover:bg-[#4a6077] transition-colors"
+        >
           {t("see_all") || "See All"} <ArrowRight size={14} />
         </button>
       </div>
@@ -407,11 +429,20 @@ export default function Dashboard() {
     );
   };
 
+  // ===== SEE ALL HANDLERS - Navigate to Crew Management =====
+  const handleSeeAllExpired = () => {
+    navigate("/crew");
+  };
+
+  const handleSeeAllExpireSoon = () => {
+    navigate("/crew");
+  };
+
   return (
     <div className="w-full flex flex-col gap-6">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <h1 className="text-xl font-medium text-text tracking-wide">
+        <h1 className="text-2xl font-bold text-text tracking-wide">
           {t("overview") || "Overview"}
         </h1>
         <div className="flex items-center gap-4">
@@ -421,7 +452,7 @@ export default function Dashboard() {
           </button>
           <button
             onClick={() => navigate("/crew/new")}
-            className="flex items-center gap-2 px-6 py-2 bg-brand-accent rounded-[6px] text-sm text-brand-light hover:bg-brand-navy transition-colors"
+            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-brand-dark text-white hover:bg-brand transition-colors text-sm font-medium"
           >
             <Plus size={16} />
             {t("add_crew") || "Add New"}
@@ -444,6 +475,7 @@ export default function Dashboard() {
           expiredData={expiredData}
           loading={loading}
           t={t}
+          onSeeAll={handleSeeAllExpired}
         />
       </div>
 
@@ -453,6 +485,7 @@ export default function Dashboard() {
           expireSoonData={expireSoonData}
           loading={loading}
           t={t}
+          onSeeAll={handleSeeAllExpireSoon}
         />
       </div>
     </div>

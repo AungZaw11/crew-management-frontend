@@ -40,6 +40,7 @@ const translations = {
     save_record: "Save Record",
     overview: "Overview",
     total: "Total",
+    new_person: "New Person",
 
     // ===== NAVIGATION =====
     dashboard: "Dashboard",
@@ -258,8 +259,6 @@ const translations = {
     preview: "Preview",
     choose_file: "Choose File",
     passport: "Passport",
-    new_person: "New Person",
-    add_new_crew: "Add New Crew",
 
     // ===== PLACEHOLDERS =====
     select_option: "Please select",
@@ -289,12 +288,9 @@ const translations = {
 
     // ===== QUALIFICATION FORM =====
     new_qualification: "New Qualification",
-    certificate_name: "Certificate Name",
     expiration: "Expiration",
     training_date: "Training Date",
-    expire_date: "Expire Date",
     attach_file: "Attach File",
-    license_number: "License Number",
     remarks: "Remarks",
     select_certificate: "Select Certificate...",
     enter_certificate_name: "Enter certificate name",
@@ -417,6 +413,7 @@ const translations = {
     save_record: "기록 저장",
     overview: "개요",
     total: "합계",
+    new_person: "새 직원",
 
     // ===== NAVIGATION =====
     dashboard: "대시보드",
@@ -635,8 +632,6 @@ const translations = {
     preview: "미리보기",
     choose_file: "파일 선택",
     passport: "여권",
-    new_person: "새 직원",
-    add_new_crew: "새 승무원 추가",
 
     // ===== PLACEHOLDERS =====
     select_option: "선택하세요",
@@ -666,12 +661,9 @@ const translations = {
 
     // ===== QUALIFICATION FORM =====
     new_qualification: "새 자격증",
-    certificate_name: "자격증 명",
     expiration: "만료",
     training_date: "교육 일자",
-    expire_date: "만료 일자",
     attach_file: "파일 첨부",
-    license_number: "면허 번호",
     remarks: "비고",
     select_certificate: "자격증을 선택하세요...",
     enter_certificate_name: "자격증 명을 입력하세요",
