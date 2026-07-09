@@ -7,13 +7,17 @@ import { SubHeader } from "../../components/crew/SubHeader";
 import { TabPills, TAB_KEYS } from "../../components/crew/TabPills";
 import PersonalInfoForm from "../../components/crew/PersonalInfoForm";
 import { QualificationCreateForm } from "../../components/crew/QualificationCreateForm";
-import AppointmentForm from "./forms/AppointmentForm"; 
-import ReplacementForm from "./forms/ReplacementForm";
-import PaymentForm from "./forms/PaymentForm";
-import FamilyForm from "./forms/FamilyForm";
-import ExperienceForm from "./forms/ExperienceForm";
-import AccidentForm from "./forms/AccidentForm";
-import EvaluationForm from "./forms/EvaluationForm";
+
+// ===== FORMS - components/crew/forms/ ကနေ import လုပ်ပါ =====
+import AppointmentForm from "../../components/crew/forms/AppointmentForm";
+import ReplacementForm from "../../components/crew/forms/ReplacementForm";
+import PaymentForm from "../../components/crew/forms/PaymentForm";
+import FamilyForm from "../../components/crew/forms/FamilyForm";
+import InjuryForm from "../../components/crew/forms/InjuryForm";
+import HealthForm from "../../components/crew/forms/HealthForm";
+import ExperienceForm from "../../components/crew/forms/ExperienceForm";
+import EvaluationForm from "../../components/crew/forms/EvaluationForm";
+import AccidentForm from "../../components/crew/forms/AccidentForm";
 
 function OtherTab({ tabName }) {
   return (
@@ -104,7 +108,7 @@ export default function CrewCreate() {
     console.log("❌ Qualification cancelled!");
   };
 
-  const crewLabel = t("add_new_crew") || "Add New Crew";
+  const crewLabel = t("new_person") || "New Person";
 
   // ===== RENDER TAB CONTENT =====
   const renderContent = () => {
@@ -130,7 +134,7 @@ export default function CrewCreate() {
 
       case TAB_KEYS[2]: // appointment
         return <AppointmentForm />;
-      
+
       case TAB_KEYS[3]: // replacement
         return <ReplacementForm />;
 
@@ -140,9 +144,15 @@ export default function CrewCreate() {
       case TAB_KEYS[5]: // family
         return <FamilyForm />;
 
-      case TAB_KEYS[8]: // experience
+      case TAB_KEYS[6]: // injury
+        return <InjuryForm />;
+
+      case TAB_KEYS[7]: // health
+        return <HealthForm />;
+
+      case TAB_KEYS[8]: // experiences
         return <ExperienceForm />;
-      
+
       case TAB_KEYS[9]: // evaluation
         return <EvaluationForm />;
 

@@ -259,6 +259,7 @@ const translations = {
     preview: "Preview",
     choose_file: "Choose File",
     passport: "Passport",
+    add_new_crew: "Add New Crew",
 
     // ===== PLACEHOLDERS =====
     select_option: "Please select",
@@ -288,6 +289,7 @@ const translations = {
 
     // ===== QUALIFICATION FORM =====
     new_qualification: "New Qualification",
+    edit_qualification: "Edit Qualification",
     expiration: "Expiration",
     training_date: "Training Date",
     attach_file: "Attach File",
@@ -303,6 +305,7 @@ const translations = {
 
     // ===== APPOINTMENT FORM =====
     new_appointment: "New Appointment",
+    edit_appointment: "Edit Appointment",
     deployment_division: "Deployment Division",
     deployment_content: "Deployment Content",
     ship_name: "Ship's Name",
@@ -311,23 +314,29 @@ const translations = {
     boarding_period: "Boarding Period",
     place: "Place",
     select_division: "Select Division...",
+    select_division_first: "Please select Division first",
     select_deployment_content: "Select Deployment Content...",
     select_ship: "Select Ship...",
     select_rank: "Select Rank...",
     enter_boarding_period: "Enter boarding period",
     enter_place: "Enter place",
+    select_contract: "Select Contract Type...",
 
     // ===== REPLACEMENT FORM =====
     new_replacement: "New Replacement",
+    edit_replacement: "Edit Replacement",
     date: "Date",
+    select_place: "Select Place...",
 
     // ===== PAYMENT FORM =====
     new_payment: "New Payment",
+    edit_payment: "Edit Payment",
     account_holder: "Account Holder",
     select_bank: "Select Bank...",
     enter_account_holder: "Enter account holder name",
     enter_account_number: "Enter account number",
     select_relation: "Select Relation...",
+    select_currency: "Select Currency...",
 
     // ===== FAMILY FORM =====
     family_details: "Family Details",
@@ -339,8 +348,8 @@ const translations = {
     update: "Update",
 
     // ===== EXPERIENCE FORM =====
-    experience: "Experience",
-    add_experience: "Add Experience",
+    new_experience: "New Experience",
+    edit_experience: "Edit Experience",
     company_name: "Company Name",
     area: "Area",
     ship_type: "Ship Type",
@@ -354,9 +363,11 @@ const translations = {
     enter_board_leave: "Enter board/leave",
     enter_grt: "Enter GRT",
     enter_kw: "Enter KW",
+    select_board_leave: "Select Board/Leave...",
 
     // ===== ACCIDENT FORM =====
     add_accident: "Add Accident",
+    edit_accident: "Edit Accident",
     accident_reason: "Accident Reason",
     re_use: "Re-use",
     accident_date: "Accident Date",
@@ -368,12 +379,45 @@ const translations = {
     select_accident_type: "Select Accident Type...",
 
     // ===== EVALUATION FORM =====
+    new_evaluation: "New Evaluation",
+    edit_evaluation: "Edit Evaluation",
     height: "Height",
     shipping: "Shipping",
     performance_evaluation: "Performance Evaluation",
     attachment: "Attachment",
     no_file_chosen: "No file chosen",
     enter_performance_evaluation: "Enter performance evaluation...",
+    enter_evaluator: "Enter evaluator name",
+    enter_period: "e.g., 2024-01 - 2024-12",
+    enter_recommendation: "Enter recommendation",
+    enter_comments: "Enter additional comments",
+    enter_height: "Enter height in cm",
+    enter_shipping: "Enter shipping details",
+    select_rating: "Select Rating...",
+
+    // ===== INJURY FORM =====
+    add_injury: "Add Injury",
+    edit_injury: "Edit Injury",
+    illness: "Illness",
+    medical_name: "Medical Name",
+    hospital: "Hospital",
+    treatment_start_date: "Treatment Start Date",
+    recovery_date: "Recovery Date",
+    public_private: "Public/Private",
+    expense_won: "Expense_won",
+    expense_ex: "Expense_ex",
+    select_type: "Select Type...",
+
+    // ===== HEALTH FORM =====
+    add_health: "Add Health Record",
+    edit_health: "Edit Health Record",
+    size: "Size (H/W)",
+    sight: "Sight (L/R)",
+    hearing: "Hearing (L/R)",
+    blood: "Blood",
+    decision: "Decision",
+    select_blood: "Select Blood Type...",
+    select_decision: "Select Decision...",
   },
 
   kr: {
@@ -632,6 +676,7 @@ const translations = {
     preview: "미리보기",
     choose_file: "파일 선택",
     passport: "여권",
+    add_new_crew: "새 승무원 추가",
 
     // ===== PLACEHOLDERS =====
     select_option: "선택하세요",
@@ -661,6 +706,7 @@ const translations = {
 
     // ===== QUALIFICATION FORM =====
     new_qualification: "새 자격증",
+    edit_qualification: "자격증 수정",
     expiration: "만료",
     training_date: "교육 일자",
     attach_file: "파일 첨부",
@@ -676,6 +722,7 @@ const translations = {
 
     // ===== APPOINTMENT FORM =====
     new_appointment: "새 임명",
+    edit_appointment: "임명 수정",
     deployment_division: "배치 부서",
     deployment_content: "배치 내용",
     ship_name: "선박 이름",
@@ -684,23 +731,29 @@ const translations = {
     boarding_period: "승선 기간",
     place: "장소",
     select_division: "부서를 선택하세요...",
+    select_division_first: "먼저 부서를 선택하세요",
     select_deployment_content: "배치 내용을 선택하세요...",
     select_ship: "선박을 선택하세요...",
     select_rank: "직급을 선택하세요...",
     enter_boarding_period: "승선 기간을 입력하세요",
     enter_place: "장소를 입력하세요",
+    select_contract: "계약 유형을 선택하세요...",
 
     // ===== REPLACEMENT FORM =====
     new_replacement: "새 교체",
+    edit_replacement: "교체 수정",
     date: "일자",
+    select_place: "장소를 선택하세요...",
 
     // ===== PAYMENT FORM =====
     new_payment: "새 결제 정보",
+    edit_payment: "결제 정보 수정",
     account_holder: "예금주",
     select_bank: "은행을 선택하세요...",
     enter_account_holder: "예금주를 입력하세요",
     enter_account_number: "계좌번호를 입력하세요",
     select_relation: "관계를 선택하세요...",
+    select_currency: "통화를 선택하세요...",
 
     // ===== FAMILY FORM =====
     family_details: "가족 정보",
@@ -712,8 +765,8 @@ const translations = {
     update: "수정",
 
     // ===== EXPERIENCE FORM =====
-    experience: "경력",
-    add_experience: "경력 추가",
+    new_experience: "새 경력",
+    edit_experience: "경력 수정",
     company_name: "회사명",
     area: "항해 지역",
     ship_type: "선박 유형",
@@ -727,9 +780,11 @@ const translations = {
     enter_board_leave: "승/하선을 입력하세요",
     enter_grt: "총톤수를 입력하세요",
     enter_kw: "출력을 입력하세요",
+    select_board_leave: "승/하선을 선택하세요...",
 
     // ===== ACCIDENT FORM =====
     add_accident: "사고 추가",
+    edit_accident: "사고 수정",
     accident_reason: "사고 사유",
     re_use: "재사용",
     accident_date: "사고 일자",
@@ -741,12 +796,45 @@ const translations = {
     select_accident_type: "사고 유형을 선택하세요...",
 
     // ===== EVALUATION FORM =====
+    new_evaluation: "새 평가",
+    edit_evaluation: "평가 수정",
     height: "키",
     shipping: "선적",
     performance_evaluation: "성과 평가",
     attachment: "첨부 파일",
     no_file_chosen: "선택된 파일 없음",
     enter_performance_evaluation: "성과 평가를 입력하세요...",
+    enter_evaluator: "평가자 이름을 입력하세요",
+    enter_period: "예: 2024-01 - 2024-12",
+    enter_recommendation: "추천 사항을 입력하세요",
+    enter_comments: "추가 의견을 입력하세요",
+    enter_height: "키(cm)를 입력하세요",
+    enter_shipping: "선적 정보를 입력하세요",
+    select_rating: "평점을 선택하세요...",
+
+    // ===== INJURY FORM =====
+    add_injury: "부상 추가",
+    edit_injury: "부상 수정",
+    illness: "질병",
+    medical_name: "의료 명",
+    hospital: "병원",
+    treatment_start_date: "치료 시작 일자",
+    recovery_date: "회복 일자",
+    public_private: "공공/민간",
+    expense_won: "비용_won",
+    expense_ex: "비용_ex",
+    select_type: "유형을 선택하세요...",
+
+    // ===== HEALTH FORM =====
+    add_health: "건강 기록 추가",
+    edit_health: "건강 기록 수정",
+    size: "크기 (키/몸무게)",
+    sight: "시력 (좌/우)",
+    hearing: "청력 (좌/우)",
+    blood: "혈액형",
+    decision: "판정",
+    select_blood: "혈액형을 선택하세요...",
+    select_decision: "판정을 선택하세요...",
   },
 };
 
