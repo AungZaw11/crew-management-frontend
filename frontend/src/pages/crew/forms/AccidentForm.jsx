@@ -3,7 +3,6 @@ import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { ChevronDown, Calendar } from "lucide-react";
 import { useLanguage } from "../../../context/LanguageContext";
-import { SubHeader } from "../../../components/crew/SubHeader";
 
 // ===== SHIP NAME OPTIONS =====
 const SHIP_NAME_OPTIONS = [
@@ -50,7 +49,6 @@ const RANK_OPTIONS = [
   "Chief Cook",
   "Cook",
   "Mess Boy",
-  
 ];
 
 // ===== ACCIDENT TYPE OPTIONS =====
@@ -124,17 +122,10 @@ export default function AccidentForm() {
     navigate(`/crew/${id}`);
   };
 
-  const crewLabel = t("accident") || "Accident";
-
   return (
     <div className="flex flex-col bg-white min-h-screen">
-      <SubHeader
-        onBack={handleBack}
-        onAddNew={() => {}}
-        crewLabel={crewLabel}
-        showAddNew={false}
-      />
-
+      {/* ===== SUBHEADER ဖယ်ရှားပြီး ===== */}
+      
       <div className="flex-1 bg-white px-6 py-8 md:px-10">
         <div className="mx-auto max-w-[1152px]">
           <div className="flex items-center rounded-t-md border border-gray-200 bg-[#FBFDFF] px-6 py-3.5">
@@ -170,6 +161,7 @@ export default function AccidentForm() {
                   <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#3C5065]" />
                 </div>
               </div>
+
               {/* Accident Date */}
               <div className="flex flex-col gap-2.5">
                 <FieldLabel>
@@ -182,9 +174,8 @@ export default function AccidentForm() {
                     value={formData.accidentDate}
                     onChange={handleChange}
                     placeholder="-"
-                    className="h-[41px] w-full rounded-md border border-gray-200 bg-white px-3 pr-9 text-sm text-[#3C5065] placeholder:text-[#3C5065]/70 focus:border-[#002F67] focus:outline-none focus:ring-1 focus:ring-[#002F67]"
+                    className="h-[41px] w-full rounded-md border border-gray-200 bg-white px-3 pr-15 text-sm text-[#3C5065] placeholder:text-[#3C5065]/70 focus:border-[#002F67] focus:outline-none focus:ring-1 focus:ring-[#002F67]"
                   />
-                  <Calendar className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#3C5065]" />
                 </div>
               </div>
 
@@ -214,7 +205,7 @@ export default function AccidentForm() {
                 </div>
               </div>
 
-               {/* Accident Type */}
+              {/* Accident Type */}
               <div className="flex flex-col gap-2.5">
                 <FieldLabel>
                   {t("accident_type") || "Accident Type"}
@@ -264,8 +255,8 @@ export default function AccidentForm() {
                   <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#3C5065]" />
                 </div>
               </div>
-            
-            {/* Accident Cost */}
+
+              {/* Accident Cost */}
               <div className="flex flex-col gap-2.5">
                 <FieldLabel>
                   {t("accident_cost") || "Accident Cost"}
@@ -278,6 +269,7 @@ export default function AccidentForm() {
                   className="h-[41px] w-full rounded-md border border-gray-200 bg-white px-3 text-sm text-[#3C5065] placeholder:text-[#3C5065]/70 focus:border-[#002F67] focus:outline-none focus:ring-1 focus:ring-[#002F67]"
                 />
               </div>
+
               {/* Re-use */}
               <div className="flex flex-col gap-2.5">
                 <FieldLabel>
@@ -292,7 +284,6 @@ export default function AccidentForm() {
                 />
               </div>
 
-            
               {/* Etc */}
               <div className="flex flex-col gap-2.5">
                 <FieldLabel>
@@ -307,26 +298,23 @@ export default function AccidentForm() {
                 />
               </div>
 
-              
-              
-                {/* Remarks */} 
-
-                <div className="flex flex-col gap-2.5">
+              {/* Remarks - Full Width */}
+              <div className="flex flex-col gap-2.5 md:col-span-2">
                 <FieldLabel>
-
-                    {t("remarks") || "Remarks"} 
+                  {t("remarks") || "Remarks"}
                 </FieldLabel>
                 <textarea
                   name="remarks"
                   value={formData.remarks}
                   onChange={handleChange}
-                  placeholder="-"
-                  className="h-[41px] w-full rounded-md border border-gray-200 bg-white px-3 text-sm text-[#3C5065] placeholder:text-[#3C5065]/70 focus:border-[#002F67] focus:outline-none focus:ring-1 focus:ring-[#002F67]"
+                  placeholder={t("write_remarks") || "Write remarks ..."}
+                  rows={3}
+                  className="w-full resize-none rounded-md border border-gray-200 bg-white px-3 py-2.5 text-sm text-[#3C5065] placeholder:text-[#3C5065]/70 focus:border-[#002F67] focus:outline-none focus:ring-1 focus:ring-[#002F67]"
                 />
               </div>
             </div>
           </div>
-                    
+
           <div className="mt-8 flex items-center justify-end gap-5">
             <button
               onClick={handleCancel}

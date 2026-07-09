@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useLanguage } from "../../../context/LanguageContext";
-import { SubHeader } from "../../../components/crew/SubHeader";
+import { ChevronDown, UploadCloud } from "lucide-react";
 
 // ===== BANK NAME OPTIONS =====
 const BANK_OPTIONS = [
@@ -81,19 +81,11 @@ export default function PaymentForm() {
     navigate(`/crew/${id}`);
   };
 
-  const crewLabel = t("new_payment") || "New Payment";
-
   return (
     <div className="flex flex-col bg-white min-h-screen">
-      <SubHeader
-        onBack={handleBack}
-        onAddNew={() => {}}
-        crewLabel={crewLabel}
-        showAddNew={false}
-      />
-
       <div className="flex-1 bg-white px-6 py-8 md:px-10">
         <div className="mx-auto max-w-[1152px]">
+          {/* ===== HEADER ===== */}
           <div className="flex items-center rounded-t-md border border-gray-200 bg-[#FBFDFF] px-6 py-3.5">
             <h2 className="text-[17px] font-medium text-[#3C5065]">
               {t("new_payment") || "New Payment"}
@@ -104,9 +96,11 @@ export default function PaymentForm() {
             <div className="grid grid-cols-1 gap-x-16 gap-y-7 md:grid-cols-2">
               {/* Bank Name - Required */}
               <div className="flex flex-col gap-2.5">
+
                 <FieldLabel required={true}>
                   {t("bank_name") || "Bank Name"}
                 </FieldLabel>
+                <ChevronDown className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#3C5065]/70 pointer-events-none" /> 
                 <select
                   name="bankName"
                   value={formData.bankName}
@@ -123,6 +117,7 @@ export default function PaymentForm() {
                     </option>
                   ))}
                 </select>
+                
               </div>
 
               {/* Account Holder - Required */}

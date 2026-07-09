@@ -3,7 +3,6 @@ import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Plus, Trash2, Edit2, X } from "lucide-react";
 import { useLanguage } from "../../../context/LanguageContext";
-import { SubHeader } from "../../../components/crew/SubHeader";
 
 // ===== RELATION OPTIONS =====
 const RELATION_OPTIONS = [
@@ -135,8 +134,6 @@ export default function FamilyForm() {
     }
   };
 
-  const crewLabel = t("family_details") || "Family Details";
-
   const cancelEdit = () => {
     setEditingId(null);
     setFormData({ name: "", relation: "", birth: "", remarks: "" });
@@ -145,13 +142,8 @@ export default function FamilyForm() {
 
   return (
     <div className="flex flex-col bg-white min-h-screen">
-      <SubHeader
-        onBack={handleBack}
-        onAddNew={() => {}}
-        crewLabel={crewLabel}
-        showAddNew={false}
-      />
-
+      {/* ===== SUBHEADER ဖယ်ရှားပြီး ===== */}
+      
       <div className="flex-1 bg-white px-6 py-8 md:px-10">
         <div className="mx-auto max-w-[1152px]">
           <div className="flex items-center rounded-t-md border border-gray-200 bg-[#FBFDFF] px-6 py-3.5">

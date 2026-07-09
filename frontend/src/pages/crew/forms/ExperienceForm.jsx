@@ -3,7 +3,6 @@ import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { ChevronDown, Plus, Trash2, Edit2, X } from "lucide-react";
 import { useLanguage } from "../../../context/LanguageContext";
-import { SubHeader } from "../../../components/crew/SubHeader";
 
 // ===== RANK OPTIONS =====
 const RANK_OPTIONS = [
@@ -135,17 +134,10 @@ export default function ExperienceForm() {
     navigate(`/crew/${id}`);
   };
 
-  const crewLabel = t("experiences") || "Experiences";
-
   return (
     <div className="flex flex-col bg-white min-h-screen">
-      <SubHeader
-        onBack={handleBack}
-        onAddNew={() => {}}
-        crewLabel={crewLabel}
-        showAddNew={false}
-      />
-
+      {/* ===== SUBHEADER ဖယ်ရှားပြီး ===== */}
+      
       <div className="flex-1 bg-white px-6 py-8 md:px-10">
         <div className="mx-auto max-w-[1152px]">
           <div className="flex items-center rounded-t-md border border-gray-200 bg-[#FBFDFF] px-6 py-3.5">
@@ -204,30 +196,30 @@ export default function ExperienceForm() {
                     />
                   </div>
 
-                    {/* Rank */}
-                    <div className="flex flex-col gap-1.5">
+                  {/* Rank */}
+                  <div className="flex flex-col gap-1.5">
                     <FieldLabel required={true}>
-                        {t("rank") || "Rank"}
+                      {t("rank") || "Rank"}
                     </FieldLabel>
                     <div className="relative">
-                        <select
+                      <select
                         name="rank"
                         value={exp.rank}
                         onChange={(e) => handleChange(e, exp.id)}
                         className="h-[41px] w-full rounded-md border border-gray-200 bg-white px-3 pr-9 text-sm text-[#3C5065] appearance-none focus:border-[#002F67] focus:outline-none focus:ring-1 focus:ring-[#002F67]"
-                        >
+                      >
                         <option value="">
-                            {t("select_rank") || "Select Rank..."}
+                          {t("select_rank") || "Select Rank..."}
                         </option>
                         {RANK_OPTIONS.map((rank) => (
-                            <option key={rank} value={rank}>
+                          <option key={rank} value={rank}>
                             {rank}
-                            </option>
+                          </option>
                         ))}
-                        </select>
-                        <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#3C5065]" />
+                      </select>
+                      <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#3C5065]" />
                     </div>
-                    </div>
+                  </div>
 
                   {/* Boarding Date */}
                   <div className="flex flex-col gap-1.5">
