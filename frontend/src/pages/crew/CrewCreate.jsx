@@ -13,6 +13,7 @@ import PaymentForm from "./forms/PaymentForm";
 import FamilyForm from "./forms/FamilyForm";
 import ExperienceForm from "./forms/ExperienceForm";
 import AccidentForm from "./forms/AccidentForm";
+import EvaluationForm from "./forms/EvaluationForm";
 
 function OtherTab({ tabName }) {
   return (
@@ -141,6 +142,9 @@ export default function CrewCreate() {
 
       case TAB_KEYS[8]: // experience
         return <ExperienceForm />;
+      
+      case TAB_KEYS[9]: // evaluation
+        return <EvaluationForm />;
 
       case TAB_KEYS[11]: // accident
         return <AccidentForm />;

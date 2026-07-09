@@ -399,6 +399,18 @@ const translations = {
     write_reason: "Write reason ...",
     write_remarks: "Write remarks ...",
     select_accident_type: "Select Accident Type...",
+
+
+      // ===== EVALUATION FORM =====
+    evaluation: "Evaluation",
+    date: "Date",
+    height: "Height",
+    shipping: "Shipping",
+    performance_evaluation: "Performance Evaluation",
+    attachment: "Attachment",
+    choose_file: "Choose File",
+    no_file_chosen: "No file chosen",
+    enter_performance_evaluation: "Enter performance evaluation...",
   },
 
   kr: {
@@ -786,6 +798,18 @@ const translations = {
     enter_grt: "총톤수를 입력하세요",
     enter_kw: "출력을 입력하세요",
     enter_remarks: "비고를 입력하세요",
+
+
+     // ===== EVALUATION FORM =====
+    evaluation: "평가",
+    date: "날짜",
+    height: "키",
+    shipping: "선적",
+    performance_evaluation: "성과 평가",
+    attachment: "첨부 파일",
+    choose_file: "파일 선택",
+    no_file_chosen: "선택된 파일 없음",
+    enter_performance_evaluation: "성과 평가를 입력하세요...",
      // ===== ACCIDENT FORM =====
     accident: "사고",
     add_accident: "사고 추가",
