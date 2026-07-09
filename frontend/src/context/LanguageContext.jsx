@@ -17,6 +17,7 @@ const translations = {
     import: "Import",
     add: "Add",
     add_crew: "Add Crew",
+    add_new: "Add New",
     search: "Search",
     search_placeholder: "Search by name, code, vessel...",
     no_data: "No data found",
@@ -37,6 +38,8 @@ const translations = {
     record: "record",
     reset: "Reset",
     save_record: "Save Record",
+    overview: "Overview",
+    total: "Total",
 
     // ===== NAVIGATION =====
     dashboard: "Dashboard",
@@ -45,7 +48,6 @@ const translations = {
     register: "Register",
     payment: "Payment",
     settings: "Settings",
-    overview: "Overview",
     calendar: "Calendar",
 
     // ===== LOGIN =====
@@ -84,7 +86,18 @@ const translations = {
     vessel_name: "Vessel's Name",
     crew_class: "Crew Class",
     sign_on: "Sign On",
+    sign_off: "Sign Off",
     include_period_contract: "Include Period Contract",
+    expired: "Expired",
+    active: "Active",
+    inactive: "InActive",
+    expired_contracts: "Expired Contracts",
+    expire_soon: "Expire Soon",
+    crew_name: "Crew Name",
+    overdue: "Overdue",
+    education_name: "Education Name",
+    expire_date: "Expire Date",
+    remaining_date: "Remaining Date",
 
     // ===== DASHBOARD =====
     dashboard_overview: "Dashboard Overview",
@@ -111,7 +124,8 @@ const translations = {
     crew_deleted: "Crew deleted successfully.",
     crew_not_found: "Crew not found.",
     confirm_delete: "Are you sure you want to delete?",
-    confirm_delete_message: "Do you really want to delete this records? This process cannot be undone.",
+    confirm_delete_message:
+      "Do you really want to delete this records? This process cannot be undone.",
 
     // ===== PROFILE =====
     profile: "Profile",
@@ -244,8 +258,8 @@ const translations = {
     preview: "Preview",
     choose_file: "Choose File",
     passport: "Passport",
-     new_person: "New Person",
-    add_new_crew: "Add New Crew", 
+    new_person: "New Person",
+    add_new_crew: "Add New Crew",
 
     // ===== PLACEHOLDERS =====
     select_option: "Please select",
@@ -272,7 +286,8 @@ const translations = {
     tab_certificates: "Certificates",
     tab_accident: "Accident",
     crew_profile_sections: "Crew profile sections",
-   // ===== QUALIFICATION FORM =====
+
+    // ===== QUALIFICATION FORM =====
     new_qualification: "New Qualification",
     certificate_name: "Certificate Name",
     expiration: "Expiration",
@@ -290,125 +305,77 @@ const translations = {
     max_file_size: "Maximum File Size is 20MB",
     supported_file_types: "Supported File Types are .png, .jpeg, .pdf, .csv",
 
-      // ===== APPOINTMENT FORM =====
+    // ===== APPOINTMENT FORM =====
     new_appointment: "New Appointment",
     deployment_division: "Deployment Division",
     deployment_content: "Deployment Content",
     ship_name: "Ship's Name",
-    rank: "Rank",
     boarding_date: "Boarding Date",
     leaving_date: "Leaving Date",
     boarding_period: "Boarding Period",
     place: "Place",
-    contract_type: "Contract Type",
-    remarks: "Remarks",
     select_division: "Select Division...",
-    select_division_first: "Please select Division first",
     select_deployment_content: "Select Deployment Content...",
     select_ship: "Select Ship...",
     select_rank: "Select Rank...",
     enter_boarding_period: "Enter boarding period",
     enter_place: "Enter place",
-    select_contract: "Select Contract Type...",
-    enter_remarks: "Enter remarks",
 
-     // ===== REPLACEMENT FORM =====
+    // ===== REPLACEMENT FORM =====
     new_replacement: "New Replacement",
-    deployment_division: "Deployment Division",
-    deployment_content: "Deployment Content",
-    ship_name: "Ship's Name",
-    rank: "Rank",
     date: "Date",
-    place: "Place",
-    remarks: "Remarks",
-    select_division: "Select Division...",
-    select_division_first: "Please select Division first",
-    select_deployment_content: "Select Deployment Content...",
-    select_ship: "Select Ship...",
-    select_rank: "Select Rank...",
-    enter_place: "Enter place",
-    enter_remarks: "Enter remarks",
-     // ===== PAYMENT FORM =====
+
+    // ===== PAYMENT FORM =====
     new_payment: "New Payment",
-    bank_name: "Bank Name",
     account_holder: "Account Holder",
-    account_number: "Account Number",
-    relation: "Relation",
     select_bank: "Select Bank...",
     enter_account_holder: "Enter account holder name",
     enter_account_number: "Enter account number",
     select_relation: "Select Relation...",
-      // ===== FAMILY FORM =====
+
+    // ===== FAMILY FORM =====
     family_details: "Family Details",
     add_family_member: "Add Family Member",
     edit_family_member: "Edit Family Member",
-    name: "Name",
-    relation: "Relation",
-    birth: "Birth",
-    remarks: "Remarks",
-    actions: "Actions",
     no_family_members: "No family members added yet",
     fill_required_fields: "Please fill required fields",
-    select_relation: "Select Relation...",
     enter_name: "Enter name",
-    enter_remarks: "Enter remarks",
     update: "Update",
-    add: "Add",
 
     // ===== EXPERIENCE FORM =====
-    experiences: "Experiences",
     experience: "Experience",
     add_experience: "Add Experience",
     company_name: "Company Name",
-    ship_name: "Ship Name",
-    rank: "Rank",
-    boarding_date: "Boarding Date",
-    leaving_date: "Leaving Date",
     area: "Area",
     ship_type: "Ship Type",
     board_leave: "Board/Leave",
-    grt: "GRT",
     kw: "KW",
-    remarks: "Remarks",
     at_least_one_experience: "You must have at least one experience record",
     enter_company_name: "Enter company name",
     enter_ship_name: "Enter ship name",
-    select_rank: "Select Rank...",
     select_area: "Select Area...",
     select_ship_type: "Select Ship Type...",
     enter_board_leave: "Enter board/leave",
     enter_grt: "Enter GRT",
     enter_kw: "Enter KW",
-    enter_remarks: "Enter remarks",
-
 
     // ===== ACCIDENT FORM =====
-    accident: "Accident",
     add_accident: "Add Accident",
-    ship_name: "Ship's Name",
-    rank: "Rank",
     accident_reason: "Accident Reason",
     re_use: "Re-use",
-    remarks: "Remarks",
     accident_date: "Accident Date",
-    accident_type: "Accident Type",
     accident_cost: "Accident Cost",
     etc: "Etc",
     choose_ship_name: "Choose Ship Name",
-    select_position: "Select Position",
     write_reason: "Write reason ...",
     write_remarks: "Write remarks ...",
     select_accident_type: "Select Accident Type...",
 
-
-      // ===== EVALUATION FORM =====
-    evaluation: "Evaluation",
-    date: "Date",
+    // ===== EVALUATION FORM =====
     height: "Height",
     shipping: "Shipping",
     performance_evaluation: "Performance Evaluation",
     attachment: "Attachment",
-    choose_file: "Choose File",
     no_file_chosen: "No file chosen",
     enter_performance_evaluation: "Enter performance evaluation...",
   },
@@ -427,6 +394,7 @@ const translations = {
     import: "가져오기",
     add: "추가",
     add_crew: "승무원 추가",
+    add_new: "새로 추가",
     search: "검색",
     search_placeholder: "이름, 코드, 선박명으로 검색...",
     no_data: "데이터가 없습니다",
@@ -447,6 +415,8 @@ const translations = {
     record: "기록을 추가하려면 아래 세부 정보를 입력하세요",
     reset: "초기화",
     save_record: "기록 저장",
+    overview: "개요",
+    total: "합계",
 
     // ===== NAVIGATION =====
     dashboard: "대시보드",
@@ -455,7 +425,6 @@ const translations = {
     register: "등록",
     payment: "결제",
     settings: "설정",
-    overview: "개요",
     calendar: "달력",
 
     // ===== LOGIN =====
@@ -494,7 +463,18 @@ const translations = {
     vessel_name: "선박 이름",
     crew_class: "승무원 등급",
     sign_on: "승선",
+    sign_off: "하선",
     include_period_contract: "계약 기간 포함",
+    expired: "만료됨",
+    active: "활성",
+    inactive: "비활성",
+    expired_contracts: "만료된 계약",
+    expire_soon: "만료 예정",
+    crew_name: "승무원 이름",
+    overdue: "연체",
+    education_name: "교육 명",
+    expire_date: "만료 일자",
+    remaining_date: "잔여 일수",
 
     // ===== DASHBOARD =====
     dashboard_overview: "대시보드 개요",
@@ -521,7 +501,8 @@ const translations = {
     crew_deleted: "승무원이 성공적으로 삭제되었습니다.",
     crew_not_found: "승무원을 찾을 수 없습니다.",
     confirm_delete: "삭제하시겠습니까?",
-    confirm_delete_message: "이 기록을 정말 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.",
+    confirm_delete_message:
+      "이 기록을 정말 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.",
 
     // ===== PROFILE =====
     profile: "프로필",
@@ -654,6 +635,8 @@ const translations = {
     preview: "미리보기",
     choose_file: "파일 선택",
     passport: "여권",
+    new_person: "새 직원",
+    add_new_crew: "새 승무원 추가",
 
     // ===== PLACEHOLDERS =====
     select_option: "선택하세요",
@@ -680,13 +663,8 @@ const translations = {
     tab_certificates: "자격증",
     tab_accident: "사고",
     crew_profile_sections: "승무원 프로필 섹션",
-      new_person: "새 직원", 
-    add_new_crew: "새 승무원 추가",
 
-    
-    
-    
-        // ===== QUALIFICATION FORM =====
+    // ===== QUALIFICATION FORM =====
     new_qualification: "새 자격증",
     certificate_name: "자격증 명",
     expiration: "만료",
@@ -704,129 +682,79 @@ const translations = {
     max_file_size: "최대 파일 크기는 20MB입니다",
     supported_file_types: "지원 파일 형식: .png, .jpeg, .pdf, .csv",
 
-    
-/// ===== APPOINTMENT FORM =====
+    // ===== APPOINTMENT FORM =====
     new_appointment: "새 임명",
     deployment_division: "배치 부서",
     deployment_content: "배치 내용",
     ship_name: "선박 이름",
-    rank: "직급",
     boarding_date: "승선 일자",
     leaving_date: "하선 일자",
     boarding_period: "승선 기간",
     place: "장소",
-    contract_type: "계약 유형",
-    remarks: "비고",
     select_division: "부서를 선택하세요...",
-    select_division_first: "먼저 부서를 선택하세요",
     select_deployment_content: "배치 내용을 선택하세요...",
     select_ship: "선박을 선택하세요...",
     select_rank: "직급을 선택하세요...",
     enter_boarding_period: "승선 기간을 입력하세요",
     enter_place: "장소를 입력하세요",
-    select_contract: "계약 유형을 선택하세요...",
-    enter_remarks: "비고를 입력하세요",
-// ===== REPLACEMENT FORM =====
+
+    // ===== REPLACEMENT FORM =====
     new_replacement: "새 교체",
-    deployment_division: "배치 부서",
-    deployment_content: "배치 내용",
-    ship_name: "선박 이름",
-    rank: "직급",
     date: "일자",
-    place: "장소",
-    remarks: "비고",
-    select_division: "부서를 선택하세요...",
-    select_division_first: "먼저 부서를 선택하세요",
-    select_deployment_content: "배치 내용을 선택하세요...",
-    select_ship: "선박을 선택하세요...",
-    select_rank: "직급을 선택하세요...",
-    enter_place: "장소를 입력하세요",
-    enter_remarks: "비고를 입력하세요",
 
-
-    
     // ===== PAYMENT FORM =====
     new_payment: "새 결제 정보",
-    bank_name: "은행명",
     account_holder: "예금주",
-    account_number: "계좌번호",
-    relation: "관계",
     select_bank: "은행을 선택하세요...",
     enter_account_holder: "예금주를 입력하세요",
     enter_account_number: "계좌번호를 입력하세요",
     select_relation: "관계를 선택하세요...",
 
-     // ===== FAMILY FORM =====
+    // ===== FAMILY FORM =====
     family_details: "가족 정보",
     add_family_member: "가족 추가",
     edit_family_member: "가족 수정",
-    name: "이름",
-    relation: "관계",
-    birth: "생년월일",
-    remarks: "비고",
-    actions: "작업",
     no_family_members: "등록된 가족이 없습니다",
     fill_required_fields: "필수 항목을 입력해주세요",
-    select_relation: "관계를 선택하세요...",
     enter_name: "이름을 입력하세요",
-    enter_remarks: "비고를 입력하세요",
     update: "수정",
-    add: "추가",
 
-       // ===== EXPERIENCE FORM =====
-    experiences: "경력",
+    // ===== EXPERIENCE FORM =====
     experience: "경력",
     add_experience: "경력 추가",
     company_name: "회사명",
-    ship_name: "선박명",
-    rank: "직급",
-    boarding_date: "승선일",
-    leaving_date: "하선일",
     area: "항해 지역",
     ship_type: "선박 유형",
     board_leave: "승/하선",
-    grt: "총톤수 (GRT)",
     kw: "출력 (KW)",
-    remarks: "비고",
     at_least_one_experience: "최소 1개 이상의 경력이 필요합니다",
     enter_company_name: "회사명을 입력하세요",
     enter_ship_name: "선박명을 입력하세요",
-    select_rank: "직급을 선택하세요...",
     select_area: "항해 지역을 선택하세요...",
     select_ship_type: "선박 유형을 선택하세요...",
     enter_board_leave: "승/하선을 입력하세요",
     enter_grt: "총톤수를 입력하세요",
     enter_kw: "출력을 입력하세요",
-    enter_remarks: "비고를 입력하세요",
 
+    // ===== ACCIDENT FORM =====
+    add_accident: "사고 추가",
+    accident_reason: "사고 사유",
+    re_use: "재사용",
+    accident_date: "사고 일자",
+    accident_cost: "사고 비용",
+    etc: "기타",
+    choose_ship_name: "선박을 선택하세요",
+    write_reason: "사유를 입력하세요 ...",
+    write_remarks: "비고를 입력하세요 ...",
+    select_accident_type: "사고 유형을 선택하세요...",
 
-     // ===== EVALUATION FORM =====
-    evaluation: "평가",
-    date: "날짜",
+    // ===== EVALUATION FORM =====
     height: "키",
     shipping: "선적",
     performance_evaluation: "성과 평가",
     attachment: "첨부 파일",
-    choose_file: "파일 선택",
     no_file_chosen: "선택된 파일 없음",
     enter_performance_evaluation: "성과 평가를 입력하세요...",
-     // ===== ACCIDENT FORM =====
-    accident: "사고",
-    add_accident: "사고 추가",
-    ship_name: "선박 이름",
-    rank: "직급",
-    accident_reason: "사고 사유",
-    re_use: "재사용",
-    remarks: "비고",
-    accident_date: "사고 일자",
-    accident_type: "사고 유형",
-    accident_cost: "사고 비용",
-    etc: "기타",
-    choose_ship_name: "선박을 선택하세요",
-    select_position: "직급을 선택하세요",
-    write_reason: "사유를 입력하세요 ...",
-    write_remarks: "비고를 입력하세요 ...",
-    select_accident_type: "사고 유형을 선택하세요...",
   },
 };
 
