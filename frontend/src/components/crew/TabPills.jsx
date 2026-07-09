@@ -2,7 +2,6 @@
 import React from "react";
 import { useLanguage } from "../../context/LanguageContext";
 
-// Tab keys (for internal use)
 export const TAB_KEYS = [
   "personal_info",
   "qualifications",
@@ -18,8 +17,8 @@ export const TAB_KEYS = [
   "accident",
 ];
 
-// For backward compatibility - export as TABS as well
-export const TABS = TAB_KEYS; // ← ဒီမှာ ထည့်ပါ
+
+export const TABS = TAB_KEYS; 
 
 // Tab display names with translation keys
 export const TAB_LABELS = {

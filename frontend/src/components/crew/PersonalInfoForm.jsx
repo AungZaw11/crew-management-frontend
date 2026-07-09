@@ -234,19 +234,20 @@ export default function PersonalInfoForm({
               error={errors.hire_date}
             />
             <FormField
-              label={t("name_korean") || "Name (Korean)"}
-              value={crewMember.name_kor || ""}
-              onChange={onChange}
-              name="name_kor"
-              isEditing={isEditing}
-            />
-            <FormField
               label={t("name_english") || "Name (English)"}
               value={crewMember.name_eng || ""}
               onChange={onChange}
               name="name_eng"
               isEditing={isEditing}
             />
+            <FormField
+              label={t("name_korean") || "Name (Korean)"}
+              value={crewMember.name_kor || ""}
+              onChange={onChange}
+              name="name_kor"
+              isEditing={isEditing}
+            />
+            
             <FormField
               label={t("name_chinese") || "Name (Chinese)"}
               value=""
@@ -276,7 +277,7 @@ export default function PersonalInfoForm({
               onChange={onChange}
               name="address_kor"  
               isEditing={isEditing}
-              required={true}
+              required={false}
               error={errors.address_kor}
             /> 
           </div>

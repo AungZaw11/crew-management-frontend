@@ -7,7 +7,12 @@ import { SubHeader } from "../../components/crew/SubHeader";
 import { TabPills, TAB_KEYS } from "../../components/crew/TabPills";
 import PersonalInfoForm from "../../components/crew/PersonalInfoForm";
 import { QualificationCreateForm } from "../../components/crew/QualificationCreateForm";
-import AppointmentForm from "./forms/AppointmentForm"; // ← AppointmentForm ကို import လုပ်ပါ
+import AppointmentForm from "./forms/AppointmentForm"; 
+import ReplacementForm from "./forms/ReplacementForm";
+import PaymentForm from "./forms/PaymentForm";
+import FamilyForm from "./forms/FamilyForm";
+import ExperienceForm from "./forms/ExperienceForm";
+import AccidentForm from "./forms/AccidentForm";
 
 function OtherTab({ tabName }) {
   return (
@@ -124,6 +129,21 @@ export default function CrewCreate() {
 
       case TAB_KEYS[2]: // appointment
         return <AppointmentForm />;
+      
+      case TAB_KEYS[3]: // replacement
+        return <ReplacementForm />;
+
+      case TAB_KEYS[4]: // payment
+        return <PaymentForm />;
+
+      case TAB_KEYS[5]: // family
+        return <FamilyForm />;
+
+      case TAB_KEYS[8]: // experience
+        return <ExperienceForm />;
+
+      case TAB_KEYS[11]: // accident
+        return <AccidentForm />;
 
       default:
         return <OtherTab tabName={activeTab} />;

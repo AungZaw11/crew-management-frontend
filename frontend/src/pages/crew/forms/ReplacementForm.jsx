@@ -1,4 +1,4 @@
-// src/pages/crew/forms/AppointmentForm.jsx
+// src/pages/crew/forms/ReplacementForm.jsx
 import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { ChevronDown } from "lucide-react";
@@ -120,13 +120,6 @@ const SHIP_NAME_OPTIONS = [
   "HS GLORY",
 ];
 
-// ===== LABOR CONTRACT OPTIONS =====
-const CONTRACT_OPTIONS = [
-  { value: "permanent", label: "Permanent" },
-  { value: "day_worker", label: "Day Worker" },
-  { value: "ratio", label: "Ratio" },
-];
-
 function FieldLabel({ children, required = false }) {
   return (
     <label className="text-base font-medium text-[#315888]">
@@ -136,7 +129,7 @@ function FieldLabel({ children, required = false }) {
   );
 }
 
-export default function AppointmentForm() {
+export default function ReplacementForm() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { t } = useLanguage();
@@ -145,11 +138,8 @@ export default function AppointmentForm() {
     content: "",
     ship: "",
     rank: "",
-    boardingDate: "",
-    leavingDate: "",
-    boardingPeriod: "",
+    date: "",
     place: "",
-    contractType: "",
     remarks: "",
   });
 
@@ -163,7 +153,7 @@ export default function AppointmentForm() {
 
   const handleSave = async () => {
     try {
-      console.log("Saving appointment:", formData);
+      console.log("Saving replacement:", formData);
       // Add your API call here
       navigate(`/crew/${id}`);
     } catch (error) {
@@ -179,7 +169,7 @@ export default function AppointmentForm() {
     navigate(`/crew/${id}`);
   };
 
-  const crewLabel = t("new_appointment") || "New Appointment";
+  const crewLabel = t("new_replacement") || "New Replacement";
 
   // ===== Check if Sign On or Sign Off =====
   const isSignOn = formData.division === "sign_on";
@@ -189,7 +179,7 @@ export default function AppointmentForm() {
   const getContentOptions = () => {
     if (isSignOn) return SIGN_ON_CONTENT_OPTIONS;
     if (isSignOff) return SIGN_OFF_CONTENT_OPTIONS;
-    return []; // No options when nothing selected
+    return [];
   };
 
   const contentOptions = getContentOptions();
@@ -207,13 +197,13 @@ export default function AppointmentForm() {
         <div className="mx-auto max-w-[1152px]">
           <div className="flex items-center rounded-t-md border border-gray-200 bg-[#FBFDFF] px-6 py-3.5">
             <h2 className="text-[17px] font-medium text-[#3C5065]">
-              {t("new_appointment") || "New Appointment"}
+              {t("new_replacement") || "New Replacement"}
             </h2>
           </div>
 
           <div className="rounded-b-md border border-t-0 border-gray-200 bg-white p-6 md:p-7">
             <div className="grid grid-cols-1 gap-x-16 gap-y-7 md:grid-cols-2">
-              {/* Deployment Division - Required - Select Box */}
+              {/* Deployment Division */}
               <div className="flex flex-col gap-2.5">
                 <FieldLabel required={true}>
                   {t("deployment_division") || "Deployment Division"}
@@ -239,7 +229,7 @@ export default function AppointmentForm() {
                 </div>
               </div>
 
-              {/* Deployment Content - Required - Conditional Select Box */}
+              {/* Deployment Content */}
               <div className="flex flex-col gap-2.5">
                 <FieldLabel required={true}>
                   {t("deployment_content") || "Deployment Content"}
@@ -274,7 +264,7 @@ export default function AppointmentForm() {
                 )}
               </div>
 
-              {/* Ship Name - Required - Select Box */}
+              {/* Ship's Name */}
               <div className="flex flex-col gap-2.5">
                 <FieldLabel required={true}>
                   {t("ship_name") || "Ship's Name"}
@@ -300,7 +290,7 @@ export default function AppointmentForm() {
                 </div>
               </div>
 
-              {/* Rank - Required - Select Box */}
+              {/* Rank */}
               <div className="flex flex-col gap-2.5">
                 <FieldLabel required={true}>
                   {t("rank") || "Rank"}
@@ -326,43 +316,21 @@ export default function AppointmentForm() {
                 </div>
               </div>
 
-              {/* ===== CONDITIONAL DATE FIELDS ===== */}
-              
-              {/* Boarding Date - Show only when Sign On or nothing selected */}
-              {(isSignOn || !formData.division) && (
-                <div className="flex flex-col gap-2.5">
-                  <FieldLabel required={isSignOn}>
-                    {t("boarding_date") || "Boarding Date"}
-                  </FieldLabel>
-                  <input
-                    type="date"
-                    name="boardingDate"
-                    value={formData.boardingDate}
-                    onChange={handleChange}
-                    className="h-[41px] w-full rounded-md border border-gray-200 bg-[#FBFDFF] px-3 text-sm text-[#3C5065] focus:border-[#002F67] focus:outline-none focus:ring-1 focus:ring-[#002F67]"
-                    required={isSignOn}
-                  />
-                </div>
-              )}
+              {/* Date */}
+              <div className="flex flex-col gap-2.5">
+                <FieldLabel required={true}>
+                  {t("date") || "Date"}
+                </FieldLabel>
+                <input
+                  type="date"
+                  name="date"
+                  value={formData.date}
+                  onChange={handleChange}
+                  className="h-[41px] w-full rounded-md border border-gray-200 bg-[#FBFDFF] px-3 text-sm text-[#3C5065] focus:border-[#002F67] focus:outline-none focus:ring-1 focus:ring-[#002F67]"
+                  required
+                />
+              </div>
 
-              {/* Leaving Date - Show only when Sign Off */}
-              {isSignOff && (
-                <div className="flex flex-col gap-2.5">
-                  <FieldLabel required={true}>
-                    {t("leaving_date") || "Leaving Date"}
-                  </FieldLabel>
-                  <input
-                    type="date"
-                    name="leavingDate"
-                    value={formData.leavingDate}
-                    onChange={handleChange}
-                    className="h-[41px] w-full rounded-md border border-gray-200 bg-[#FBFDFF] px-3 text-sm text-[#3C5065] focus:border-[#002F67] focus:outline-none focus:ring-1 focus:ring-[#002F67]"
-                    required={true}
-                  />
-                </div>
-              )}
-
-              
               {/* Place */}
               <div className="flex flex-col gap-2.5">
                 <FieldLabel>
@@ -372,37 +340,12 @@ export default function AppointmentForm() {
                   name="place"
                   value={formData.place}
                   onChange={handleChange}
-                  placeholder={t("enter_place") || "Place"}
+                  placeholder={t("enter_place") || "Enter place"}
                   className="h-[41px] w-full rounded-md border border-gray-200 bg-[#FBFDFF] px-3 text-sm text-[#3C5065] placeholder:text-[#3C5065]/70 focus:border-[#002F67] focus:outline-none focus:ring-1 focus:ring-[#002F67]"
                 />
               </div>
 
-              {/* Contract Type */}
-              <div className="flex flex-col gap-2.5">
-                <FieldLabel>
-                  {t("contract_type") || "Contract Type"}
-                </FieldLabel>
-                <div className="relative">
-                  <select
-                    name="contractType"
-                    value={formData.contractType}
-                    onChange={handleChange}
-                    className="h-[41px] w-full rounded-md border border-gray-200 bg-[#FBFDFF] px-3 pr-9 text-sm text-[#3C5065] appearance-none focus:border-[#002F67] focus:outline-none focus:ring-1 focus:ring-[#002F67]"
-                  >
-                    <option value="">
-                      {t("select_contract") || "Select Contract Type..."}
-                    </option>
-                    {CONTRACT_OPTIONS.map((contract) => (
-                      <option key={contract.value} value={contract.value}>
-                        {contract.label}
-                      </option>
-                    ))}
-                  </select>
-                  <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#3C5065]" />
-                </div>
-              </div>
-
-              {/* Remarks */}
+              {/* Remarks - Full Width */}
               <div className="flex flex-col gap-2.5 md:col-span-2">
                 <FieldLabel>
                   {t("remarks") || "Remarks"}
@@ -411,7 +354,7 @@ export default function AppointmentForm() {
                   name="remarks"
                   value={formData.remarks}
                   onChange={handleChange}
-                  placeholder={t("enter_remarks") || "Fill Remarks"}
+                  placeholder={t("enter_remarks") || "Enter remarks"}
                   rows={4}
                   className="w-full resize-none rounded-md border border-gray-200 bg-[#FBFDFF] px-3 py-2.5 text-sm text-[#3C5065] placeholder:text-[#3C5065]/70 focus:border-[#002F67] focus:outline-none focus:ring-1 focus:ring-[#002F67]"
                 />
