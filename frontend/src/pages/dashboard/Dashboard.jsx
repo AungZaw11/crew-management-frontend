@@ -1,21 +1,18 @@
 // src/pages/dashboard/Dashboard.jsx
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import {
   Upload,
   Plus,
   ArrowRight,
-  Search,
-  ChevronDown,
-  CheckSquare,
-  Calendar,
 } from "lucide-react";
 import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
-import { useCrew } from "../../context/CrewContext";
 import LoadingSpinner from "../../components/common/LoadingSpinner";
 import { useLanguage } from "../../context/LanguageContext";
+import { fetchDashboardData } from "../../redux/slices/dashboardSlice";
 
-// ===== SUMMARY CARDS (Dynamic) =====
+// ===== SUMMARY CARDS =====
 function SummaryCards({ stats, t }) {
   const cards = [
     {
@@ -96,16 +93,18 @@ function SummaryCards({ stats, t }) {
   );
 }
 
-// ===== CREW PIE CHART (Dynamic) =====
+// ===== CREW PIE CHART =====
 function CrewPieChart({ totalCrews, signOn, signOff, t }) {
   const data = [
-    { name: t("sign_on") || "Sign On", value: signOn || 0, color: "#4D55A8" },
+    { name: t("sign_on") || "Sign On", value: signOn || 0, color: "#4CAF50" },
     {
       name: t("sign_off") || "Sign Off",
       value: signOff || 0,
-      color: "#D97F79",
+      color: "#F44336",
     },
   ];
+
+  const filteredData = data.filter(item => item.value > 0);
 
   return (
     <div className="flex h-[478px] flex-col rounded-md border border-[#E5E7EB] bg-white p-6">
@@ -121,35 +120,26 @@ function CrewPieChart({ totalCrews, signOn, signOff, t }) {
             {totalCrews || 0}
           </span>
         </div>
-        <div className="flex flex-col items-center">
-          <div className="flex items-center gap-2">
-            <div className="h-3 w-3 rounded-full bg-[#7179D2]" />
-            <span className="font-inter text-xs text-black">
-              {t("sign_on") || "Sign On"}
+        {filteredData.map((item, index) => (
+          <div key={index} className="flex flex-col items-center">
+            <div className="flex items-center gap-2">
+              <div className="h-3 w-3 rounded-full" style={{ backgroundColor: item.color }} />
+              <span className="font-inter text-xs text-black">
+                {item.name}
+              </span>
+            </div>
+            <span className="mt-2 font-inter text-xl font-semibold" style={{ color: item.color }}>
+              {item.value || 0}
             </span>
           </div>
-          <span className="mt-2 font-inter text-xl font-semibold text-[#4D55A8]">
-            {signOn || 0}
-          </span>
-        </div>
-        <div className="flex flex-col items-center">
-          <div className="flex items-center gap-2">
-            <div className="h-3 w-3 rounded-full bg-[#D97F79]" />
-            <span className="font-inter text-xs text-black">
-              {t("sign_off") || "Sign Off"}
-            </span>
-          </div>
-          <span className="mt-2 font-inter text-xl font-semibold text-[#D97F79]">
-            {signOff || 0}
-          </span>
-        </div>
+        ))}
       </div>
 
       <div className="relative mt-8 flex-1">
         <ResponsiveContainer width="100%" height="100%">
           <PieChart>
             <Pie
-              data={data}
+              data={filteredData}
               cx="50%"
               cy="50%"
               innerRadius={60}
@@ -158,7 +148,7 @@ function CrewPieChart({ totalCrews, signOn, signOff, t }) {
               dataKey="value"
               stroke="none"
             >
-              {data.map((entry, index) => (
+              {filteredData.map((entry, index) => (
                 <Cell key={`cell-${index}`} fill={entry.color} />
               ))}
             </Pie>
@@ -177,7 +167,7 @@ function CrewPieChart({ totalCrews, signOn, signOff, t }) {
   );
 }
 
-// ===== EXPIRED CONTRACTS TABLE (Dynamic) =====
+// ===== EXPIRED CONTRACTS TABLE =====
 function ExpiredContractsTable({ expiredData, loading, t, onSeeAll }) {
   if (loading) {
     return (
@@ -187,7 +177,6 @@ function ExpiredContractsTable({ expiredData, loading, t, onSeeAll }) {
     );
   }
 
-  // ===== Data မရှိရင်လည်း See All ပါ =====
   if (!expiredData || expiredData.length === 0) {
     return (
       <div className="flex h-[478px] flex-col rounded-md border border-[#E2E8F0] bg-white">
@@ -212,7 +201,6 @@ function ExpiredContractsTable({ expiredData, loading, t, onSeeAll }) {
     );
   }
 
-  // ===== Data ရှိရင်လည်း See All ပါ =====
   return (
     <div className="flex h-[478px] flex-col rounded-md border border-[#E2E8F0] bg-white">
       <div className="flex items-center justify-between border-b border-[#F1F5F9] bg-[#EFF6FF] px-5 py-4">
@@ -256,7 +244,7 @@ function ExpiredContractsTable({ expiredData, loading, t, onSeeAll }) {
   );
 }
 
-// ===== EXPIRE SOON TABLE (Dynamic) =====
+// ===== EXPIRE SOON TABLE =====
 function ExpireSoonTable({ expireSoonData, loading, t, onSeeAll }) {
   if (loading) {
     return (
@@ -266,7 +254,6 @@ function ExpireSoonTable({ expireSoonData, loading, t, onSeeAll }) {
     );
   }
 
-  // ===== Data မရှိရင်လည်း See All ပါ =====
   if (!expireSoonData || expireSoonData.length === 0) {
     return (
       <div className="flex flex-col rounded-md border border-[#E2E8F0] bg-white">
@@ -291,7 +278,6 @@ function ExpireSoonTable({ expireSoonData, loading, t, onSeeAll }) {
     );
   }
 
-  // ===== Data ရှိရင်လည်း See All ပါ =====
   return (
     <div className="flex flex-col rounded-md border border-[#E2E8F0] bg-white">
       <div className="flex items-center justify-between border-b border-[#F1F5F9] bg-[#EFF6FF] px-5 py-4">
@@ -342,94 +328,24 @@ function ExpireSoonTable({ expireSoonData, loading, t, onSeeAll }) {
 // ===== MAIN DASHBOARD =====
 export default function Dashboard() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const { t } = useLanguage();
-  const { crews, loading, totalCrews, fetchCrews } = useCrew();
-  const [dashboardStats, setDashboardStats] = useState(null);
-  const [expiredData, setExpiredData] = useState([]);
-  const [expireSoonData, setExpireSoonData] = useState([]);
+  
+  const {
+    stats,
+    totalCrews,
+    signOn,
+    signOff,
+    expiredData,
+    expireSoonData,
+    loading,
+    error,
+  } = useSelector((state) => state.dashboard);
 
-  // ===== FETCH DASHBOARD DATA FROM API =====
   useEffect(() => {
-    const fetchDashboardData = async () => {
-      try {
-        await fetchCrews(0, 100);
-        const stats = calculateStats(crews);
-        setDashboardStats(stats);
-        const expired = getExpiredCrews(crews);
-        const expireSoon = getExpireSoonCrews(crews);
-        setExpiredData(expired);
-        setExpireSoonData(expireSoon);
-      } catch (error) {
-        console.error("Failed to fetch dashboard data:", error);
-      }
-    };
+    dispatch(fetchDashboardData());
+  }, [dispatch]);
 
-    fetchDashboardData();
-  }, []);
-
-  // ===== CALCULATE STATS =====
-  const calculateStats = (crewData) => {
-    return {
-      certificate: {
-        count: crewData?.length || 0,
-        expired: crewData?.filter((c) => c.status === "expired").length || 0,
-        days30: crewData?.filter((c) => c.daysRemaining <= 30).length || 0,
-      },
-      contract: {
-        count: crewData?.length || 0,
-        expired:
-          crewData?.filter((c) => c.contractStatus === "expired").length || 0,
-        days30: crewData?.filter((c) => c.contractDays <= 30).length || 0,
-      },
-      ppt: {
-        count: crewData?.length || 0,
-        expired: crewData?.filter((c) => c.pptStatus === "expired").length || 0,
-        days30: crewData?.filter((c) => c.pptDays <= 30).length || 0,
-      },
-      vessel: {
-        count: crewData?.length || 0,
-        active:
-          crewData?.filter((c) => c.vesselStatus === "active").length || 0,
-        inactive:
-          crewData?.filter((c) => c.vesselStatus === "inactive").length || 0,
-      },
-    };
-  };
-
-  // ===== GET EXPIRED CREWS =====
-  const getExpiredCrews = (crewData) => {
-    return (
-      crewData
-        ?.filter((c) => c.overdueDays && c.overdueDays < 0)
-        ?.map((c) => ({
-          name: c.name || "Unknown",
-          vessel: c.vessel || "-",
-          rank: c.rank || "-",
-          overdue: `${c.overdueDays || 0} Days`,
-        })) || []
-    );
-  };
-
-  // ===== GET EXPIRE SOON CREWS =====
-  const getExpireSoonCrews = (crewData) => {
-    return (
-      crewData
-        ?.filter(
-          (c) =>
-            c.daysRemaining && c.daysRemaining <= 30 && c.daysRemaining > 0,
-        )
-        ?.map((c) => ({
-          name: c.name || "Unknown",
-          vessel: c.vessel || "-",
-          rank: c.rank || "-",
-          education: c.education || "-",
-          expireDate: c.expireDate || "-",
-          remaining: `${c.daysRemaining || 0} Days`,
-        })) || []
-    );
-  };
-
-  // ===== SEE ALL HANDLERS - Navigate to Crew Management =====
   const handleSeeAllExpired = () => {
     navigate("/crew");
   };
@@ -437,6 +353,22 @@ export default function Dashboard() {
   const handleSeeAllExpireSoon = () => {
     navigate("/crew");
   };
+
+  if (loading) {
+    return (
+      <div className="flex h-[500px] items-center justify-center">
+        <LoadingSpinner />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex h-[500px] items-center justify-center text-red-500">
+        <p>Error loading dashboard: {error}</p>
+      </div>
+    );
+  }
 
   return (
     <div className="w-full flex flex-col gap-6">
@@ -461,14 +393,14 @@ export default function Dashboard() {
       </div>
 
       {/* Summary Cards */}
-      <SummaryCards stats={dashboardStats} t={t} />
+      <SummaryCards stats={stats} t={t} />
 
       {/* Charts & Tables */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         <CrewPieChart
           totalCrews={totalCrews || 0}
-          signOn={0}
-          signOff={0}
+          signOn={signOn || 0}
+          signOff={signOff || 0}
           t={t}
         />
         <ExpiredContractsTable

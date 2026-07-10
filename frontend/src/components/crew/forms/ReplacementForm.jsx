@@ -1,29 +1,38 @@
 // src/components/crew/forms/ReplacementForm.jsx
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { ChevronDown } from "lucide-react";
 import { useLanguage } from "../../../context/LanguageContext";
 
 // ===== DIVISION OPTIONS =====
 const DIVISION_OPTIONS = [
-  "Deck",
-  "Engine",
-  "Catering",
-  "Hotel",
-  "Medical",
-  "Technical",
-  "Other",
+  { value: "sign_on", label: "Sign On" },
+  { value: "sign_off", label: "Sign Off" },
 ];
 
-// ===== CONTENT OPTIONS =====
-const CONTENT_OPTIONS = [
-  "Emergency Replacement",
-  "Scheduled Rotation",
-  "Medical Leave",
-  "Resignation",
-  "Promotion",
-  "Transfer",
-  "Contract End",
-  "Other",
+// ===== CONTENT OPTIONS - SIGN ON =====
+const SIGN_ON_CONTENT_OPTIONS = [
+  { value: "probation", label: "Probation" },
+  { value: "rejoining", label: "Re-Joining" },
+  { value: "new_joining", label: "New Joining" },
+  { value: "promotion", label: "Promotion" },
+  { value: "paid_leave", label: "Paid Leave (Passenger Ship)" },
+];
+
+// ===== CONTENT OPTIONS - SIGN OFF =====
+const SIGN_OFF_CONTENT_OPTIONS = [
+  { value: "transfer", label: "Transfer" },
+  { value: "etc", label: "ETC" },
+  { value: "dismissal", label: "Dismissal" },
+  { value: "vacation", label: "Vacation" },
+  { value: "disciplinary", label: "Disciplinary" },
+  { value: "promotion_off", label: "Promotion" },
+  { value: "injury_illness", label: "Injure or Illness" },
+  { value: "short_contract", label: "Short Contract" },
+  { value: "self_will", label: "Self-Will" },
+  { value: "without_notice", label: "Without Notice" },
+  { value: "finished_contract", label: "Finished Contract" },
+  { value: "end_paid_leave", label: "End of paid Leave(Passenger ships)" },
+  { value: "sold", label: "SOLD" },
 ];
 
 // ===== SHIP NAME OPTIONS =====
@@ -97,8 +106,7 @@ function FieldLabel({ children, required = false }) {
 }
 
 export default function ReplacementForm({
-  formData,
-  onChange,
+  initialData = {},
   onSave,
   onCancel,
   mode = "create",
@@ -106,6 +114,54 @@ export default function ReplacementForm({
 }) {
   const { t } = useLanguage();
   const isEdit = mode === "edit";
+
+  // ===== INTERNAL STATE =====
+  const [formData, setFormData] = useState({
+    division: "",
+    content: "",
+    ship: "",
+    rank: "",
+    date: "",
+    place: "",
+    remarks: "",
+  });
+
+  // ===== LOAD INITIAL DATA =====
+  useEffect(() => {
+    if (initialData && Object.keys(initialData).length > 0) {
+      setFormData({
+        division: initialData.division || "",
+        content: initialData.content || "",
+        ship: initialData.ship || "",
+        rank: initialData.rank || "",
+        date: initialData.date || "",
+        place: initialData.place || "",
+        remarks: initialData.remarks || "",
+      });
+    }
+  }, [initialData]);
+
+  // ===== HANDLE CHANGE =====
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  // ===== CHECK DIVISION =====
+  const isSignOn = formData.division === "sign_on";
+  const isSignOff = formData.division === "sign_off";
+
+  // ===== GET CONTENT OPTIONS =====
+  const getContentOptions = () => {
+    if (isSignOn) return SIGN_ON_CONTENT_OPTIONS;
+    if (isSignOff) return SIGN_OFF_CONTENT_OPTIONS;
+    return [];
+  };
+
+  const contentOptions = getContentOptions();
 
   return (
     <div className="flex-1 bg-white px-6 py-8 md:px-10">
@@ -128,8 +184,8 @@ export default function ReplacementForm({
               <div className="relative">
                 <select
                   name="division"
-                  value={formData?.division || ""}
-                  onChange={onChange}
+                  value={formData.division}
+                  onChange={handleChange}
                   className="h-[41px] w-full rounded-md border border-gray-200 bg-[#FBFDFF] px-3 pr-9 text-sm text-[#3C5065] appearance-none focus:border-[#002F67] focus:outline-none focus:ring-1 focus:ring-[#002F67]"
                   required
                 >
@@ -137,8 +193,8 @@ export default function ReplacementForm({
                     {t("select_division") || "Select Division..."}
                   </option>
                   {DIVISION_OPTIONS.map((division) => (
-                    <option key={division} value={division}>
-                      {division}
+                    <option key={division.value} value={division.value}>
+                      {division.label}
                     </option>
                   ))}
                 </select>
@@ -146,7 +202,7 @@ export default function ReplacementForm({
               </div>
             </div>
 
-            {/* Deployment Content - Required */}
+            {/* Deployment Content - Required - Conditional */}
             <div className="flex flex-col gap-2.5">
               <FieldLabel required={true}>
                 {t("deployment_content") || "Deployment Content"}
@@ -154,23 +210,31 @@ export default function ReplacementForm({
               <div className="relative">
                 <select
                   name="content"
-                  value={formData?.content || ""}
-                  onChange={onChange}
+                  value={formData.content}
+                  onChange={handleChange}
                   className="h-[41px] w-full rounded-md border border-gray-200 bg-[#FBFDFF] px-3 pr-9 text-sm text-[#3C5065] appearance-none focus:border-[#002F67] focus:outline-none focus:ring-1 focus:ring-[#002F67]"
                   required
+                  disabled={!formData.division}
                 >
                   <option value="">
-                    {t("select_deployment_content") ||
-                      "Select Deployment Content..."}
+                    {!formData.division
+                      ? t("select_division_first") || "Please select Division first..."
+                      : t("select_deployment_content") || "Select Deployment Content..."
+                    }
                   </option>
-                  {CONTENT_OPTIONS.map((content) => (
-                    <option key={content} value={content}>
-                      {content}
+                  {contentOptions.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
                     </option>
                   ))}
                 </select>
                 <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#3C5065]" />
               </div>
+              {!formData.division && (
+                <p className="text-xs text-amber-600">
+                  {t("select_division_first") || "Please select Division first"}
+                </p>
+              )}
             </div>
 
             {/* Ship Name - Required */}
@@ -181,8 +245,8 @@ export default function ReplacementForm({
               <div className="relative">
                 <select
                   name="ship"
-                  value={formData?.ship || ""}
-                  onChange={onChange}
+                  value={formData.ship}
+                  onChange={handleChange}
                   className="h-[41px] w-full rounded-md border border-gray-200 bg-[#FBFDFF] px-3 pr-9 text-sm text-[#3C5065] appearance-none focus:border-[#002F67] focus:outline-none focus:ring-1 focus:ring-[#002F67]"
                   required
                 >
@@ -205,8 +269,8 @@ export default function ReplacementForm({
               <div className="relative">
                 <select
                   name="rank"
-                  value={formData?.rank || ""}
-                  onChange={onChange}
+                  value={formData.rank}
+                  onChange={handleChange}
                   className="h-[41px] w-full rounded-md border border-gray-200 bg-[#FBFDFF] px-3 pr-9 text-sm text-[#3C5065] appearance-none focus:border-[#002F67] focus:outline-none focus:ring-1 focus:ring-[#002F67]"
                   required
                 >
@@ -229,8 +293,8 @@ export default function ReplacementForm({
               <input
                 type="date"
                 name="date"
-                value={formData?.date || ""}
-                onChange={onChange}
+                value={formData.date}
+                onChange={handleChange}
                 className="h-[41px] w-full rounded-md border border-gray-200 bg-[#FBFDFF] px-3 text-sm text-[#3C5065] focus:border-[#002F67] focus:outline-none focus:ring-1 focus:ring-[#002F67]"
               />
             </div>
@@ -241,8 +305,8 @@ export default function ReplacementForm({
               <div className="relative">
                 <select
                   name="place"
-                  value={formData?.place || ""}
-                  onChange={onChange}
+                  value={formData.place}
+                  onChange={handleChange}
                   className="h-[41px] w-full rounded-md border border-gray-200 bg-[#FBFDFF] px-3 pr-9 text-sm text-[#3C5065] appearance-none focus:border-[#002F67] focus:outline-none focus:ring-1 focus:ring-[#002F67]"
                 >
                   <option value="">
@@ -263,8 +327,8 @@ export default function ReplacementForm({
               <FieldLabel>{t("remarks") || "Remarks"}</FieldLabel>
               <textarea
                 name="remarks"
-                value={formData?.remarks || ""}
-                onChange={onChange}
+                value={formData.remarks}
+                onChange={handleChange}
                 placeholder={t("enter_remarks") || "Enter remarks"}
                 rows={3}
                 className="w-full resize-none rounded-md border border-gray-200 bg-[#FBFDFF] px-3 py-2.5 text-sm text-[#3C5065] placeholder:text-[#3C5065]/70 focus:border-[#002F67] focus:outline-none focus:ring-1 focus:ring-[#002F67]"
@@ -281,7 +345,7 @@ export default function ReplacementForm({
             {t("cancel") || "Cancel"}
           </button>
           <button
-            onClick={onSave}
+            onClick={() => onSave(formData)}
             className="w-[171px] rounded-md bg-[#002F67] py-2.5 text-sm font-medium text-white hover:bg-[#00397e]"
           >
             {isEdit ? t("update") || "Update" : t("save") || "Save"}

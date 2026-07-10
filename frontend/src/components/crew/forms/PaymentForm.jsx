@@ -20,21 +20,7 @@ const BANK_OPTIONS = [
   "Other",
 ];
 
-// ===== CURRENCY OPTIONS =====
-const CURRENCY_OPTIONS = [
-  "USD",
-  "EUR",
-  "GBP",
-  "JPY",
-  "KRW",
-  "MMK",
-  "SGD",
-  "AUD",
-  "CAD",
-  "CHF",
-  "CNY",
-  "HKD",
-];
+
 
 // ===== RELATION OPTIONS =====
 const RELATION_OPTIONS = [
@@ -115,6 +101,25 @@ export default function PaymentForm({
               </div>
             </div>
 
+
+             {/* Account Number */}
+            <div className="flex flex-col gap-2.5">
+              <FieldLabel required={true}>
+                {t("account_number") || "Account Number"}
+              </FieldLabel>
+              <input
+                name="account"
+                value={formData?.account || ""}
+                onChange={onChange}
+                placeholder={
+                  t("enter_account_number") || "Enter account number"
+                }
+                className="h-[41px] w-full rounded-md border border-gray-200 bg-[#FBFDFF] px-3 text-sm text-[#3C5065] placeholder:text-[#3C5065]/70 focus:border-[#002F67] focus:outline-none focus:ring-1 focus:ring-[#002F67]"
+                required
+              />
+            </div>
+
+
             {/* Account Holder */}
             <div className="flex flex-col gap-2.5">
               <FieldLabel required={true}>
@@ -132,23 +137,7 @@ export default function PaymentForm({
               />
             </div>
 
-            {/* Account Number */}
-            <div className="flex flex-col gap-2.5">
-              <FieldLabel required={true}>
-                {t("account_number") || "Account Number"}
-              </FieldLabel>
-              <input
-                name="account"
-                value={formData?.account || ""}
-                onChange={onChange}
-                placeholder={
-                  t("enter_account_number") || "Enter account number"
-                }
-                className="h-[41px] w-full rounded-md border border-gray-200 bg-[#FBFDFF] px-3 text-sm text-[#3C5065] placeholder:text-[#3C5065]/70 focus:border-[#002F67] focus:outline-none focus:ring-1 focus:ring-[#002F67]"
-                required
-              />
-            </div>
-
+           
             {/* Relation */}
             <div className="flex flex-col gap-2.5">
               <FieldLabel required={true}>
@@ -175,96 +164,12 @@ export default function PaymentForm({
               </div>
             </div>
 
-            {/* Basic Wage */}
-            <div className="flex flex-col gap-2.5">
-              <FieldLabel>{t("basic_wage") || "Basic Wage"}</FieldLabel>
-              <input
-                name="basicWage"
-                value={formData?.basicWage || ""}
-                onChange={onChange}
-                placeholder="0.00"
-                type="number"
-                step="0.01"
-                className="h-[41px] w-full rounded-md border border-gray-200 bg-[#FBFDFF] px-3 text-sm text-[#3C5065] placeholder:text-[#3C5065]/70 focus:border-[#002F67] focus:outline-none focus:ring-1 focus:ring-[#002F67]"
-              />
-            </div>
+            
 
-            {/* Overtime */}
-            <div className="flex flex-col gap-2.5">
-              <FieldLabel>{t("overtime") || "Overtime"}</FieldLabel>
-              <input
-                name="overtime"
-                value={formData?.overtime || ""}
-                onChange={onChange}
-                placeholder="0.00"
-                type="number"
-                step="0.01"
-                className="h-[41px] w-full rounded-md border border-gray-200 bg-[#FBFDFF] px-3 text-sm text-[#3C5065] placeholder:text-[#3C5065]/70 focus:border-[#002F67] focus:outline-none focus:ring-1 focus:ring-[#002F67]"
-              />
-            </div>
-
-            {/* Allowances */}
-            <div className="flex flex-col gap-2.5">
-              <FieldLabel>{t("allowances") || "Allowances"}</FieldLabel>
-              <input
-                name="allowances"
-                value={formData?.allowances || ""}
-                onChange={onChange}
-                placeholder="0.00"
-                type="number"
-                step="0.01"
-                className="h-[41px] w-full rounded-md border border-gray-200 bg-[#FBFDFF] px-3 text-sm text-[#3C5065] placeholder:text-[#3C5065]/70 focus:border-[#002F67] focus:outline-none focus:ring-1 focus:ring-[#002F67]"
-              />
-            </div>
-
-            {/* Deductions */}
-            <div className="flex flex-col gap-2.5">
-              <FieldLabel>{t("deductions") || "Deductions"}</FieldLabel>
-              <input
-                name="deductions"
-                value={formData?.deductions || ""}
-                onChange={onChange}
-                placeholder="0.00"
-                type="number"
-                step="0.01"
-                className="h-[41px] w-full rounded-md border border-gray-200 bg-[#FBFDFF] px-3 text-sm text-[#3C5065] placeholder:text-[#3C5065]/70 focus:border-[#002F67] focus:outline-none focus:ring-1 focus:ring-[#002F67]"
-              />
-            </div>
-
-            {/* Currency */}
-            <div className="flex flex-col gap-2.5">
-              <FieldLabel>{t("currency") || "Currency"}</FieldLabel>
-              <div className="relative">
-                <select
-                  name="currency"
-                  value={formData?.currency || ""}
-                  onChange={onChange}
-                  className="h-[41px] w-full rounded-md border border-gray-200 bg-[#FBFDFF] px-3 pr-9 text-sm text-[#3C5065] appearance-none focus:border-[#002F67] focus:outline-none focus:ring-1 focus:ring-[#002F67]"
-                >
-                  <option value="">
-                    {t("select_currency") || "Select Currency..."}
-                  </option>
-                  {CURRENCY_OPTIONS.map((currency) => (
-                    <option key={currency} value={currency}>
-                      {currency}
-                    </option>
-                  ))}
-                </select>
-                <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#3C5065]" />
-              </div>
-            </div>
-
-            {/* Payment Date */}
-            <div className="flex flex-col gap-2.5">
-              <FieldLabel>{t("payment_date") || "Payment Date"}</FieldLabel>
-              <input
-                type="date"
-                name="paymentDate"
-                value={formData?.paymentDate || ""}
-                onChange={onChange}
-                className="h-[41px] w-full rounded-md border border-gray-200 bg-[#FBFDFF] px-3 text-sm text-[#3C5065] focus:border-[#002F67] focus:outline-none focus:ring-1 focus:ring-[#002F67]"
-              />
-            </div>
+           
+          
+           
+          
           </div>
         </div>
 

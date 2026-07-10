@@ -28,7 +28,7 @@ export default function Header({ onMobileMenuToggle, isMobileMenuOpen }) {
     );
   };
 
-  // ==================== LOGOUT ====================
+ 
   const handleLogout = async () => {
     setShowLogoutConfirm(false);
     try {
@@ -48,14 +48,12 @@ export default function Header({ onMobileMenuToggle, isMobileMenuOpen }) {
       console.error("Logout Error:", error);
       toast.error(" Logout failed");
     } finally {
-      // Clear local storage
+      
       localStorage.removeItem("token");
       localStorage.removeItem("user");
       localStorage.removeItem("expire_date");
 
-      // Language stays in localStorage
-      // localStorage.removeItem('language');
-
+      
       navigate("/login");
     }
   };
@@ -111,7 +109,7 @@ export default function Header({ onMobileMenuToggle, isMobileMenuOpen }) {
             />
           </div>
 
-          {/* Search - Mobile Toggle */}
+          
           <button
             onClick={() => setSearchOpen(!searchOpen)}
             className="lg:hidden p-1.5 hover:bg-gray-100 rounded-md transition-colors"
@@ -119,16 +117,14 @@ export default function Header({ onMobileMenuToggle, isMobileMenuOpen }) {
             <Search size={18} />
           </button>
 
-          {/* Notification */}
+          
           <button className="text-text-main hover:text-brand transition-colors relative p-1.5">
             <Bell size={18} className="sm:w-5 sm:h-5" />
             <span className="absolute top-1 right-1 w-1.5 h-1.5 sm:w-2 sm:h-2 bg-red-500 rounded-full"></span>
           </button>
 
-          {/* Language Switcher */}
           <LanguageSwitcher />
 
-          {/* Avatar */}
           <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-brand-lighter border border-gray-200 overflow-hidden cursor-pointer flex-shrink-0">
             <img
               src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
@@ -138,7 +134,7 @@ export default function Header({ onMobileMenuToggle, isMobileMenuOpen }) {
           </div>
         </div>
 
-        {/* Mobile Search */}
+     
         {searchOpen && (
           <div className="absolute top-full left-0 right-0 bg-surface-alt border-b border-gray-200 p-3 lg:hidden animate-fade-in-up">
             <div className="relative">

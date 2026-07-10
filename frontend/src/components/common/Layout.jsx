@@ -10,9 +10,25 @@ export default function Layout({ children }) {
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
   const location = useLocation();
 
+  // ===== DEBUG: Log when Layout renders =====
+  console.log("🔍 Layout rendering");
+  console.log("🔍 Layout - children:", children);
+  console.log("🔍 Layout - location:", location.pathname);
+
   useEffect(() => {
+    console.log("🔍 Layout - location changed to:", location.pathname);
     setMobileSidebarOpen(false);
   }, [location]);
+
+  // ===== RENDER CONTENT =====
+  const renderContent = () => {
+    if (children) {
+      console.log("🔍 Layout - Rendering children");
+      return children;
+    }
+    console.log("🔍 Layout - Rendering Outlet");
+    return <Outlet />;
+  };
 
   return (
     <div className="flex h-screen bg-surface-alt overflow-hidden">
@@ -24,7 +40,7 @@ export default function Layout({ children }) {
         />
       )}
 
-      {/* Sidebar - Desktop */}
+      {/* Desktop Sidebar */}
       <div className="hidden lg:block flex-shrink-0 transition-all duration-300">
         <Sidebar
           collapsed={sidebarCollapsed}
@@ -32,7 +48,7 @@ export default function Layout({ children }) {
         />
       </div>
 
-      {/* Sidebar - Mobile */}
+      {/* Mobile Sidebar */}
       <div
         className={`fixed top-0 left-0 h-full z-50 transition-transform duration-300 lg:hidden ${
           mobileSidebarOpen ? "translate-x-0" : "-translate-x-full"
@@ -55,7 +71,9 @@ export default function Layout({ children }) {
         />
 
         <main className="flex-1 overflow-y-auto bg-surface-alt p-3 sm:p-4 md:p-6 lg:p-8">
-          <div className="max-w-7xl mx-auto">{children || <Outlet />}</div>
+          <div className="max-w-7xl mx-auto">
+            {renderContent()}
+          </div>
         </main>
 
         <BottomNav />
