@@ -2,19 +2,19 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { Provider } from "react-redux";
-import { BrowserRouter } from "react-router-dom";
+import { RouterProvider } from "react-router-dom";  
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
-import App from "./App";
+import { store } from "./store/store";
+import { LanguageProvider } from "./common/hooks/LanguageContext";
+import router from "./routes/Router";  
 import "./index.css";
-import { store } from "./redux/store"; 
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <Provider store={store}>
-      <BrowserRouter>
-        <App />
+      <LanguageProvider>
+        <RouterProvider router={router} />  
         <ToastContainer
           position="bottom-right"
           autoClose={3000}
@@ -27,7 +27,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
           pauseOnHover
           theme="light"
         />
-      </BrowserRouter>
+      </LanguageProvider>
     </Provider>
-  </React.StrictMode>,
+  </React.StrictMode>
 );
