@@ -19,7 +19,7 @@ export default function AppointmentCreatePage() {
       onChange={handleChange}
       onSave={handleSave}
       onCancel={handleCancel}
-      mode="create"
+      mode="create"       
       isLoading={isLoading}
     />
   );

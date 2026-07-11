@@ -838,6 +838,7 @@ const translations = {
   },
 };
 
+
 const LanguageContext = createContext();
 
 export const useLanguage = () => {
@@ -863,8 +864,9 @@ export const LanguageProvider = ({ children }) => {
       setLanguage(lang);
       localStorage.setItem("language", lang);
 
+      // ✅ Update API Header (Standard way)
       if (api && api.defaults) {
-        api.defaults.headers.language = lang;
+        api.defaults.headers["Accept-Language"] = lang;
       }
 
       document.documentElement.lang = lang;
@@ -873,11 +875,12 @@ export const LanguageProvider = ({ children }) => {
   };
 
   useEffect(() => {
+    // ✅ Set default language header on app load
     if (api && api.defaults) {
-      api.defaults.headers.language = language;
+      api.defaults.headers["Accept-Language"] = language;
     }
     document.documentElement.lang = language;
-  }, []);
+  }, [language]);
 
   const value = {
     language,

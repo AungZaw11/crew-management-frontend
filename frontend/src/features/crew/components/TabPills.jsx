@@ -2,6 +2,7 @@
 import React from "react";
 import { useLanguage } from "../../../common/hooks/LanguageContext";
 
+// ===== TAB KEYS =====
 export const TAB_KEYS = [
   "personal_info",
   "qualifications",
@@ -13,11 +14,11 @@ export const TAB_KEYS = [
   "health",
   "experiences",
   "evaluation",
-  "certificates",
   "accident",
 ];
 
-const TAB_LABELS = {
+// ===== TAB LABELS =====
+export const TAB_LABELS = {
   personal_info: "Personal Info",
   qualifications: "Qualifications",
   appointment: "Appointment",
@@ -28,30 +29,100 @@ const TAB_LABELS = {
   health: "Health",
   experiences: "Experiences",
   evaluation: "Evaluation",
-  certificates: "Certificates",
+  
   accident: "Accident",
 };
 
-export default function TabPills({ activeTab, setActiveTab }) {
+// ===== TAB ICONS (optional) =====
+export const TAB_ICONS = {
+  personal_info: "👤",
+  qualifications: "📜",
+  appointment: "📅",
+  replacement: "🔄",
+  payment: "💰",
+  family: "👨‍👩‍👧‍👦",
+  injury: "🩹",
+  health: "🏥",
+  experiences: "💼",
+  evaluation: "⭐",
+  certificates: "📄",
+  accident: "⚠️",
+};
+
+// ===== MAIN COMPONENT =====
+export default function TabPills({
+  activeTab,
+  setActiveTab,
+  tabs = TAB_KEYS,
+  customLabels = {},
+  showIcons = false,
+  className = "",
+  pillClassName = "",
+  activeClassName = "",
+  inactiveClassName = "",
+  isPersonalInfoValid = true,  
+  hasCrewId = false, 
+}) {
   const { t } = useLanguage();
 
+   const handleTabChange = (tabKey) => {
+    
+    if (activeTab === TAB_KEYS[0] && tabKey !== TAB_KEYS[0]) {
+      if (!isPersonalInfoValid) {
+        alert("Please complete Personal Information first!");
+        return;
+      }
+      if (!hasCrewId) {
+        alert("Please save Personal Information first!");
+        return;
+      }
+    }
+    setActiveTab(tabKey);
+  };
+
+  const getTabLabel = (tabKey) => {
+    return customLabels[tabKey] || t(tabKey) || TAB_LABELS[tabKey] || tabKey.replace("_", " ");
+  };
+
+  const getTabIcon = (tabKey) => {
+    return TAB_ICONS[tabKey] || "";
+  };
+
   return (
-    <div className="flex flex-wrap gap-2 px-6 py-4 border-b border-gray-200 bg-gray-50/80">
-      {TAB_KEYS.map((key) => (
-        <button
-          key={key}
-          onClick={() => setActiveTab(key)}
-          className={`px-4 py-2 text-sm font-medium rounded-md transition-all duration-200
-            ${
-              activeTab === key
-                ? "bg-blue-600 text-white shadow-sm ring-2 ring-blue-600 ring-offset-1"
-                : "bg-white text-gray-600 hover:bg-gray-100 border border-gray-200 hover:border-gray-300"
-            }
-          `}
-        >
-          {t(key) || TAB_LABELS[key] || key.replace("_", " ")}
-        </button>
-      ))}
+    <div
+      className={`border-b border-gray-200 bg-[#FBFDFF] px-10 py-6 md:px-8 ${className}`}
+    >
+      <div
+        role="tablist"
+        aria-label={t("crew_profile_sections") || "Crew profile sections"}
+        className="flex flex-wrap gap-4"
+      >
+        {tabs.map((tabKey) => {
+          const active = activeTab === tabKey;
+          const label = getTabLabel(tabKey);
+          const icon = showIcons ? getTabIcon(tabKey) : "";
+
+          return (
+            <button
+              key={tabKey}
+              role="tab"
+              aria-selected={active}
+              onClick={() => setActiveTab(tabKey)}
+              className={`
+                w-[168px] rounded-full border py-1.5 text-base transition-all duration-200
+                ${active 
+                  ? `border-[#002F67] bg-[#002F67] font-medium text-[#EFF6FF] shadow-sm ${activeClassName}`
+                  : `border-[#315888] bg-white text-[#315888] hover:bg-slate-50 hover:border-[#002F67] ${inactiveClassName}`
+                }
+                ${pillClassName}
+              `}
+            >
+              {icon && <span className="mr-2">{icon}</span>}
+              {label}
+            </button>
+          );
+        })}
+      </div>
     </div>
   );
 }

@@ -43,7 +43,7 @@ const initialPersonalInfoState = {
   contract_period: "",
 };
 
-export const usePersonalInfo = (initialData = null, onSuccess, onError) => {
+export const usePersonalInfo = (initialData = null, onSuccess) => {
   const dispatch = useDispatch();
   const [crewMember, setCrewMember] = useState(initialData || initialPersonalInfoState);
   const [errors, setErrors] = useState({});
@@ -51,7 +51,6 @@ export const usePersonalInfo = (initialData = null, onSuccess, onError) => {
   const [avatarPreview, setAvatarPreview] = useState(null);
   const [avatarFile, setAvatarFile] = useState(null);
 
-  // ===== HANDLE CHANGE =====
   const handleChange = useCallback((e) => {
     const { name, value } = e.target;
     setCrewMember((prev) => ({ ...prev, [name]: value }));
@@ -60,7 +59,6 @@ export const usePersonalInfo = (initialData = null, onSuccess, onError) => {
     }
   }, [errors]);
 
-  // ===== HANDLE FILE UPLOAD =====
   const handleFileUpload = useCallback((file) => {
     setAvatarFile(file);
     const reader = new FileReader();
@@ -71,14 +69,12 @@ export const usePersonalInfo = (initialData = null, onSuccess, onError) => {
     reader.readAsDataURL(file);
   }, []);
 
-  // ===== HANDLE REMOVE AVATAR =====
   const handleRemoveAvatar = useCallback(() => {
     setAvatarPreview(null);
     setAvatarFile(null);
     toastHelper.info('Avatar removed');
   }, []);
 
-  // ===== VALIDATE =====
   const validate = useCallback(() => {
     const newErrors = {};
     const requiredFields = [
@@ -116,7 +112,6 @@ export const usePersonalInfo = (initialData = null, onSuccess, onError) => {
     return !hasError;
   }, [crewMember]);
 
-  // ===== HANDLE SAVE =====
   const handleSave = useCallback(async () => {
     if (!validate()) {
       const firstError = document.querySelector(".border-red-500");
@@ -154,15 +149,11 @@ export const usePersonalInfo = (initialData = null, onSuccess, onError) => {
       }
     } catch (error) {
       toastHelper.updateLoadingToError(toastId, error.message || "Failed to save personal info");
-      if (onError) {
-        onError(error);
-      }
     } finally {
       setIsLoading(false);
     }
-  }, [crewMember, avatarFile, validate, dispatch, onSuccess, onError]);
+  }, [crewMember, avatarFile, validate, dispatch, onSuccess]);
 
-  // ===== RESET =====
   const reset = useCallback(() => {
     setCrewMember(initialPersonalInfoState);
     setErrors({});

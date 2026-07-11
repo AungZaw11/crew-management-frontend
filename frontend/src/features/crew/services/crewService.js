@@ -24,6 +24,30 @@ const mockCrews = [
     email: "mg.mg@example.com",
     phone: "+95 999 888 778",
   },
+  {
+    id: 3,
+    crew_code: "CRW002",
+    name_eng: "Mg Mg Lwin",
+    name_kor: "엠지엠",
+    rank: "Engineer",
+    vessel: "Woori Sun",
+    status: "on_leave",
+    hire_date: "2023-03-20",
+    email: "mg.mg@example.com",
+    phone: "+95 999 888 778",
+  },
+  {
+    id: 4,
+    crew_code: "CRW002",
+    name_eng: "Mg Mg Lwin",
+    name_kor: "엠지엠",
+    rank: "Engineer",
+    vessel: "Woori Sun",
+    status: "on_leave",
+    hire_date: "2023-03-20",
+    email: "mg.mg@example.com",
+    phone: "+95 999 888 778",
+  }
 ];
 
 export const crewService = {

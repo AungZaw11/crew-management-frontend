@@ -3,28 +3,54 @@ import api from "../../../services/api";
 
 // ===== MOCK DATA =====
 const mockDashboardData = {
-  totalCrews: 72,
-  signOn: 45,
-  signOff: 20,
-  onLeave: 7,
-  activeContracts: 38,
-  expiringContracts: 12,
-  pendingPayments: 8,
-  totalAmount: 125000,
-  completedContracts: 156,
-  completionRate: "78%",
-  availableCrew: 15,
-  expiringCerts: 24,
+  // ===== Summary Cards Data =====
+  certificateCount: 96,
+  certificateLeft: 30,
+  certificateRight: 20,
+  
+  contractCount: 55,
+  contractLeft: 20,
+  contractRight: 15,
+  
+  pptCount: 124,
+  pptLeft: 40,
+  pptRight: 25,
+  
+  vesselCount: 24,
+  vesselLeft: 10,
+  vesselRight: 8,
+  
+  // ===== Crew Status =====
+  totalCrews: 1200,
+  signOn: 800,
+  signOff: 400,
+  onLeave: 150,
+  
+  // ===== Expired Contracts Table =====
   expiredData: [
-    { id: 1, name: "Aung Ko Htet", certificate: "STCW", expiryDate: "2024-01-15" },
-    { id: 2, name: "Mg Mg Lwin", certificate: "Medical", expiryDate: "2024-02-01" },
-    { id: 3, name: "Htoo Htoo", certificate: "Passport", expiryDate: "2024-02-10" },
+    { id: 1, name: "Mg Mg", vessel: "Sun Rio", rank: "Captain", overdue: "30 Days" },
+    { id: 2, name: "Aung Aung", vessel: "Woori Sun", rank: "Pilot", overdue: "45 Days" },
+    { id: 3, name: "Ko Htoo", vessel: "HS Glory", rank: "Chief Officer", overdue: "20 Days" },
+    { id: 4, name: "Hla Hla", vessel: "Oriental Star", rank: "Engineer", overdue: "60 Days" },
+    { id: 5, name: "Ye Htet", vessel: "Sun Rio", rank: "Able Seaman", overdue: "15 Days" },
+    { id: 6, name: "Lin Lin", vessel: "Woori Sun", rank: "Captain", overdue: "35 Days" },
+    { id: 7, name: "John K", vessel: "HS Glory", rank: "Pilot", overdue: "25 Days" },
   ],
+  
+  // ===== Expire Soon Table =====
   expireSoonData: [
-    { id: 1, name: "Ye Phyo Win", certificate: "GMDSS", expiryDate: "2024-04-15", daysLeft: 15 },
-    { id: 2, name: "Kyaw Zin", certificate: "STCW", expiryDate: "2024-04-20", daysLeft: 20 },
-    { id: 3, name: "Nay Lin", certificate: "Medical", expiryDate: "2024-04-25", daysLeft: 25 },
+    { id: 1, name: "Ye Htet", vessel: "Sun Rio", rank: "Pilot", education: "Certificate of Endorsement (GMDSS)", expireDate: "2024-04-15", remaining: "30 Days" },
+    { id: 2, name: "Lin Lin", vessel: "Woori Sun", rank: "Captain", education: "Captain", expireDate: "2024-04-20", remaining: "30 Days" },
+    { id: 3, name: "John K", vessel: "HS Glory", rank: "Pilot", education: "Pilot", expireDate: "2024-04-25", remaining: "30 Days" },
+    { id: 4, name: "Mg Mg", vessel: "Sun Rio", rank: "Captain", education: "Captain", expireDate: "2024-04-28", remaining: "30 Days" },
+    { id: 5, name: "Aung Aung", vessel: "Woori Sun", rank: "Pilot", education: "Pilot", expireDate: "2024-04-30", remaining: "30 Days" },
+    { id: 6, name: "Ko Htoo", vessel: "HS Glory", rank: "Chief Officer", education: "Captain", expireDate: "2024-05-05", remaining: "30 Days" },
   ],
+  
+  // ===== Pie Chart Data =====
+  signOn: 800,
+  signOff: 400,
+  totalCrews: 1200,
 };
 
 export const dashboardService = {
@@ -43,29 +69,9 @@ export const dashboardService = {
     // }
   },
 
-  // Get recent activities
-  getActivities: async () => {
-    await new Promise((resolve) => setTimeout(resolve, 500));
-    return {
-      data: [
-        { message: "New crew member added: Aung Ko Htet", time: "2 hours ago" },
-        { message: "Certificate updated for Mg Mg Lwin", time: "4 hours ago" },
-        { message: "Contract expired for Htoo Htoo", time: "1 day ago" },
-      ],
-    };
-  },
+  
 
-  // Get upcoming tasks
-  getTasks: async () => {
-    await new Promise((resolve) => setTimeout(resolve, 500));
-    return {
-      data: [
-        { title: "Review crew certifications", dueDate: "2026-07-15", priority: "High" },
-        { title: "Update crew contracts", dueDate: "2026-07-20", priority: "Medium" },
-        { title: "Monthly payroll processing", dueDate: "2026-07-25", priority: "High" },
-      ],
-    };
-  },
+ 
 };
 
 export default dashboardService;

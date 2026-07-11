@@ -1,33 +1,100 @@
 // src/features/crew/pages/CrewDetailPage.jsx
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { ArrowLeft, Edit, Trash2, Mail, Phone, MapPin, Calendar, User, Anchor } from "lucide-react";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchCrewById } from "../services/crewSlice";
+import { fetchQualificationsByCrewId, deleteQualification } from "../../qualification/services/qualificationSlice";
+import SubHeader from "../components/SubHeader";
+import TabPills, { TAB_KEYS } from "../components/TabPills";
+import PersonalInfoForm from "../../personal-info/components/PersonalInfoForm";
+import QualificationList from "../../qualification/components/QualificationList";
 import { useLanguage } from "../../../common/hooks/LanguageContext";
-import { useCrewDetail } from "../hooks/useCrewDetail";
-import { useCrewList } from "../hooks/useCrewList";
-import CrewStatusBadge from "../components/CrewStatusBadge";
 import LoadingSpinner from "../../../common/components/LoadingSpinner";
+import toastHelper from "../../../utils/toastHelper";
+
+function OtherTab({ tabName }) {
+  return (
+    <div className="text-center py-12 text-text-light">
+      <p className="text-lg">{tabName} content goes here</p>
+    </div>
+  );
+}
 
 export default function CrewDetailPage() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const { t } = useLanguage();
-  const { crew, isLoading, error, deleteCrew } = useCrewDetail(id);
+  
+  const { selectedCrew, isLoading: isCrewLoading } = useSelector((state) => state.crew);
+  const { qualifications, isLoading: isQualLoading } = useSelector((state) => state.qualification);
+  const [activeTab, setActiveTab] = useState(TAB_KEYS[0]);
 
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  useEffect(() => {
+    if (id) {
+      dispatch(fetchCrewById(id));
+    }
+  }, [dispatch, id]);
 
-  if (isLoading) {
+  // Load qualifications when Qualification tab is active
+  useEffect(() => {
+    if (activeTab === TAB_KEYS[1] && id) {
+      dispatch(fetchQualificationsByCrewId(id));
+    }
+  }, [dispatch, id, activeTab]);
+
+  const handleBack = () => navigate("/crew");
+  
+  // ✅ Edit နှိပ်ရင် Edit Page ကိုသွားမယ်
+  const handleEdit = () => {
+    navigate(`/crew/${id}/edit`);
+  };
+
+  // ✅ Delete Crew
+  const handleDeleteCrew = async () => {
+    if (window.confirm(t("confirm_delete") || "Are you sure you want to delete this crew member?")) {
+      try {
+        // TODO: dispatch deleteCrew(id)
+        toastHelper.success("Crew deleted successfully!");
+        navigate("/crew");
+      } catch (error) {
+        toastHelper.error(error.message || "Failed to delete crew");
+      }
+    }
+  };
+
+  const handleDeleteQualification = async (qualId) => {
+    if (window.confirm(t("confirm_delete") || "Are you sure?")) {
+      try {
+        await dispatch(deleteQualification(qualId)).unwrap();
+        toastHelper.success(t("qualification_deleted") || "Qualification deleted!");
+        dispatch(fetchQualificationsByCrewId(id));
+      } catch (error) {
+        toastHelper.error(error.message || "Failed to delete");
+      }
+    }
+  };
+
+  const handleEditQualification = (qualId) => {
+    navigate(`/crew/${id}/qualification/${qualId}/edit`);
+  };
+
+  const handleViewQualification = (qualId) => {
+    navigate(`/crew/${id}/qualification/${qualId}`);
+  };
+
+  if (isCrewLoading) {
     return (
-      <div className="flex items-center justify-center h-64">
+      <div className="flex h-screen items-center justify-center">
         <LoadingSpinner />
       </div>
     );
   }
 
-  if (error) {
+  if (!selectedCrew) {
     return (
       <div className="p-6 text-center">
-        <p className="text-red-500">{error}</p>
+        <p className="text-gray-500">{t("crew_not_found") || "Crew not found"}</p>
         <button
           onClick={() => navigate("/crew")}
           className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
@@ -38,188 +105,75 @@ export default function CrewDetailPage() {
     );
   }
 
-  if (!crew) {
-    return (
-      <div className="p-6 text-center">
-        <p className="text-gray-500">{t("crew_not_found") || "Crew member not found"}</p>
-        <button
-          onClick={() => navigate("/crew")}
-          className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
-        >
-          {t("back_to_list") || "Back to List"}
-        </button>
-      </div>
-    );
-  }
+  const crewLabel = selectedCrew.name_eng || selectedCrew.name_kor || "Crew Member";
 
-  const handleDelete = async () => {
-    await deleteCrew();
-    navigate("/crew");
+  const renderContent = () => {
+    switch (activeTab) {
+      case TAB_KEYS[0]: // personal_info
+        return (
+          <PersonalInfoForm
+            crewMember={selectedCrew}
+            isEditing={false}
+            crewId={id}
+          />
+        );
+
+      case TAB_KEYS[1]: // qualifications
+        return (
+          <QualificationList
+            qualifications={qualifications}
+            crewId={id}
+            onEdit={handleEditQualification}
+            onDelete={handleDeleteQualification}
+            onView={handleViewQualification}
+            isLoading={isQualLoading}
+          />
+        );
+
+      case TAB_KEYS[2]: // appointment
+        return <OtherTab tabName="Appointment" />;
+      case TAB_KEYS[3]: // replacement
+        return <OtherTab tabName="Replacement" />;
+      case TAB_KEYS[4]: // payment
+        return <OtherTab tabName="Payment" />;
+      case TAB_KEYS[5]: // family
+        return <OtherTab tabName="Family" />;
+      case TAB_KEYS[6]: // injury
+        return <OtherTab tabName="Injury" />;
+      case TAB_KEYS[7]: // health
+        return <OtherTab tabName="Health" />;
+      case TAB_KEYS[8]: // experiences
+        return <OtherTab tabName="Experiences" />;
+      case TAB_KEYS[9]: // evaluation
+        return <OtherTab tabName="Evaluation" />;
+      case TAB_KEYS[10]: // certificates
+        return <OtherTab tabName="Certificates" />;
+      case TAB_KEYS[11]: // accident
+        return <OtherTab tabName="Accident" />;
+
+      default:
+        return <OtherTab tabName={activeTab} />;
+    }
   };
 
   return (
-    <div className="p-6 max-w-[1200px] mx-auto">
-      {/* Header */}
-      <div className="flex flex-wrap justify-between items-center gap-4 mb-6">
-        <div className="flex items-center gap-4">
-          <button
-            onClick={() => navigate("/crew")}
-            className="p-2 hover:bg-gray-100 rounded-md transition-colors"
-          >
-            <ArrowLeft className="w-5 h-5 text-gray-600" />
-          </button>
-          <div>
-            <h1 className="text-2xl font-bold text-gray-800">
-              {crew.name_eng || crew.name_kor || "Crew Member"}
-            </h1>
-            <p className="text-sm text-gray-500">{crew.crew_code}</p>
-          </div>
-        </div>
-        <div className="flex gap-3">
-          <button
-            onClick={() => navigate(`/crew/${id}/edit`)}
-            className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors text-sm"
-          >
-            <Edit size={16} />
-            {t("edit") || "Edit"}
-          </button>
-          <button
-            onClick={() => setShowDeleteConfirm(true)}
-            className="flex items-center gap-2 px-4 py-2 border border-red-300 text-red-600 rounded-md hover:bg-red-50 transition-colors text-sm"
-          >
-            <Trash2 size={16} />
-            {t("delete") || "Delete"}
-          </button>
-        </div>
-      </div>
+    <div className="flex flex-col bg-white min-h-screen">
+      {/* ✅ SubHeader - Edit Button ပါတယ် */}
+      <SubHeader
+        onBack={handleBack}
+        isNew={false}
+        crewLabel={crewLabel}
+        showAddNew={false}
+        showEdit={true}        
+        onEdit={handleEdit}    
+        showDelete={true}      
+        onDelete={handleDeleteCrew}  
+        isEditMode={false}     
+      />
 
-      {/* Delete Confirmation Modal */}
-      {showDeleteConfirm && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 max-w-md w-full">
-            <h3 className="text-lg font-semibold mb-2">
-              {t("confirm_delete") || "Confirm Delete"}
-            </h3>
-            <p className="text-gray-600 mb-4">
-              {t("confirm_delete_message") || "Are you sure you want to delete this crew member?"}
-            </p>
-            <div className="flex justify-end gap-3">
-              <button
-                onClick={() => setShowDeleteConfirm(false)}
-                className="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50"
-              >
-                {t("cancel") || "Cancel"}
-              </button>
-              <button
-                onClick={handleDelete}
-                className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
-              >
-                {t("delete") || "Delete"}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      <TabPills activeTab={activeTab} setActiveTab={setActiveTab} />
 
-      {/* Profile Card */}
-      <div className="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
-        <div className="p-6 border-b border-gray-200">
-          <div className="flex flex-col md:flex-row gap-6">
-            {/* Avatar */}
-            <div className="flex-shrink-0">
-              <div className="w-32 h-32 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden">
-                {crew.avatar ? (
-                  <img src={crew.avatar} alt={crew.name_eng} className="w-full h-full object-cover" />
-                ) : (
-                  <User className="w-16 h-16 text-gray-400" />
-                )}
-              </div>
-            </div>
-
-            {/* Basic Info */}
-            <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <p className="text-sm text-gray-500">{t("crew_code") || "Crew Code"}</p>
-                <p className="font-medium">{crew.crew_code}</p>
-              </div>
-              <div>
-                <p className="text-sm text-gray-500">{t("rank") || "Rank"}</p>
-                <p className="font-medium">{crew.rank || "-"}</p>
-              </div>
-              <div>
-                <p className="text-sm text-gray-500">{t("vessel") || "Vessel"}</p>
-                <p className="font-medium">{crew.vessel || "-"}</p>
-              </div>
-              <div>
-                <p className="text-sm text-gray-500">{t("status") || "Status"}</p>
-                <CrewStatusBadge status={crew.status} size="md" />
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Contact Info */}
-        <div className="p-6 border-b border-gray-200">
-          <h3 className="text-lg font-semibold mb-4">
-            {t("contact_info") || "Contact Information"}
-          </h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="flex items-center gap-3">
-              <Mail className="w-4 h-4 text-gray-400" />
-              <div>
-                <p className="text-sm text-gray-500">{t("email") || "Email"}</p>
-                <p className="font-medium">{crew.email || "-"}</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-3">
-              <Phone className="w-4 h-4 text-gray-400" />
-              <div>
-                <p className="text-sm text-gray-500">{t("phone") || "Phone"}</p>
-                <p className="font-medium">{crew.phone || "-"}</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-3">
-              <Phone className="w-4 h-4 text-gray-400" />
-              <div>
-                <p className="text-sm text-gray-500">{t("mobile") || "Mobile"}</p>
-                <p className="font-medium">{crew.mobile || "-"}</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-3">
-              <MapPin className="w-4 h-4 text-gray-400" />
-              <div>
-                <p className="text-sm text-gray-500">{t("address") || "Address"}</p>
-                <p className="font-medium">{crew.address || "-"}</p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Personal Details */}
-        <div className="p-6">
-          <h3 className="text-lg font-semibold mb-4">
-            {t("personal_details") || "Personal Details"}
-          </h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <p className="text-sm text-gray-500">{t("birth_date") || "Birth Date"}</p>
-              <p className="font-medium">{crew.birth_date || "-"}</p>
-            </div>
-            <div>
-              <p className="text-sm text-gray-500">{t("nationality") || "Nationality"}</p>
-              <p className="font-medium">{crew.nationality || "-"}</p>
-            </div>
-            <div>
-              <p className="text-sm text-gray-500">{t("hire_date") || "Hire Date"}</p>
-              <p className="font-medium">{crew.hire_date || "-"}</p>
-            </div>
-            <div>
-              <p className="text-sm text-gray-500">{t("religion") || "Religion"}</p>
-              <p className="font-medium">{crew.religion || "-"}</p>
-            </div>
-          </div>
-        </div>
-      </div>
+      <div className="flex-1 bg-white">{renderContent()}</div>
     </div>
   );
 }

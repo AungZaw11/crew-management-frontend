@@ -39,7 +39,7 @@ export default function DynamicTable({
 
     try {
       if (useDemoData) {
-        console.log(`📊 Using demo data for ${tabName}`);
+        console.log(` Using demo data for ${tabName}`);
         const demoData = getDemoData();
         const startIndex = (page - 1) * itemsPerPage;
         const endIndex = startIndex + itemsPerPage;

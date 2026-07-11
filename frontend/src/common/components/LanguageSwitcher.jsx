@@ -8,19 +8,21 @@ export default function LanguageSwitcher() {
   const { language, setLanguage, t } = useLanguage();
 
   const handleLanguageChange = (lang) => {
+    // 1. Update State
     setLanguage(lang);
+    
+    // 2. Update LocalStorage
     localStorage.setItem("language", lang);
-    api.defaults.headers.language = lang;
-
-    api.interceptors.request.use(
-      (config) => {
-        config.headers.language = lang;
-        return config;
-      },
-      (error) => Promise.reject(error),
-    );
-
-    console.log("Language changed to:", lang);
+    
+    // 3. Update API Headers
+    if (api && api.defaults) {
+      api.defaults.headers["Accept-Language"] = lang;
+    }
+    
+    // 4. Update HTML lang attribute
+    document.documentElement.lang = lang;
+    
+    console.log(`🌐 Language changed to: ${lang.toUpperCase()}`);
   };
 
   return (

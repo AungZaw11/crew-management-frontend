@@ -1,40 +1,26 @@
 // src/features/appointment/hooks/useAppointment.js
 import { useState, useCallback, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useNavigate, useParams } from "react-router-dom";
-import { createAppointment, updateAppointment, fetchAppointmentById } from "../services/appointmentSlice";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { createAppointment, updateAppointment } from "../services/appointmentSlice";
 import toastHelper from "../../../utils/toastHelper";
 
-export const useAppointment = (initialData = null, onSuccess) => {
+export const useAppointment = (initialData = null) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { id } = useParams();
-  const isEdit = !!id;
-
-  // State
   const [formData, setFormData] = useState(initialData || {});
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
+  const isEditing = !!initialData?.id;
 
-  // Redux State
-  const { selectedAppointment, isLoading: isFetching } = useSelector(
-    (state) => state.appointment
-  );
-
-  // ===== LOAD DATA FOR EDIT =====
+  // Load initial data when editing
   useEffect(() => {
-    if (isEdit && id) {
-      dispatch(fetchAppointmentById(id));
+    if (initialData) {
+      setFormData(initialData);
     }
-  }, [dispatch, id, isEdit]);
+  }, [initialData]);
 
-  useEffect(() => {
-    if (isEdit && selectedAppointment) {
-      setFormData(selectedAppointment);
-    }
-  }, [isEdit, selectedAppointment]);
-
-  // ===== HANDLE CHANGE =====
+  // Handle change
   const handleChange = useCallback((e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -43,7 +29,7 @@ export const useAppointment = (initialData = null, onSuccess) => {
     }
   }, [errors]);
 
-  // ===== VALIDATE =====
+  // Validate
   const validate = useCallback(() => {
     const newErrors = {};
     const requiredFields = [
@@ -69,7 +55,7 @@ export const useAppointment = (initialData = null, onSuccess) => {
     return !hasError;
   }, [formData]);
 
-  // ===== HANDLE SAVE =====
+  // Handle save
   const handleSave = useCallback(async () => {
     if (!validate()) {
       const firstError = document.querySelector(".border-red-500");
@@ -82,40 +68,35 @@ export const useAppointment = (initialData = null, onSuccess) => {
 
     setIsLoading(true);
     const toastId = toastHelper.loading(
-      isEdit ? "Updating appointment..." : "Saving appointment..."
+      isEditing ? "Updating appointment..." : "Saving appointment..."
     );
 
     try {
       let result;
-      if (isEdit) {
-        result = await dispatch(updateAppointment({ id, data: formData })).unwrap();
+      if (isEditing) {
+        result = await dispatch(updateAppointment({ id: formData.id, data: formData })).unwrap();
       } else {
         result = await dispatch(createAppointment(formData)).unwrap();
       }
 
       toastHelper.updateLoadingToSuccess(
         toastId,
-        isEdit ? "Appointment updated successfully!" : "Appointment saved successfully!"
+        isEditing ? "Appointment updated successfully!" : "Appointment saved successfully!"
       );
-
-      if (onSuccess) {
-        onSuccess(result);
-      } else {
-        navigate("/crew/appointment");
-      }
+      navigate(-1);
     } catch (error) {
       toastHelper.updateLoadingToError(
         toastId,
-        error.message || (isEdit ? "Failed to update appointment" : "Failed to save appointment")
+        error.message || (isEditing ? "Failed to update appointment" : "Failed to save appointment")
       );
     } finally {
       setIsLoading(false);
     }
-  }, [formData, isEdit, id, validate, dispatch, navigate, onSuccess]);
+  }, [formData, isEditing, validate, dispatch, navigate]);
 
-  // ===== HANDLE CANCEL =====
+  // Handle cancel
   const handleCancel = useCallback(() => {
-    navigate("/crew/appointment");
+    navigate(-1);
   }, [navigate]);
 
   return {
@@ -123,8 +104,7 @@ export const useAppointment = (initialData = null, onSuccess) => {
     setFormData,
     errors,
     isLoading,
-    isFetching,
-    isEdit,
+    isEditing,
     handleChange,
     handleSave,
     handleCancel,

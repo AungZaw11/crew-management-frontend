@@ -4,14 +4,19 @@ import { useQualification } from "../hooks/useQualification";
 import QualificationForm from "../components/QualificationForm";
 
 export default function QualificationCreatePage() {
+  // ✅ useQualification Hook ကို သုံးပါ
   const {
     formData,
     errors,
     isLoading,
+    isEditing,
+    uploadedFile,
     handleChange,
+    handleFileUpload,
+    handleFileRemove,
     handleSave,
     handleCancel,
-  } = useQualification(null);
+  } = useQualification(null, null);
 
   return (
     <QualificationForm
@@ -19,8 +24,12 @@ export default function QualificationCreatePage() {
       onChange={handleChange}
       onSave={handleSave}
       onCancel={handleCancel}
-      mode="create"
+      errors={errors}
       isLoading={isLoading}
+      isEditing={isEditing}
+      uploadedFile={uploadedFile}
+      onFileUpload={handleFileUpload}     
+      onFileRemove={handleFileRemove}     
     />
   );
 }

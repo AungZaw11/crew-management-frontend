@@ -1,13 +1,13 @@
 // src/features/qualification/services/qualificationSlice.js
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import qualificationService from "../qualificationService";
+import qualificationService from "./qualificationService";
 
 // ===== ASYNC THUNKS =====
-export const fetchQualifications = createAsyncThunk(
-  "qualification/fetchAll",
-  async (_, { rejectWithValue }) => {
+export const fetchQualificationsByCrewId = createAsyncThunk(
+  "qualification/fetchByCrewId",
+  async (crewId, { rejectWithValue }) => {
     try {
-      const response = await qualificationService.getAll();
+      const response = await qualificationService.getByCrewId(crewId);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response?.data?.message || "Failed to fetch qualifications");
@@ -84,16 +84,16 @@ const qualificationSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      // Fetch All
-      .addCase(fetchQualifications.pending, (state) => {
+      // Fetch By Crew ID
+      .addCase(fetchQualificationsByCrewId.pending, (state) => {
         state.isLoading = true;
         state.error = null;
       })
-      .addCase(fetchQualifications.fulfilled, (state, action) => {
+      .addCase(fetchQualificationsByCrewId.fulfilled, (state, action) => {
         state.isLoading = false;
         state.qualifications = action.payload;
       })
-      .addCase(fetchQualifications.rejected, (state, action) => {
+      .addCase(fetchQualificationsByCrewId.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload;
       })

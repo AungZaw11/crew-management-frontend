@@ -1,6 +1,6 @@
 // src/features/crew/components/SubHeader.jsx
 import React from "react";
-import { ArrowLeft, Plus } from "lucide-react";
+import { ArrowLeft, Plus, Trash2, Edit } from "lucide-react";
 import { useLanguage } from "../../../common/hooks/LanguageContext";
 
 export default function SubHeader({
@@ -9,6 +9,11 @@ export default function SubHeader({
   crewLabel = "New Person",
   showAddNew = false,
   onAddNew,
+  showDelete = false,
+  onDelete,
+  showEdit = false,        
+  onEdit,                  
+  isEditMode = false,     
 }) {
   const { t } = useLanguage();
 
@@ -26,15 +31,40 @@ export default function SubHeader({
         </h1>
       </div>
 
-      {showAddNew && (
-        <button
-          onClick={onAddNew}
-          className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors text-sm font-medium"
-        >
-          <Plus className="w-4 h-4" />
-          {t("add_new") || "Add New"}
-        </button>
-      )}
+      <div className="flex items-center gap-3">
+      
+        {showEdit && !isEditMode && (
+          <button
+            onClick={onEdit}
+            className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors text-sm font-medium"
+          >
+            <Edit className="w-4 h-4" />
+            {t("edit") || "Edit"}
+          </button>
+        )}
+
+        {/* Delete Button */}
+        {showDelete && (
+          <button
+            onClick={onDelete}
+            className="flex items-center gap-2 px-4 py-2 border border-red-300 text-red-600 rounded-md hover:bg-red-50 transition-colors text-sm font-medium"
+          >
+            <Trash2 className="w-4 h-4" />
+            {t("delete") || "Delete"}
+          </button>
+        )}
+        
+        {/* Add New Button */}
+        {showAddNew && (
+          <button
+            onClick={onAddNew}
+            className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors text-sm font-medium"
+          >
+            <Plus className="w-4 h-4" />
+            {t("add_new") || "Add New"}
+          </button>
+        )}
+      </div>
     </div>
   );
 }

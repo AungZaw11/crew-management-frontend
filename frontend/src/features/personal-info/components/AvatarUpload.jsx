@@ -49,7 +49,7 @@ export default function AvatarUpload({
   };
 
   return (
-    <div className="flex flex-col items-center gap-3 p-6 border-b border-gray-200">
+    <div className="flex flex-col items-center gap-3">
       <div className="relative flex h-[162px] w-[140px] items-center justify-center rounded bg-gray-200 overflow-hidden">
         {avatarPreview ? (
           <img 

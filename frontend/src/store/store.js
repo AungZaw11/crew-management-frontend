@@ -7,7 +7,7 @@ import crewReducer from "../features/crew/services/crewSlice";
 import dashboardReducer from "../features/dashboard/services/dashboardSlice";
 import calendarReducer from "../features/calendar/services/calendarSlice";
 import personalInfoReducer from "../features/personal-info/services/personalInfoSlice";
-
+import qualificationReducer from "../features/qualification/services/qualificationSlice";
 // ===== OPTIONAL: နောင်ထည့်မယ့် Reducers =====
 // import appointmentReducer from "../features/appointment/services/appointmentSlice";
 // import replacementReducer from "../features/replacement/services/replacementSlice";
@@ -28,6 +28,7 @@ export const store = configureStore({
     dashboard: dashboardReducer,
     calendar: calendarReducer,
     personalInfo: personalInfoReducer,
+    qualification: qualificationReducer,
     
     // ❌ မပြီးသေးတဲ့ Features (Comment လုပ်ထားပါ)
     // appointment: appointmentReducer,
@@ -39,7 +40,7 @@ export const store = configureStore({
     // experience: experienceReducer,
     // evaluation: evaluationReducer,
     // accident: accidentReducer,
-    // qualification: qualificationReducer,
+    // 
   },
   // ===== MIDDLEWARE CONFIGURATION =====
   middleware: (getDefaultMiddleware) =>
