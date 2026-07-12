@@ -10,7 +10,19 @@ export const fetchReplacements = createAsyncThunk(
       const response = await replacementService.getAll();
       return response.data;
     } catch (error) {
-      return rejectWithValue(error.response?.data?.message || "Failed to fetch replacements");
+      return rejectWithValue(error.message || "Failed to fetch replacements");
+    }
+  }
+);
+
+export const fetchReplacementsByCrewId = createAsyncThunk(
+  "replacement/fetchByCrewId",
+  async (crewId, { rejectWithValue }) => {
+    try {
+      const response = await replacementService.getByCrewId(crewId);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.message || "Failed to fetch replacements");
     }
   }
 );
@@ -22,7 +34,7 @@ export const fetchReplacementById = createAsyncThunk(
       const response = await replacementService.getById(id);
       return response.data;
     } catch (error) {
-      return rejectWithValue(error.response?.data?.message || "Failed to fetch replacement");
+      return rejectWithValue(error.message || "Failed to fetch replacement");
     }
   }
 );
@@ -34,7 +46,7 @@ export const createReplacement = createAsyncThunk(
       const response = await replacementService.create(data);
       return response.data;
     } catch (error) {
-      return rejectWithValue(error.response?.data?.message || "Failed to create replacement");
+      return rejectWithValue(error.message || "Failed to create replacement");
     }
   }
 );
@@ -46,7 +58,7 @@ export const updateReplacement = createAsyncThunk(
       const response = await replacementService.update(id, data);
       return response.data;
     } catch (error) {
-      return rejectWithValue(error.response?.data?.message || "Failed to update replacement");
+      return rejectWithValue(error.message || "Failed to update replacement");
     }
   }
 );
@@ -58,7 +70,7 @@ export const deleteReplacement = createAsyncThunk(
       await replacementService.delete(id);
       return id;
     } catch (error) {
-      return rejectWithValue(error.response?.data?.message || "Failed to delete replacement");
+      return rejectWithValue(error.message || "Failed to delete replacement");
     }
   }
 );
@@ -94,6 +106,19 @@ const replacementSlice = createSlice({
         state.replacements = action.payload;
       })
       .addCase(fetchReplacements.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload;
+      })
+      // Fetch By Crew ID
+      .addCase(fetchReplacementsByCrewId.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(fetchReplacementsByCrewId.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.replacements = action.payload;
+      })
+      .addCase(fetchReplacementsByCrewId.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload;
       })

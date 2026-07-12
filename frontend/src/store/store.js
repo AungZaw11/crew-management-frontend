@@ -8,12 +8,11 @@ import dashboardReducer from "../features/dashboard/services/dashboardSlice";
 import calendarReducer from "../features/calendar/services/calendarSlice";
 import personalInfoReducer from "../features/personal-info/services/personalInfoSlice";
 import qualificationReducer from "../features/qualification/services/qualificationSlice";
-// ===== OPTIONAL: နောင်ထည့်မယ့် Reducers =====
-// import appointmentReducer from "../features/appointment/services/appointmentSlice";
-// import replacementReducer from "../features/replacement/services/replacementSlice";
-// import paymentReducer from "../features/payment/services/paymentSlice";
-// import familyReducer from "../features/family/services/familySlice";
-// import injuryReducer from "../features/injury/services/injurySlice";
+import appointmentReducer from "../features/appointment/services/appointmentSlice";
+import replacementReducer from "../features/replacement/services/replacementSlice"; 
+import paymentReducer from "../features/payment/services/paymentSlice";
+import familyReducer from "../features/family/services/familySlice";
+ import injuryReducer from "../features/injury/services/injurySlice";
 // import healthReducer from "../features/health/services/healthSlice";
 // import experienceReducer from "../features/experience/services/experienceSlice";
 // import evaluationReducer from "../features/evaluation/services/evaluationSlice";
@@ -22,20 +21,17 @@ import qualificationReducer from "../features/qualification/services/qualificati
 
 export const store = configureStore({
   reducer: {
-    // ✅ ပြီးသွားတဲ့ Features
     auth: authReducer,
     crew: crewReducer,
     dashboard: dashboardReducer,
     calendar: calendarReducer,
     personalInfo: personalInfoReducer,
     qualification: qualificationReducer,
-    
-    // ❌ မပြီးသေးတဲ့ Features (Comment လုပ်ထားပါ)
-    // appointment: appointmentReducer,
-    // replacement: replacementReducer,
-    // payment: paymentReducer,
-    // family: familyReducer,
-    // injury: injuryReducer,
+    appointment: appointmentReducer,
+    replacement: replacementReducer,
+    payment: paymentReducer,
+    family: familyReducer,
+    injury: injuryReducer,
     // health: healthReducer,
     // experience: experienceReducer,
     // evaluation: evaluationReducer,

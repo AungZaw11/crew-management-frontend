@@ -2,71 +2,197 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import healthService from "./healthService";
 
-// ===== ASYNC THUNKS =====
-export const fetchHealths = createAsyncThunk(
-  "health/fetchAll",
-  async (_, { rejectWithValue }) => {
+// ===== INJURIES =====
+export const fetchInjuries = createAsyncThunk(
+  "health/fetchInjuries",
+  async (crewId, { rejectWithValue }) => {
     try {
-      const response = await healthService.getAll();
+      const response = await healthService.getInjuries(crewId);
       return response.data;
     } catch (error) {
-      return rejectWithValue(error.response?.data?.message || "Failed to fetch health records");
+      return rejectWithValue(error.message);
     }
   }
 );
 
-export const fetchHealthById = createAsyncThunk(
-  "health/fetchById",
+export const fetchInjuryById = createAsyncThunk(
+  "health/fetchInjuryById",
   async (id, { rejectWithValue }) => {
     try {
-      const response = await healthService.getById(id);
+      const response = await healthService.getInjuryById(id);
       return response.data;
     } catch (error) {
-      return rejectWithValue(error.response?.data?.message || "Failed to fetch health record");
+      return rejectWithValue(error.message);
     }
   }
 );
 
-export const createHealth = createAsyncThunk(
-  "health/create",
+export const createInjury = createAsyncThunk(
+  "health/createInjury",
   async (data, { rejectWithValue }) => {
     try {
-      const response = await healthService.create(data);
+      const response = await healthService.createInjury(data);
       return response.data;
     } catch (error) {
-      return rejectWithValue(error.response?.data?.message || "Failed to create health record");
+      return rejectWithValue(error.message);
     }
   }
 );
 
-export const updateHealth = createAsyncThunk(
-  "health/update",
+export const updateInjury = createAsyncThunk(
+  "health/updateInjury",
   async ({ id, data }, { rejectWithValue }) => {
     try {
-      const response = await healthService.update(id, data);
+      const response = await healthService.updateInjury(id, data);
       return response.data;
     } catch (error) {
-      return rejectWithValue(error.response?.data?.message || "Failed to update health record");
+      return rejectWithValue(error.message);
     }
   }
 );
 
-export const deleteHealth = createAsyncThunk(
-  "health/delete",
+export const deleteInjury = createAsyncThunk(
+  "health/deleteInjury",
   async (id, { rejectWithValue }) => {
     try {
-      await healthService.delete(id);
+      await healthService.deleteInjury(id);
       return id;
     } catch (error) {
-      return rejectWithValue(error.response?.data?.message || "Failed to delete health record");
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+// ===== MEDICAL CHECKUPS =====
+export const fetchMedicalCheckups = createAsyncThunk(
+  "health/fetchMedicalCheckups",
+  async (crewId, { rejectWithValue }) => {
+    try {
+      const response = await healthService.getMedicalCheckups(crewId);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+export const fetchMedicalCheckupById = createAsyncThunk(
+  "health/fetchMedicalCheckupById",
+  async (id, { rejectWithValue }) => {
+    try {
+      const response = await healthService.getMedicalCheckupById(id);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+export const createMedicalCheckup = createAsyncThunk(
+  "health/createMedicalCheckup",
+  async (data, { rejectWithValue }) => {
+    try {
+      const response = await healthService.createMedicalCheckup(data);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+export const updateMedicalCheckup = createAsyncThunk(
+  "health/updateMedicalCheckup",
+  async ({ id, data }, { rejectWithValue }) => {
+    try {
+      const response = await healthService.updateMedicalCheckup(id, data);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+export const deleteMedicalCheckup = createAsyncThunk(
+  "health/deleteMedicalCheckup",
+  async (id, { rejectWithValue }) => {
+    try {
+      await healthService.deleteMedicalCheckup(id);
+      return id;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+// ===== DISEASES =====
+export const fetchDiseases = createAsyncThunk(
+  "health/fetchDiseases",
+  async (crewId, { rejectWithValue }) => {
+    try {
+      const response = await healthService.getDiseases(crewId);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+export const fetchDiseaseById = createAsyncThunk(
+  "health/fetchDiseaseById",
+  async (id, { rejectWithValue }) => {
+    try {
+      const response = await healthService.getDiseaseById(id);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+export const createDisease = createAsyncThunk(
+  "health/createDisease",
+  async (data, { rejectWithValue }) => {
+    try {
+      const response = await healthService.createDisease(data);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+export const updateDisease = createAsyncThunk(
+  "health/updateDisease",
+  async ({ id, data }, { rejectWithValue }) => {
+    try {
+      const response = await healthService.updateDisease(id, data);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+export const deleteDisease = createAsyncThunk(
+  "health/deleteDisease",
+  async (id, { rejectWithValue }) => {
+    try {
+      await healthService.deleteDisease(id);
+      return id;
+    } catch (error) {
+      return rejectWithValue(error.message);
     }
   }
 );
 
 // ===== SLICE =====
 const initialState = {
-  healths: [],
-  selectedHealth: null,
+  injuries: [],
+  medicalCheckups: [],
+  diseases: [],
+  selectedInjury: null,
+  selectedMedicalCheckup: null,
+  selectedDisease: null,
   isLoading: false,
   error: null,
 };
@@ -79,79 +205,116 @@ const healthSlice = createSlice({
       state.error = null;
     },
     clearSelected: (state) => {
-      state.selectedHealth = null;
+      state.selectedInjury = null;
+      state.selectedMedicalCheckup = null;
+      state.selectedDisease = null;
     },
   },
   extraReducers: (builder) => {
     builder
-      // Fetch All
-      .addCase(fetchHealths.pending, (state) => {
+      // ===== INJURIES =====
+      .addCase(fetchInjuries.pending, (state) => {
         state.isLoading = true;
-        state.error = null;
       })
-      .addCase(fetchHealths.fulfilled, (state, action) => {
+      .addCase(fetchInjuries.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.healths = action.payload;
+        state.injuries = action.payload;
       })
-      .addCase(fetchHealths.rejected, (state, action) => {
+      .addCase(fetchInjuries.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload;
       })
-      // Fetch By ID
-      .addCase(fetchHealthById.pending, (state) => {
+      .addCase(fetchInjuryById.pending, (state) => {
         state.isLoading = true;
-        state.error = null;
       })
-      .addCase(fetchHealthById.fulfilled, (state, action) => {
+      .addCase(fetchInjuryById.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.selectedHealth = action.payload;
+        state.selectedInjury = action.payload;
       })
-      .addCase(fetchHealthById.rejected, (state, action) => {
+      .addCase(fetchInjuryById.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload;
       })
-      // Create
-      .addCase(createHealth.pending, (state) => {
+      .addCase(createInjury.fulfilled, (state, action) => {
+        state.injuries.push(action.payload);
+      })
+      .addCase(updateInjury.fulfilled, (state, action) => {
+        const index = state.injuries.findIndex((item) => item.id === action.payload.id);
+        if (index !== -1) state.injuries[index] = action.payload;
+        state.selectedInjury = action.payload;
+      })
+      .addCase(deleteInjury.fulfilled, (state, action) => {
+        state.injuries = state.injuries.filter((item) => item.id !== action.payload);
+      })
+
+      // ===== MEDICAL CHECKUPS =====
+      .addCase(fetchMedicalCheckups.pending, (state) => {
         state.isLoading = true;
-        state.error = null;
       })
-      .addCase(createHealth.fulfilled, (state, action) => {
+      .addCase(fetchMedicalCheckups.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.healths.push(action.payload);
+        state.medicalCheckups = action.payload;
       })
-      .addCase(createHealth.rejected, (state, action) => {
+      .addCase(fetchMedicalCheckups.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload;
       })
-      // Update
-      .addCase(updateHealth.pending, (state) => {
+      .addCase(fetchMedicalCheckupById.pending, (state) => {
         state.isLoading = true;
-        state.error = null;
       })
-      .addCase(updateHealth.fulfilled, (state, action) => {
+      .addCase(fetchMedicalCheckupById.fulfilled, (state, action) => {
         state.isLoading = false;
-        const index = state.healths.findIndex((item) => item.id === action.payload.id);
-        if (index !== -1) {
-          state.healths[index] = action.payload;
-        }
-        state.selectedHealth = action.payload;
+        state.selectedMedicalCheckup = action.payload;
       })
-      .addCase(updateHealth.rejected, (state, action) => {
+      .addCase(fetchMedicalCheckupById.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload;
       })
-      // Delete
-      .addCase(deleteHealth.pending, (state) => {
+      .addCase(createMedicalCheckup.fulfilled, (state, action) => {
+        state.medicalCheckups.push(action.payload);
+      })
+      .addCase(updateMedicalCheckup.fulfilled, (state, action) => {
+        const index = state.medicalCheckups.findIndex((item) => item.id === action.payload.id);
+        if (index !== -1) state.medicalCheckups[index] = action.payload;
+        state.selectedMedicalCheckup = action.payload;
+      })
+      .addCase(deleteMedicalCheckup.fulfilled, (state, action) => {
+        state.medicalCheckups = state.medicalCheckups.filter((item) => item.id !== action.payload);
+      })
+
+      // ===== DISEASES =====
+      .addCase(fetchDiseases.pending, (state) => {
         state.isLoading = true;
-        state.error = null;
       })
-      .addCase(deleteHealth.fulfilled, (state, action) => {
+      .addCase(fetchDiseases.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.healths = state.healths.filter((item) => item.id !== action.payload);
+        state.diseases = action.payload;
       })
-      .addCase(deleteHealth.rejected, (state, action) => {
+      .addCase(fetchDiseases.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload;
+      })
+      .addCase(fetchDiseaseById.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(fetchDiseaseById.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.selectedDisease = action.payload;
+      })
+      .addCase(fetchDiseaseById.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload;
+      })
+      .addCase(createDisease.fulfilled, (state, action) => {
+        state.diseases.push(action.payload);
+      })
+      .addCase(updateDisease.fulfilled, (state, action) => {
+        const index = state.diseases.findIndex((item) => item.id === action.payload.id);
+        if (index !== -1) state.diseases[index] = action.payload;
+        state.selectedDisease = action.payload;
+      })
+      .addCase(deleteDisease.fulfilled, (state, action) => {
+        state.diseases = state.diseases.filter((item) => item.id !== action.payload);
       });
   },
 });

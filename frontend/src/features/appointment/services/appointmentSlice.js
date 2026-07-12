@@ -10,7 +10,19 @@ export const fetchAppointments = createAsyncThunk(
       const response = await appointmentService.getAll();
       return response.data;
     } catch (error) {
-      return rejectWithValue(error.response?.data?.message || "Failed to fetch appointments");
+      return rejectWithValue(error.message || "Failed to fetch appointments");
+    }
+  }
+);
+
+export const fetchAppointmentsByCrewId = createAsyncThunk(
+  "appointment/fetchByCrewId",
+  async (crewId, { rejectWithValue }) => {
+    try {
+      const response = await appointmentService.getByCrewId(crewId);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.message || "Failed to fetch appointments");
     }
   }
 );
@@ -22,7 +34,7 @@ export const fetchAppointmentById = createAsyncThunk(
       const response = await appointmentService.getById(id);
       return response.data;
     } catch (error) {
-      return rejectWithValue(error.response?.data?.message || "Failed to fetch appointment");
+      return rejectWithValue(error.message || "Failed to fetch appointment");
     }
   }
 );
@@ -34,7 +46,7 @@ export const createAppointment = createAsyncThunk(
       const response = await appointmentService.create(data);
       return response.data;
     } catch (error) {
-      return rejectWithValue(error.response?.data?.message || "Failed to create appointment");
+      return rejectWithValue(error.message || "Failed to create appointment");
     }
   }
 );
@@ -46,7 +58,7 @@ export const updateAppointment = createAsyncThunk(
       const response = await appointmentService.update(id, data);
       return response.data;
     } catch (error) {
-      return rejectWithValue(error.response?.data?.message || "Failed to update appointment");
+      return rejectWithValue(error.message || "Failed to update appointment");
     }
   }
 );
@@ -58,7 +70,7 @@ export const deleteAppointment = createAsyncThunk(
       await appointmentService.delete(id);
       return id;
     } catch (error) {
-      return rejectWithValue(error.response?.data?.message || "Failed to delete appointment");
+      return rejectWithValue(error.message || "Failed to delete appointment");
     }
   }
 );
@@ -94,6 +106,19 @@ const appointmentSlice = createSlice({
         state.appointments = action.payload;
       })
       .addCase(fetchAppointments.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload;
+      })
+      // Fetch By Crew ID
+      .addCase(fetchAppointmentsByCrewId.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(fetchAppointmentsByCrewId.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.appointments = action.payload;
+      })
+      .addCase(fetchAppointmentsByCrewId.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload;
       })

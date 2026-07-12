@@ -2,14 +2,27 @@
 import { useState, useCallback, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
-import { createHealth, updateHealth, fetchHealthById } from "../services/healthSlice";
+import {
+  fetchInjuryById,
+  fetchMedicalCheckupById,
+  fetchDiseaseById,
+  createInjury,
+  createMedicalCheckup,
+  createDisease,
+  updateInjury,
+  updateMedicalCheckup,
+  updateDisease,
+} from "../services/healthSlice";
 import toastHelper from "../../../utils/toastHelper";
 
 export const useHealth = (initialData = null, onSuccess) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { id } = useParams();
+  const { crewId, tab, id } = useParams();
   const isEdit = !!id;
+
+  // Active tab
+  const activeTab = tab || "injury";
 
   // State
   const [formData, setFormData] = useState(initialData || {});
@@ -17,22 +30,100 @@ export const useHealth = (initialData = null, onSuccess) => {
   const [isLoading, setIsLoading] = useState(false);
 
   // Redux State
-  const { selectedHealth, isLoading: isFetching } = useSelector(
-    (state) => state.health
-  );
+  const {
+    selectedInjury,
+    selectedMedicalCheckup,
+    selectedDisease,
+    isLoading: isFetching,
+  } = useSelector((state) => state.health);
+
+  // ===== GET SELECTED DATA BASED ON TAB =====
+  const getSelectedData = () => {
+    switch (activeTab) {
+      case "injury":
+        return selectedInjury;
+      case "medical_checkup":
+        return selectedMedicalCheckup;
+      case "disease":
+        return selectedDisease;
+      default:
+        return null;
+    }
+  };
+
+  const selectedData = getSelectedData();
+
+  // ===== FETCH BY ID =====
+  const fetchById = useCallback(() => {
+    if (!id) return;
+    
+    switch (activeTab) {
+      case "injury":
+        dispatch(fetchInjuryById(id));
+        break;
+      case "medical_checkup":
+        dispatch(fetchMedicalCheckupById(id));
+        break;
+      case "disease":
+        dispatch(fetchDiseaseById(id));
+        break;
+      default:
+        break;
+    }
+  }, [dispatch, id, activeTab]);
+
+  // ===== CREATE =====
+  const createRecord = useCallback(async (data) => {
+    let result;
+    switch (activeTab) {
+      case "injury":
+        result = await dispatch(createInjury(data)).unwrap();
+        break;
+      case "medical_checkup":
+        result = await dispatch(createMedicalCheckup(data)).unwrap();
+        break;
+      case "disease":
+        result = await dispatch(createDisease(data)).unwrap();
+        break;
+      default:
+        throw new Error("Invalid tab");
+    }
+    return result;
+  }, [dispatch, activeTab]);
+
+  // ===== UPDATE =====
+  const updateRecord = useCallback(async (updateId, data) => {
+    let result;
+    const payload = { id: updateId, data };
+    
+    switch (activeTab) {
+      case "injury":
+        result = await dispatch(updateInjury(payload)).unwrap();
+        break;
+      case "medical_checkup":
+        result = await dispatch(updateMedicalCheckup(payload)).unwrap();
+        break;
+      case "disease":
+        result = await dispatch(updateDisease(payload)).unwrap();
+        break;
+      default:
+        throw new Error("Invalid tab");
+    }
+    return result;
+  }, [dispatch, activeTab]);
 
   // ===== LOAD DATA FOR EDIT =====
   useEffect(() => {
     if (isEdit && id) {
-      dispatch(fetchHealthById(id));
+      fetchById();
     }
-  }, [dispatch, id, isEdit]);
+  }, [isEdit, id, fetchById]);
 
   useEffect(() => {
-    if (isEdit && selectedHealth) {
-      setFormData(selectedHealth);
+    if (isEdit && selectedData) {
+      setFormData(selectedData);
     }
-  }, [isEdit, selectedHealth]);
+  }, [isEdit, selectedData]);
 
   // ===== HANDLE CHANGE =====
   const handleChange = useCallback((e) => {
@@ -50,6 +141,12 @@ export const useHealth = (initialData = null, onSuccess) => {
       { key: "date", label: "Date" },
     ];
 
+    // For Disease, startDate and endDate are required
+    if (activeTab === "disease") {
+      requiredFields.push({ key: "startDate", label: "Start Date" });
+      requiredFields.push({ key: "endDate", label: "End Date" });
+    }
+
     let hasError = false;
     requiredFields.forEach((field) => {
       const value = formData[field.key];
@@ -64,7 +161,7 @@ export const useHealth = (initialData = null, onSuccess) => {
       toastHelper.validation(newErrors);
     }
     return !hasError;
-  }, [formData]);
+  }, [formData, activeTab]);
 
   // ===== HANDLE SAVE =====
   const handleSave = useCallback(async () => {
@@ -84,10 +181,12 @@ export const useHealth = (initialData = null, onSuccess) => {
 
     try {
       let result;
+      const payload = { ...formData, crewId };
+
       if (isEdit) {
-        result = await dispatch(updateHealth({ id, data: formData })).unwrap();
+        result = await updateRecord(id, payload);
       } else {
-        result = await dispatch(createHealth(formData)).unwrap();
+        result = await createRecord(payload);
       }
 
       toastHelper.updateLoadingToSuccess(
@@ -98,7 +197,8 @@ export const useHealth = (initialData = null, onSuccess) => {
       if (onSuccess) {
         onSuccess(result);
       } else {
-        navigate("/crew/health");
+        const tabPath = activeTab === "injury" ? "" : `/${activeTab}`;
+        navigate(`/crew/${crewId}/health${tabPath}`);
       }
     } catch (error) {
       toastHelper.updateLoadingToError(
@@ -108,20 +208,22 @@ export const useHealth = (initialData = null, onSuccess) => {
     } finally {
       setIsLoading(false);
     }
-  }, [formData, isEdit, id, validate, dispatch, navigate, onSuccess]);
+  }, [formData, isEdit, id, activeTab, crewId, validate, updateRecord, createRecord, navigate, onSuccess]);
 
   // ===== HANDLE CANCEL =====
   const handleCancel = useCallback(() => {
-    navigate("/crew/health");
-  }, [navigate]);
+    const tabPath = activeTab === "injury" ? "" : `/${activeTab}`;
+    navigate(`/crew/${crewId}/health${tabPath}`);
+  }, [navigate, crewId, activeTab]);
 
   return {
     formData,
     setFormData,
     errors,
-    isLoading,
-    isFetching,
+    isLoading: isLoading || isFetching,
     isEdit,
+    activeTab,
+    crewId,
     handleChange,
     handleSave,
     handleCancel,

@@ -2,7 +2,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import familyService from "./familyService";
 
-// ===== ASYNC THUNKS =====
 export const fetchFamilies = createAsyncThunk(
   "family/fetchAll",
   async (_, { rejectWithValue }) => {
@@ -10,7 +9,19 @@ export const fetchFamilies = createAsyncThunk(
       const response = await familyService.getAll();
       return response.data;
     } catch (error) {
-      return rejectWithValue(error.response?.data?.message || "Failed to fetch families");
+      return rejectWithValue(error.message || "Failed to fetch families");
+    }
+  }
+);
+
+export const fetchFamiliesByCrewId = createAsyncThunk(
+  "family/fetchByCrewId",
+  async (crewId, { rejectWithValue }) => {
+    try {
+      const response = await familyService.getByCrewId(crewId);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.message || "Failed to fetch families");
     }
   }
 );
@@ -22,7 +33,7 @@ export const fetchFamilyById = createAsyncThunk(
       const response = await familyService.getById(id);
       return response.data;
     } catch (error) {
-      return rejectWithValue(error.response?.data?.message || "Failed to fetch family");
+      return rejectWithValue(error.message || "Failed to fetch family");
     }
   }
 );
@@ -34,7 +45,7 @@ export const createFamily = createAsyncThunk(
       const response = await familyService.create(data);
       return response.data;
     } catch (error) {
-      return rejectWithValue(error.response?.data?.message || "Failed to create family");
+      return rejectWithValue(error.message || "Failed to create family");
     }
   }
 );
@@ -46,7 +57,7 @@ export const updateFamily = createAsyncThunk(
       const response = await familyService.update(id, data);
       return response.data;
     } catch (error) {
-      return rejectWithValue(error.response?.data?.message || "Failed to update family");
+      return rejectWithValue(error.message || "Failed to update family");
     }
   }
 );
@@ -58,12 +69,11 @@ export const deleteFamily = createAsyncThunk(
       await familyService.delete(id);
       return id;
     } catch (error) {
-      return rejectWithValue(error.response?.data?.message || "Failed to delete family");
+      return rejectWithValue(error.message || "Failed to delete family");
     }
   }
 );
 
-// ===== SLICE =====
 const initialState = {
   families: [],
   selectedFamily: null,
@@ -84,20 +94,18 @@ const familySlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      // Fetch All
-      .addCase(fetchFamilies.pending, (state) => {
+      .addCase(fetchFamiliesByCrewId.pending, (state) => {
         state.isLoading = true;
         state.error = null;
       })
-      .addCase(fetchFamilies.fulfilled, (state, action) => {
+      .addCase(fetchFamiliesByCrewId.fulfilled, (state, action) => {
         state.isLoading = false;
         state.families = action.payload;
       })
-      .addCase(fetchFamilies.rejected, (state, action) => {
+      .addCase(fetchFamiliesByCrewId.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload;
       })
-      // Fetch By ID
       .addCase(fetchFamilyById.pending, (state) => {
         state.isLoading = true;
         state.error = null;
@@ -110,48 +118,18 @@ const familySlice = createSlice({
         state.isLoading = false;
         state.error = action.payload;
       })
-      // Create
-      .addCase(createFamily.pending, (state) => {
-        state.isLoading = true;
-        state.error = null;
-      })
       .addCase(createFamily.fulfilled, (state, action) => {
-        state.isLoading = false;
         state.families.push(action.payload);
       })
-      .addCase(createFamily.rejected, (state, action) => {
-        state.isLoading = false;
-        state.error = action.payload;
-      })
-      // Update
-      .addCase(updateFamily.pending, (state) => {
-        state.isLoading = true;
-        state.error = null;
-      })
       .addCase(updateFamily.fulfilled, (state, action) => {
-        state.isLoading = false;
         const index = state.families.findIndex((item) => item.id === action.payload.id);
         if (index !== -1) {
           state.families[index] = action.payload;
         }
         state.selectedFamily = action.payload;
       })
-      .addCase(updateFamily.rejected, (state, action) => {
-        state.isLoading = false;
-        state.error = action.payload;
-      })
-      // Delete
-      .addCase(deleteFamily.pending, (state) => {
-        state.isLoading = true;
-        state.error = null;
-      })
       .addCase(deleteFamily.fulfilled, (state, action) => {
-        state.isLoading = false;
         state.families = state.families.filter((item) => item.id !== action.payload);
-      })
-      .addCase(deleteFamily.rejected, (state, action) => {
-        state.isLoading = false;
-        state.error = action.payload;
       });
   },
 });

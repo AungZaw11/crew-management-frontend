@@ -3,6 +3,8 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import paymentService from "./paymentService";
 
 // ===== ASYNC THUNKS =====
+
+// ✅ fetchPayments (အကုန်လုံး)
 export const fetchPayments = createAsyncThunk(
   "payment/fetchAll",
   async (_, { rejectWithValue }) => {
@@ -10,7 +12,20 @@ export const fetchPayments = createAsyncThunk(
       const response = await paymentService.getAll();
       return response.data;
     } catch (error) {
-      return rejectWithValue(error.response?.data?.message || "Failed to fetch payments");
+      return rejectWithValue(error.message || "Failed to fetch payments");
+    }
+  }
+);
+
+// ✅ fetchPaymentsByCrewId (Crew ID နဲ့)
+export const fetchPaymentsByCrewId = createAsyncThunk(
+  "payment/fetchByCrewId",
+  async (crewId, { rejectWithValue }) => {
+    try {
+      const response = await paymentService.getByCrewId(crewId);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.message || "Failed to fetch payments");
     }
   }
 );
@@ -22,7 +37,7 @@ export const fetchPaymentById = createAsyncThunk(
       const response = await paymentService.getById(id);
       return response.data;
     } catch (error) {
-      return rejectWithValue(error.response?.data?.message || "Failed to fetch payment");
+      return rejectWithValue(error.message || "Failed to fetch payment");
     }
   }
 );
@@ -34,7 +49,7 @@ export const createPayment = createAsyncThunk(
       const response = await paymentService.create(data);
       return response.data;
     } catch (error) {
-      return rejectWithValue(error.response?.data?.message || "Failed to create payment");
+      return rejectWithValue(error.message || "Failed to create payment");
     }
   }
 );
@@ -46,7 +61,7 @@ export const updatePayment = createAsyncThunk(
       const response = await paymentService.update(id, data);
       return response.data;
     } catch (error) {
-      return rejectWithValue(error.response?.data?.message || "Failed to update payment");
+      return rejectWithValue(error.message || "Failed to update payment");
     }
   }
 );
@@ -58,7 +73,7 @@ export const deletePayment = createAsyncThunk(
       await paymentService.delete(id);
       return id;
     } catch (error) {
-      return rejectWithValue(error.response?.data?.message || "Failed to delete payment");
+      return rejectWithValue(error.message || "Failed to delete payment");
     }
   }
 );
@@ -97,6 +112,19 @@ const paymentSlice = createSlice({
         state.isLoading = false;
         state.error = action.payload;
       })
+      // Fetch By Crew ID
+      .addCase(fetchPaymentsByCrewId.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(fetchPaymentsByCrewId.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.payments = action.payload;
+      })
+      .addCase(fetchPaymentsByCrewId.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload;
+      })
       // Fetch By ID
       .addCase(fetchPaymentById.pending, (state) => {
         state.isLoading = true;
@@ -111,50 +139,23 @@ const paymentSlice = createSlice({
         state.error = action.payload;
       })
       // Create
-      .addCase(createPayment.pending, (state) => {
-        state.isLoading = true;
-        state.error = null;
-      })
       .addCase(createPayment.fulfilled, (state, action) => {
-        state.isLoading = false;
         state.payments.push(action.payload);
       })
-      .addCase(createPayment.rejected, (state, action) => {
-        state.isLoading = false;
-        state.error = action.payload;
-      })
       // Update
-      .addCase(updatePayment.pending, (state) => {
-        state.isLoading = true;
-        state.error = null;
-      })
       .addCase(updatePayment.fulfilled, (state, action) => {
-        state.isLoading = false;
         const index = state.payments.findIndex((item) => item.id === action.payload.id);
         if (index !== -1) {
           state.payments[index] = action.payload;
         }
         state.selectedPayment = action.payload;
       })
-      .addCase(updatePayment.rejected, (state, action) => {
-        state.isLoading = false;
-        state.error = action.payload;
-      })
       // Delete
-      .addCase(deletePayment.pending, (state) => {
-        state.isLoading = true;
-        state.error = null;
-      })
       .addCase(deletePayment.fulfilled, (state, action) => {
-        state.isLoading = false;
         state.payments = state.payments.filter((item) => item.id !== action.payload);
-      })
-      .addCase(deletePayment.rejected, (state, action) => {
-        state.isLoading = false;
-        state.error = action.payload;
       });
   },
 });
 
 export const { clearError, clearSelected } = paymentSlice.actions;
-export default paymentSlice.reducer;
+export default paymentSlice.reducer;  

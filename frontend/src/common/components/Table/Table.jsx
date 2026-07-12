@@ -21,7 +21,6 @@ export default function Table({
   onDeleteSelected = null,
   showCheckbox = false,
 }) {
-  // ✅ Skeleton Loading
   if (isLoading) {
     return (
       <div className={`border border-gray-200 rounded-lg overflow-hidden ${className}`}>
