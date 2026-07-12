@@ -7,10 +7,12 @@ export const fetchQualificationsByCrewId = createAsyncThunk(
   "qualification/fetchByCrewId",
   async (crewId, { rejectWithValue }) => {
     try {
+      console.log("🔹 fetchQualificationsByCrewId - crewId:", crewId);
       const response = await qualificationService.getByCrewId(crewId);
       return response.data;
     } catch (error) {
-      return rejectWithValue(error.response?.data?.message || "Failed to fetch qualifications");
+      console.error("🔹 Error:", error.message);
+      return rejectWithValue(error.message);
     }
   }
 );
@@ -19,10 +21,12 @@ export const fetchQualificationById = createAsyncThunk(
   "qualification/fetchById",
   async (id, { rejectWithValue }) => {
     try {
+      console.log("🔹 fetchQualificationById - id:", id);
       const response = await qualificationService.getById(id);
       return response.data;
     } catch (error) {
-      return rejectWithValue(error.response?.data?.message || "Failed to fetch qualification");
+      console.error("🔹 Error:", error.message);
+      return rejectWithValue(error.message);
     }
   }
 );
@@ -31,10 +35,12 @@ export const createQualification = createAsyncThunk(
   "qualification/create",
   async (data, { rejectWithValue }) => {
     try {
+      console.log("🔹 createQualification - data:", data);
       const response = await qualificationService.create(data);
       return response.data;
     } catch (error) {
-      return rejectWithValue(error.response?.data?.message || "Failed to create qualification");
+      console.error("🔹 Error:", error.message);
+      return rejectWithValue(error.message);
     }
   }
 );
@@ -43,10 +49,12 @@ export const updateQualification = createAsyncThunk(
   "qualification/update",
   async ({ id, data }, { rejectWithValue }) => {
     try {
+      console.log("🔹 updateQualification - id:", id, "data:", data);
       const response = await qualificationService.update(id, data);
       return response.data;
     } catch (error) {
-      return rejectWithValue(error.response?.data?.message || "Failed to update qualification");
+      console.error("🔹 Error:", error.message);
+      return rejectWithValue(error.message);
     }
   }
 );
@@ -55,10 +63,12 @@ export const deleteQualification = createAsyncThunk(
   "qualification/delete",
   async (id, { rejectWithValue }) => {
     try {
+      console.log("🔹 deleteQualification - id:", id);
       await qualificationService.delete(id);
       return id;
     } catch (error) {
-      return rejectWithValue(error.response?.data?.message || "Failed to delete qualification");
+      console.error("🔹 Error:", error.message);
+      return rejectWithValue(error.message);
     }
   }
 );

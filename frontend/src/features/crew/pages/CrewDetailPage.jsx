@@ -1,13 +1,22 @@
 // src/features/crew/pages/CrewDetailPage.jsx
 import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchCrewById } from "../services/crewSlice";
 import { fetchQualificationsByCrewId, deleteQualification } from "../../qualification/services/qualificationSlice";
 import SubHeader from "../components/SubHeader";
-import TabPills, { TAB_KEYS } from "../components/TabPills";
+import TabPills, { TAB_KEYS, ROUTE_TAB_MAP } from "../components/TabPills";
 import PersonalInfoForm from "../../personal-info/components/PersonalInfoForm";
 import QualificationList from "../../qualification/components/QualificationList";
+import AppointmentForm from "../../appointment/components/AppointmentForm";
+import ReplacementForm from "../../replacement/components/ReplacementForm";
+import PaymentForm from "../../payment/components/PaymentForm";
+import FamilyForm from "../../family/components/FamilyForm";
+import InjuryForm from "../../injury/components/InjuryForm";
+import HealthForm from "../../health/components/HealthForm";
+import ExperienceForm from "../../experience/components/ExperienceForm";
+import EvaluationForm from "../../evaluation/components/EvaluationForm";
+import AccidentForm from "../../accident/components/AccidentForm";
 import { useLanguage } from "../../../common/hooks/LanguageContext";
 import LoadingSpinner from "../../../common/components/LoadingSpinner";
 import toastHelper from "../../../utils/toastHelper";
@@ -23,12 +32,24 @@ function OtherTab({ tabName }) {
 export default function CrewDetailPage() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
   const dispatch = useDispatch();
   const { t } = useLanguage();
   
   const { selectedCrew, isLoading: isCrewLoading } = useSelector((state) => state.crew);
   const { qualifications, isLoading: isQualLoading } = useSelector((state) => state.qualification);
-  const [activeTab, setActiveTab] = useState(TAB_KEYS[0]);
+  
+ 
+  const getActiveTabFromUrl = () => {
+    const pathSegments = location.pathname.split('/');
+    const lastSegment = pathSegments[pathSegments.length - 1];
+    const tabKey = Object.keys(ROUTE_TAB_MAP).find(
+      key => ROUTE_TAB_MAP[key] === lastSegment
+    );
+    return tabKey || TAB_KEYS[0];
+  };
+  
+  const [activeTab, setActiveTab] = useState(getActiveTabFromUrl);
 
   useEffect(() => {
     if (id) {
@@ -36,7 +57,6 @@ export default function CrewDetailPage() {
     }
   }, [dispatch, id]);
 
-  // Load qualifications when Qualification tab is active
   useEffect(() => {
     if (activeTab === TAB_KEYS[1] && id) {
       dispatch(fetchQualificationsByCrewId(id));
@@ -45,12 +65,10 @@ export default function CrewDetailPage() {
 
   const handleBack = () => navigate("/crew");
   
-  // ✅ Edit နှိပ်ရင် Edit Page ကိုသွားမယ်
   const handleEdit = () => {
     navigate(`/crew/${id}/edit`);
   };
 
-  // ✅ Delete Crew
   const handleDeleteCrew = async () => {
     if (window.confirm(t("confirm_delete") || "Are you sure you want to delete this crew member?")) {
       try {
@@ -131,25 +149,31 @@ export default function CrewDetailPage() {
         );
 
       case TAB_KEYS[2]: // appointment
-        return <OtherTab tabName="Appointment" />;
+        return <AppointmentForm isEditing={false} />;
+        
       case TAB_KEYS[3]: // replacement
-        return <OtherTab tabName="Replacement" />;
+        return <ReplacementForm isEditing={false} />;
+        
       case TAB_KEYS[4]: // payment
-        return <OtherTab tabName="Payment" />;
+        return <PaymentForm isEditing={false} />;
+        
       case TAB_KEYS[5]: // family
-        return <OtherTab tabName="Family" />;
+        return <FamilyForm isEditing={false} />;
+        
       case TAB_KEYS[6]: // injury
-        return <OtherTab tabName="Injury" />;
+        return <InjuryForm isEditing={false} />;
+        
       case TAB_KEYS[7]: // health
-        return <OtherTab tabName="Health" />;
+        return <HealthForm isEditing={false} />;
+        
       case TAB_KEYS[8]: // experiences
-        return <OtherTab tabName="Experiences" />;
+        return <ExperienceForm isEditing={false} />;
+        
       case TAB_KEYS[9]: // evaluation
-        return <OtherTab tabName="Evaluation" />;
-      case TAB_KEYS[10]: // certificates
-        return <OtherTab tabName="Certificates" />;
-      case TAB_KEYS[11]: // accident
-        return <OtherTab tabName="Accident" />;
+        return <EvaluationForm isEditing={false} />;
+        
+      case TAB_KEYS[10]: // accident
+        return <AccidentForm isEditing={false} />;
 
       default:
         return <OtherTab tabName={activeTab} />;
@@ -158,20 +182,24 @@ export default function CrewDetailPage() {
 
   return (
     <div className="flex flex-col bg-white min-h-screen">
-      {/* ✅ SubHeader - Edit Button ပါတယ် */}
       <SubHeader
         onBack={handleBack}
         isNew={false}
         crewLabel={crewLabel}
         showAddNew={false}
-        showEdit={true}        
-        onEdit={handleEdit}    
-        showDelete={true}      
-        onDelete={handleDeleteCrew}  
-        isEditMode={false}     
+        showEdit={true}
+        onEdit={handleEdit}
+        showDelete={true}
+        onDelete={handleDeleteCrew}
+        isEditMode={false}
       />
 
-      <TabPills activeTab={activeTab} setActiveTab={setActiveTab} />
+      
+      <TabPills 
+        activeTab={activeTab} 
+        setActiveTab={setActiveTab}
+        crewId={id}  
+      />
 
       <div className="flex-1 bg-white">{renderContent()}</div>
     </div>

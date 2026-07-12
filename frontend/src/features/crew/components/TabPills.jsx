@@ -1,8 +1,8 @@
 // src/features/crew/components/TabPills.jsx
 import React from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useLanguage } from "../../../common/hooks/LanguageContext";
 
-// ===== TAB KEYS =====
 export const TAB_KEYS = [
   "personal_info",
   "qualifications",
@@ -17,7 +17,6 @@ export const TAB_KEYS = [
   "accident",
 ];
 
-// ===== TAB LABELS =====
 export const TAB_LABELS = {
   personal_info: "Personal Info",
   qualifications: "Qualifications",
@@ -29,27 +28,29 @@ export const TAB_LABELS = {
   health: "Health",
   experiences: "Experiences",
   evaluation: "Evaluation",
-  
   accident: "Accident",
 };
 
-// ===== TAB ICONS (optional) =====
-export const TAB_ICONS = {
-  personal_info: "👤",
-  qualifications: "📜",
-  appointment: "📅",
-  replacement: "🔄",
-  payment: "💰",
-  family: "👨‍👩‍👧‍👦",
-  injury: "🩹",
-  health: "🏥",
-  experiences: "💼",
-  evaluation: "⭐",
-  certificates: "📄",
-  accident: "⚠️",
+// ✅ Tab Key → Route Path Mapping
+export const TAB_ROUTE_MAP = {
+  personal_info: "",
+  qualifications: "qualifications",
+  appointment: "appointment",
+  replacement: "replacement",
+  payment: "payment",
+  family: "family",
+  injury: "injury",
+  health: "health",
+  experiences: "experience",
+  evaluation: "evaluation",
+  accident: "accident",
 };
 
-// ===== MAIN COMPONENT =====
+// ✅ Route Path → Tab Key Mapping
+export const ROUTE_TAB_MAP = Object.fromEntries(
+  Object.entries(TAB_ROUTE_MAP).map(([key, value]) => [value, key])
+);
+
 export default function TabPills({
   activeTab,
   setActiveTab,
@@ -60,32 +61,41 @@ export default function TabPills({
   pillClassName = "",
   activeClassName = "",
   inactiveClassName = "",
-  isPersonalInfoValid = true,  
-  hasCrewId = false, 
+  crewId,
+  isEditMode = false,
 }) {
   const { t } = useLanguage();
+  const navigate = useNavigate();
+  const location = useLocation();
 
-   const handleTabChange = (tabKey) => {
+  // ✅ URL ကနေ Active Tab ကိုဆုံးဖြတ်ပါ
+  const getActiveTabFromUrl = () => {
+    const pathSegments = location.pathname.split('/');
+    const lastSegment = pathSegments[pathSegments.length - 1];
+    return ROUTE_TAB_MAP[lastSegment] || TAB_KEYS[0];
+  };
+
+  // ✅ Tab ပြောင်းရင် URL ကိုပြောင်းပါ
+  const handleTabChange = (tabKey) => {
+    if (setActiveTab) {
+      setActiveTab(tabKey);
+    }
     
-    if (activeTab === TAB_KEYS[0] && tabKey !== TAB_KEYS[0]) {
-      if (!isPersonalInfoValid) {
-        alert("Please complete Personal Information first!");
-        return;
-      }
-      if (!hasCrewId) {
-        alert("Please save Personal Information first!");
-        return;
+    if (crewId) {
+      const basePath = isEditMode ? `/crew/${crewId}/edit` : `/crew/${crewId}`;
+      const routePath = TAB_ROUTE_MAP[tabKey];
+      if (routePath) {
+        navigate(`${basePath}/${routePath}`);
+      } else {
+        navigate(basePath);
       }
     }
-    setActiveTab(tabKey);
   };
+
+  const currentActiveTab = activeTab || getActiveTabFromUrl();
 
   const getTabLabel = (tabKey) => {
     return customLabels[tabKey] || t(tabKey) || TAB_LABELS[tabKey] || tabKey.replace("_", " ");
-  };
-
-  const getTabIcon = (tabKey) => {
-    return TAB_ICONS[tabKey] || "";
   };
 
   return (
@@ -98,16 +108,15 @@ export default function TabPills({
         className="flex flex-wrap gap-4"
       >
         {tabs.map((tabKey) => {
-          const active = activeTab === tabKey;
+          const active = currentActiveTab === tabKey;
           const label = getTabLabel(tabKey);
-          const icon = showIcons ? getTabIcon(tabKey) : "";
 
           return (
             <button
               key={tabKey}
               role="tab"
               aria-selected={active}
-              onClick={() => setActiveTab(tabKey)}
+              onClick={() => handleTabChange(tabKey)}
               className={`
                 w-[168px] rounded-full border py-1.5 text-base transition-all duration-200
                 ${active 
@@ -117,7 +126,6 @@ export default function TabPills({
                 ${pillClassName}
               `}
             >
-              {icon && <span className="mr-2">{icon}</span>}
               {label}
             </button>
           );

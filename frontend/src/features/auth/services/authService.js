@@ -24,7 +24,7 @@ export const authService = {
   // ===== LOGIN =====
   login: async (credentials) => {
     if (USE_MOCK) {
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await new Promise(resolve => setTimeout(resolve, 200));
       return mockLogin(credentials);
     }
 

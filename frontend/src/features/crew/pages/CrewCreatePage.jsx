@@ -1,11 +1,11 @@
 // src/features/crew/pages/CrewCreatePage.jsx
 import React, { useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useCrewCreate } from "../hooks/useCrewCreate";
 import { fetchCrewById } from "../services/crewSlice";
 import SubHeader from "../components/SubHeader";
-import TabPills, { TAB_KEYS } from "../components/TabPills";
+import TabPills, { TAB_KEYS, ROUTE_TAB_MAP } from "../components/TabPills";
 import PersonalInfoForm from "../../personal-info/components/PersonalInfoForm";
 import QualificationForm from "../../qualification/components/QualificationForm";
 import AppointmentForm from "../../appointment/components/AppointmentForm";
@@ -31,11 +31,22 @@ function OtherTab({ tabName }) {
 export default function CrewCreatePage() {
   const navigate = useNavigate();
   const { id } = useParams();
+  const location = useLocation();
   const dispatch = useDispatch();
   const { t } = useLanguage();
   
   const { selectedCrew, isLoading: isFetching } = useSelector((state) => state.crew);
   const isEditMode = !!id;
+
+  // ✅ URL ကနေ Active Tab ကိုဆုံးဖြတ်ပါ (Edit Mode အတွက်)
+  const getActiveTabFromUrl = () => {
+    const pathSegments = location.pathname.split('/');
+    const lastSegment = pathSegments[pathSegments.length - 1];
+    const tabKey = Object.keys(ROUTE_TAB_MAP).find(
+      key => ROUTE_TAB_MAP[key] === lastSegment
+    );
+    return tabKey || TAB_KEYS[0];
+  };
 
   const {
     activeTab,
@@ -126,12 +137,31 @@ export default function CrewCreatePage() {
   useEffect(() => {
     if (isEditMode && selectedCrew) {
       setCrewMember(selectedCrew);
-      // TODO: ကျန်တဲ့ Tabs အတွက် Data ကိုလည်း ထည့်ပေးပါ
-      // setQualificationData(selectedCrew.qualifications || {});
-      // setAppointmentData(selectedCrew.appointment || {});
-      // etc.
     }
   }, [isEditMode, selectedCrew, setCrewMember]);
+
+  // ✅ URL ကနေ Tab ကိုယူပြီး set လုပ်ပါ
+  useEffect(() => {
+    if (isEditMode) {
+      const tabFromUrl = getActiveTabFromUrl();
+      if (tabFromUrl && tabFromUrl !== activeTab) {
+        setActiveTab(tabFromUrl);
+      }
+    }
+  }, [location.pathname, isEditMode]);
+
+  // ✅ Tab ပြောင်းရင် URL ကိုပြောင်းပါ (Edit Mode အတွက်)
+  const handleTabChange = (tabKey) => {
+    setActiveTab(tabKey);
+    if (isEditMode && id) {
+      const routePath = ROUTE_TAB_MAP[tabKey];
+      if (routePath) {
+        navigate(`/crew/${id}/edit/${routePath}`);
+      } else {
+        navigate(`/crew/${id}/edit`);
+      }
+    }
+  };
 
   const handleBack = () => navigate("/crew");
   const handleCancel = () => navigate("/crew");
@@ -308,7 +338,13 @@ export default function CrewCreatePage() {
         showAddNew={false}
       />
 
-      <TabPills activeTab={activeTab} setActiveTab={setActiveTab} />
+      {/* ✅ TabPills - Edit Mode ဆိုရင် Route နဲ့ချိတ်ပါ */}
+      <TabPills 
+        activeTab={activeTab} 
+        setActiveTab={handleTabChange}
+        crewId={isEditMode ? id : null}
+        isEditMode={isEditMode}
+      />
 
       <div className="flex-1 bg-white">{renderContent()}</div>
     </div>

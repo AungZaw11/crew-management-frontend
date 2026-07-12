@@ -7,7 +7,7 @@ const api = axios.create({
     "Content-Type": "application/json",
     "Accept-Language": "en", // ← Default Language
   },
-  timeout: 10000,
+  timeout: 200,
 });
 
 // ===== REQUEST INTERCEPTOR =====
