@@ -17,11 +17,28 @@ export default function HealthCreatePage() {
   const { t } = useLanguage();
   const [isLoading, setIsLoading] = useState(false);
 
-  const activeTab = tab || "injury";
+  // ✅ URL ကနေ tab ကို မှန်ကန်စွာ ယူပါ
+  const getActiveTab = () => {
+    // tab က "medical-checkup" ဆိုရင် "medical_checkup" ဖြစ်အောင်ပြောင်းပါ
+    if (tab === "medical-checkup") {
+      return "medical_checkup";
+    }
+    return tab || "injury";
+  };
+
+  const activeTab = getActiveTab();
+
+  console.log("🔹 HealthCreatePage - tab param:", tab);
+  console.log("🔹 HealthCreatePage - activeTab:", activeTab);
 
   const handleBack = () => {
-    const tabPath = activeTab === "injury" ? "" : `/${activeTab}`;
-    navigate(`/crew/${crewId}/health${tabPath}`);
+    let path = `/crew/${crewId}/health`;
+    if (activeTab === "medical_checkup") {
+      path = `/crew/${crewId}/health/medical-checkup`;
+    } else if (activeTab === "disease") {
+      path = `/crew/${crewId}/health/disease`;
+    }
+    navigate(path);
   };
 
   const handleSave = async (data) => {
@@ -49,8 +66,13 @@ export default function HealthCreatePage() {
       console.log("Created:", result);
       toastHelper.updateLoadingToSuccess(toastId, "Saved successfully!");
       
-      const tabPath = activeTab === "injury" ? "" : `/${activeTab}`;
-      navigate(`/crew/${crewId}/health${tabPath}`);
+      let path = `/crew/${crewId}/health`;
+      if (activeTab === "medical_checkup") {
+        path = `/crew/${crewId}/health/medical-checkup`;
+      } else if (activeTab === "disease") {
+        path = `/crew/${crewId}/health/disease`;
+      }
+      navigate(path);
     } catch (error) {
       console.error("Save error:", error);
       toastHelper.updateLoadingToError(toastId, error.message || "Failed to save");
@@ -66,6 +88,8 @@ export default function HealthCreatePage() {
       isLoading: isLoading,
     };
 
+    console.log("🔹 Rendering form for tab:", activeTab);
+
     switch (activeTab) {
       case "injury":
         return <InjuryForm {...commonProps} />;
@@ -74,14 +98,14 @@ export default function HealthCreatePage() {
       case "disease":
         return <DiseaseForm {...commonProps} />;
       default:
-        return null;
+        return <InjuryForm {...commonProps} />;
     }
   };
 
   const getLabel = () => {
     const labels = {
       injury: t("add_injury") || "Add Injury",
-      medical_checkup: t("add_medical_checkup") || "Add Medical Checkup",
+      medical_checkup: t("add_medical-checkup") || "Add Medical Checkup",
       disease: t("add_disease") || "Add Disease",
     };
     return labels[activeTab] || "Add";

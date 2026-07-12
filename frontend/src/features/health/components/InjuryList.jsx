@@ -8,7 +8,6 @@ import TableActions from "../../../common/components/Table/TableActions";
 import { deleteInjury } from "../services/healthSlice";
 import toastHelper from "../../../utils/toastHelper";
 
-// Mock Data
 const MOCK_INJURIES = [
   {
     id: 1,
@@ -23,22 +22,16 @@ const MOCK_INJURIES = [
     expenseEx: "-",
     remarks: "-",
   },
-  {
-    id: 2,
-    no: "02",
-    illness: "Fever",
-    medicalName: "Infection",
-    hospital: "Yangon General",
-    treatmentStart: "2024-03-10",
-    recoveryDate: "2024-03-15",
-    type: "Public",
-    expenseWon: "50000",
-    expenseEx: "20000",
-    remarks: "Recovered",
-  },
 ];
 
-export default function InjuryList({ injuries = [], crewId, isLoading = false }) {
+export default function InjuryList({ 
+  injuries = [], 
+  crewId, 
+  isLoading = false,
+  // ✅ Mini Tabs props
+  activeMiniTab = "injury",
+  onMiniTabChange = null,
+}) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { t } = useLanguage();
@@ -46,7 +39,13 @@ export default function InjuryList({ injuries = [], crewId, isLoading = false })
 
   const displayData = injuries.length > 0 ? injuries : MOCK_INJURIES;
 
-  // ✅ Delete single
+  // ✅ Mini Tabs configuration
+  const miniTabs = [
+    { key: "injury", label: "Injury" },
+    { key: "medical_checkup", label: "Medical Checkup" },
+    { key: "disease", label: "Disease" },
+  ];
+
   const handleDelete = async (id) => {
     if (window.confirm(t("confirm_delete") || "Are you sure?")) {
       try {
@@ -58,7 +57,6 @@ export default function InjuryList({ injuries = [], crewId, isLoading = false })
     }
   };
 
-  // ✅ Delete Selected
   const handleDeleteSelected = async (ids) => {
     if (window.confirm(t("confirm_delete_selected") || "Delete selected items?")) {
       try {
@@ -73,7 +71,6 @@ export default function InjuryList({ injuries = [], crewId, isLoading = false })
     }
   };
 
-  // ✅ Select All
   const handleSelectAll = () => {
     if (selectedIds.length === displayData.length) {
       setSelectedIds([]);
@@ -82,7 +79,6 @@ export default function InjuryList({ injuries = [], crewId, isLoading = false })
     }
   };
 
-  // ✅ Select Row
   const handleSelectRow = (id) => {
     if (selectedIds.includes(id)) {
       setSelectedIds(selectedIds.filter(item => item.id !== id));
@@ -127,6 +123,11 @@ export default function InjuryList({ injuries = [], crewId, isLoading = false })
       onSelectAll={handleSelectAll}
       onSelectRow={handleSelectRow}
       onDeleteSelected={handleDeleteSelected}
+      showMiniTabs={true}
+      miniTabs={miniTabs}
+      activeMiniTab={activeMiniTab}
+      onMiniTabChange={onMiniTabChange}
+      miniTabLabel="View"
     />
   );
 }

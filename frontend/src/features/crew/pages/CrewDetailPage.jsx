@@ -14,6 +14,7 @@ import ReplacementList from "../../replacement/components/ReplacementList";
 import PaymentList from "../../payment/components/PaymentList";
 import FamilyList from "../../family/components/FamilyList";
 import HealthForm from "../../health/components/HealthForm";
+import ExperienceList from "../../experience/components/ExperienceList";
 import ExperienceForm from "../../experience/components/ExperienceForm";
 import EvaluationForm from "../../evaluation/components/EvaluationForm";
 import AccidentForm from "../../accident/components/AccidentForm";
@@ -364,7 +365,13 @@ export default function CrewDetailPage() {
         return <HealthForm isEditing={false} />;
         
       case TAB_KEYS[7]:
-        return <ExperienceForm isEditing={false} />;
+        return (
+          <ExperienceList 
+            experiences={[]}  
+            crewId={id} 
+            isLoading={false}
+          />
+        );
         
       case TAB_KEYS[8]:
         return <EvaluationForm isEditing={false} />;

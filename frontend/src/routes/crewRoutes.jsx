@@ -33,6 +33,11 @@ import HealthCreatePage from "../features/health/pages/HealthCreatePage";
 import HealthEditPage from "../features/health/pages/HealthEditPage";
 import HealthDetailPage from "../features/health/pages/HealthDetailPage";
 
+import ExperienceListPage from "../features/experience/pages/ExperienceListPage";
+import ExperienceCreatePage from "../features/experience/pages/ExperienceCreatePage";
+import ExperienceEditPage from "../features/experience/pages/ExperienceEditPage";
+import ExperienceDetailPage from "../features/experience/pages/ExperienceDetailPage";
+
 const crewRoutes = [
   // ===== Crew Main Routes =====
   { path: "crew", element: <CrewListPage /> },
@@ -112,6 +117,18 @@ const crewRoutes = [
   { path: "crew/:crewId/health/injury/:id/edit", element: <HealthEditPage /> },
   { path: "crew/:crewId/health/medical-checkup/:id/edit", element: <HealthEditPage /> },
   { path: "crew/:crewId/health/disease/:id/edit", element: <HealthEditPage /> },
+
+{ path: "crew/:crewId/experience", element: <ExperienceListPage /> },
+
+  // Create
+  { path: "crew/:crewId/experience/new", element: <ExperienceCreatePage /> },
+
+  // Detail
+  { path: "crew/:crewId/experience/:id", element: <ExperienceDetailPage /> },
+
+  // Edit
+  { path: "crew/:crewId/experience/:id/edit", element: <ExperienceEditPage /> },
+
 ];
 
 export default crewRoutes;

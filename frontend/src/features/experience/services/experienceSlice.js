@@ -2,63 +2,67 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import experienceService from "./experienceService";
 
-// ===== ASYNC THUNKS =====
+// ===== FETCH ALL =====
 export const fetchExperiences = createAsyncThunk(
-  "experience/fetchAll",
-  async (_, { rejectWithValue }) => {
+  "experience/fetchExperiences",
+  async (crewId, { rejectWithValue }) => {
     try {
-      const response = await experienceService.getAll();
+      const response = await experienceService.getExperiences(crewId);
       return response.data;
     } catch (error) {
-      return rejectWithValue(error.response?.data?.message || "Failed to fetch experiences");
+      return rejectWithValue(error.message);
     }
   }
 );
 
+// ✅ FETCH BY ID - ဒီဟာကို ထည့်ပါ
 export const fetchExperienceById = createAsyncThunk(
-  "experience/fetchById",
+  "experience/fetchExperienceById",
   async (id, { rejectWithValue }) => {
     try {
-      const response = await experienceService.getById(id);
+      const response = await experienceService.getExperienceById(id);
       return response.data;
     } catch (error) {
-      return rejectWithValue(error.response?.data?.message || "Failed to fetch experience");
+      return rejectWithValue(error.message);
     }
   }
 );
 
+// ===== CREATE =====
 export const createExperience = createAsyncThunk(
-  "experience/create",
+  "experience/createExperience",
   async (data, { rejectWithValue }) => {
     try {
-      const response = await experienceService.create(data);
+      const response = await experienceService.createExperience(data);
       return response.data;
     } catch (error) {
-      return rejectWithValue(error.response?.data?.message || "Failed to create experience");
+      return rejectWithValue(error.message);
     }
   }
 );
 
+// ===== UPDATE =====
 export const updateExperience = createAsyncThunk(
-  "experience/update",
+  "experience/updateExperience",
   async ({ id, data }, { rejectWithValue }) => {
     try {
-      const response = await experienceService.update(id, data);
+      const response = await experienceService.updateExperience(id, data);
       return response.data;
     } catch (error) {
-      return rejectWithValue(error.response?.data?.message || "Failed to update experience");
+      return rejectWithValue(error.message);
     }
   }
 );
 
+// ===== DELETE =====
 export const deleteExperience = createAsyncThunk(
-  "experience/delete",
+  "experience/deleteExperience",
   async (id, { rejectWithValue }) => {
     try {
-      await experienceService.delete(id);
+      await experienceService.deleteExperience(id);
       return id;
     } catch (error) {
-      return rejectWithValue(error.response?.data?.message || "Failed to delete experience");
+      return rejectWithValue(error.message);
     }
   }
 );
@@ -84,10 +88,9 @@ const experienceSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      // Fetch All
+      // ===== FETCH ALL =====
       .addCase(fetchExperiences.pending, (state) => {
         state.isLoading = true;
-        state.error = null;
       })
       .addCase(fetchExperiences.fulfilled, (state, action) => {
         state.isLoading = false;
@@ -97,10 +100,9 @@ const experienceSlice = createSlice({
         state.isLoading = false;
         state.error = action.payload;
       })
-      // Fetch By ID
+      // ===== FETCH BY ID =====
       .addCase(fetchExperienceById.pending, (state) => {
         state.isLoading = true;
-        state.error = null;
       })
       .addCase(fetchExperienceById.fulfilled, (state, action) => {
         state.isLoading = false;
@@ -110,48 +112,25 @@ const experienceSlice = createSlice({
         state.isLoading = false;
         state.error = action.payload;
       })
-      // Create
-      .addCase(createExperience.pending, (state) => {
-        state.isLoading = true;
-        state.error = null;
-      })
+      // ===== CREATE =====
       .addCase(createExperience.fulfilled, (state, action) => {
-        state.isLoading = false;
         state.experiences.push(action.payload);
       })
-      .addCase(createExperience.rejected, (state, action) => {
-        state.isLoading = false;
-        state.error = action.payload;
-      })
-      // Update
-      .addCase(updateExperience.pending, (state) => {
-        state.isLoading = true;
-        state.error = null;
-      })
+      // ===== UPDATE =====
       .addCase(updateExperience.fulfilled, (state, action) => {
-        state.isLoading = false;
-        const index = state.experiences.findIndex((item) => item.id === action.payload.id);
+        const index = state.experiences.findIndex(
+          (item) => item.id === action.payload.id
+        );
         if (index !== -1) {
           state.experiences[index] = action.payload;
         }
         state.selectedExperience = action.payload;
       })
-      .addCase(updateExperience.rejected, (state, action) => {
-        state.isLoading = false;
-        state.error = action.payload;
-      })
-      // Delete
-      .addCase(deleteExperience.pending, (state) => {
-        state.isLoading = true;
-        state.error = null;
-      })
+      // ===== DELETE =====
       .addCase(deleteExperience.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.experiences = state.experiences.filter((item) => item.id !== action.payload);
-      })
-      .addCase(deleteExperience.rejected, (state, action) => {
-        state.isLoading = false;
-        state.error = action.payload;
+        state.experiences = state.experiences.filter(
+          (item) => item.id !== action.payload
+        );
       });
   },
 });

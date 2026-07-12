@@ -8,7 +8,6 @@ import TableActions from "../../../common/components/Table/TableActions";
 import { deleteDisease } from "../services/healthSlice";
 import toastHelper from "../../../utils/toastHelper";
 
-// Mock Data
 const MOCK_DISEASES = [
   {
     id: 1,
@@ -32,7 +31,13 @@ const MOCK_DISEASES = [
   },
 ];
 
-export default function DiseaseList({ diseases = [], crewId, isLoading = false }) {
+export default function DiseaseList({ 
+  diseases = [], 
+  crewId, 
+  isLoading = false,
+  activeMiniTab = "disease",
+  onMiniTabChange = null,
+}) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { t } = useLanguage();
@@ -40,7 +45,13 @@ export default function DiseaseList({ diseases = [], crewId, isLoading = false }
 
   const displayData = diseases.length > 0 ? diseases : MOCK_DISEASES;
 
-  // ✅ Delete single
+  // ✅ Mini Tabs configuration
+  const miniTabs = [
+    { key: "injury", label: "Injury" },
+    { key: "medical_checkup", label: "Medical Checkup" },
+    { key: "disease", label: "Disease" },
+  ];
+
   const handleDelete = async (id) => {
     if (window.confirm(t("confirm_delete") || "Are you sure?")) {
       try {
@@ -52,7 +63,6 @@ export default function DiseaseList({ diseases = [], crewId, isLoading = false }
     }
   };
 
-  // ✅ Delete Selected
   const handleDeleteSelected = async (ids) => {
     if (window.confirm(t("confirm_delete_selected") || "Delete selected items?")) {
       try {
@@ -67,7 +77,6 @@ export default function DiseaseList({ diseases = [], crewId, isLoading = false }
     }
   };
 
-  // ✅ Select All
   const handleSelectAll = () => {
     if (selectedIds.length === displayData.length) {
       setSelectedIds([]);
@@ -76,7 +85,6 @@ export default function DiseaseList({ diseases = [], crewId, isLoading = false }
     }
   };
 
-  // ✅ Select Row
   const handleSelectRow = (id) => {
     if (selectedIds.includes(id)) {
       setSelectedIds(selectedIds.filter(item => item.id !== id));
@@ -118,6 +126,11 @@ export default function DiseaseList({ diseases = [], crewId, isLoading = false }
       onSelectAll={handleSelectAll}
       onSelectRow={handleSelectRow}
       onDeleteSelected={handleDeleteSelected}
+      showMiniTabs={true}
+      miniTabs={miniTabs}
+      activeMiniTab={activeMiniTab}
+      onMiniTabChange={onMiniTabChange}
+      miniTabLabel="View"
     />
   );
 }

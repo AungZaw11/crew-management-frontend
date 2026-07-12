@@ -20,6 +20,11 @@ export default function Table({
   onSelectRow = null,
   onDeleteSelected = null,
   showCheckbox = false,
+  showMiniTabs = false,
+  miniTabs = [],
+  activeMiniTab = "",
+  onMiniTabChange = null,
+  miniTabLabel = "View",
 }) {
   if (isLoading) {
     return (
@@ -94,9 +99,31 @@ export default function Table({
 
   return (
     <div className={`border border-gray-200 rounded-lg overflow-visible ${className}`}>
-      {/* Header with Filter & Delete Button */}
+      {/* Header with Mini Tabs, Filter & Delete Button */}
       <div className="flex items-center justify-between px-4 py-3 bg-gray-50 border-b border-gray-200">
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-6">
+          {showMiniTabs && miniTabs.length > 0 && onMiniTabChange && (
+            <div className="flex items-center gap-3">
+              <span className="text-sm font-medium text-gray-600">{miniTabLabel}:</span>
+              <div className="flex gap-1 bg-white rounded-md border border-gray-200 p-0.5">
+                {miniTabs.map((tab) => (
+                  <button
+                    key={tab.key}
+                    onClick={() => onMiniTabChange(tab.key)}
+                    className={`px-3 py-1.5 text-xs font-medium rounded-md transition-colors ${
+                      activeMiniTab === tab.key
+                        ? "bg-blue-600 text-white shadow-sm"
+                        : "text-gray-600 hover:bg-gray-100"
+                    }`}
+                  >
+                    {tab.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Filter - Optional */}
           {filterOptions.length > 0 && onFilterChange && (
             <div className="flex items-center gap-2">
               <span className="text-sm text-gray-600">{filterLabel}:</span>

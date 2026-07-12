@@ -8,7 +8,6 @@ import TableActions from "../../../common/components/Table/TableActions";
 import { deleteMedicalCheckup } from "../services/healthSlice";
 import toastHelper from "../../../utils/toastHelper";
 
-// Mock Data
 const MOCK_CHECKUPS = [
   {
     id: 1,
@@ -20,19 +19,16 @@ const MOCK_CHECKUPS = [
     blood: "O",
     decision: "Normal",
   },
-  {
-    id: 2,
-    no: "02",
-    date: "2024-06-15",
-    size: "168cm / 62kg",
-    sight: "0.8 / 0.9",
-    hearing: "Normal / Normal",
-    blood: "A",
-    decision: "Normal",
-  },
 ];
 
-export default function MedicalCheckupList({ checkups = [], crewId, isLoading = false }) {
+export default function MedicalCheckupList({ 
+  checkups = [], 
+  crewId, 
+  isLoading = false,
+  // ✅ Mini Tabs props
+  activeMiniTab = "medical_checkup",
+  onMiniTabChange = null,
+}) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { t } = useLanguage();
@@ -40,7 +36,13 @@ export default function MedicalCheckupList({ checkups = [], crewId, isLoading = 
 
   const displayData = checkups.length > 0 ? checkups : MOCK_CHECKUPS;
 
-  // ✅ Delete single
+  // ✅ Mini Tabs configuration
+  const miniTabs = [
+    { key: "injury", label: "Injury" },
+    { key: "medical_checkup", label: "Medical Checkup" },
+    { key: "disease", label: "Disease" },
+  ];
+
   const handleDelete = async (id) => {
     if (window.confirm(t("confirm_delete") || "Are you sure?")) {
       try {
@@ -52,7 +54,6 @@ export default function MedicalCheckupList({ checkups = [], crewId, isLoading = 
     }
   };
 
-  // ✅ Delete Selected
   const handleDeleteSelected = async (ids) => {
     if (window.confirm(t("confirm_delete_selected") || "Delete selected items?")) {
       try {
@@ -67,7 +68,6 @@ export default function MedicalCheckupList({ checkups = [], crewId, isLoading = 
     }
   };
 
-  // ✅ Select All
   const handleSelectAll = () => {
     if (selectedIds.length === displayData.length) {
       setSelectedIds([]);
@@ -76,7 +76,6 @@ export default function MedicalCheckupList({ checkups = [], crewId, isLoading = 
     }
   };
 
-  // ✅ Select Row
   const handleSelectRow = (id) => {
     if (selectedIds.includes(id)) {
       setSelectedIds(selectedIds.filter(item => item.id !== id));
@@ -132,6 +131,11 @@ export default function MedicalCheckupList({ checkups = [], crewId, isLoading = 
       onSelectAll={handleSelectAll}
       onSelectRow={handleSelectRow}
       onDeleteSelected={handleDeleteSelected}
+      showMiniTabs={true}
+      miniTabs={miniTabs}
+      activeMiniTab={activeMiniTab}
+      onMiniTabChange={onMiniTabChange}
+      miniTabLabel="View"
     />
   );
 }

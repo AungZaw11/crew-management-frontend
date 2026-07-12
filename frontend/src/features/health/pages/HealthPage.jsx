@@ -4,9 +4,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useLanguage } from "../../../common/hooks/LanguageContext";
 import SubHeader from "../../crew/components/SubHeader";
-// ✅ Main TabPill ကို import လုပ်ပါ
 import TabPills from "../../crew/components/TabPills";
-import HealthTabs, { HEALTH_TAB_KEYS, HEALTH_TAB_LABELS } from "../components/HealthTabs";
 import InjuryList from "../components/InjuryList";
 import MedicalCheckupList from "../components/MedicalCheckupList";
 import DiseaseList from "../components/DiseaseList";
@@ -43,10 +41,8 @@ export default function HealthPage() {
     isLoading 
   } = useSelector((state) => state.health || { injuries: [], medicalCheckups: [], diseases: [], isLoading: false });
   
-  // ✅ Crew Data ကို Redux ကနေယူပါ
   const { selectedCrew } = useSelector((state) => state.crew || {});
 
-  // ✅ Crew Data ကိုပါ fetch လုပ်ပါ
   useEffect(() => {
     if (crewId) {
       dispatch(fetchCrewById(crewId));
@@ -73,14 +69,19 @@ export default function HealthPage() {
     navigate(`/crew/${crewId}`);
   };
 
-  // ✅ Add New နှိပ်ရင် activeTab ပေါ်မူတည်ပြီး မှန်ကန်တဲ့ path ကိုသွားပါ
+  // ✅ Add New - activeTab ပေါ်မူတည်ပြီး မှန်ကန်တဲ့ path ကိုသွားပါ
   const handleAdd = () => {
+    console.log("🔹 handleAdd - activeTab:", activeTab); // ✅ Debug အတွက်
+    
     if (activeTab === "injury") {
       navigate(`/crew/${crewId}/health/injury/new`);
     } else if (activeTab === "medical_checkup") {
       navigate(`/crew/${crewId}/health/medical-checkup/new`);
     } else if (activeTab === "disease") {
       navigate(`/crew/${crewId}/health/disease/new`);
+    } else {
+      // Fallback
+      navigate(`/crew/${crewId}/health/injury/new`);
     }
   };
 
@@ -96,13 +97,45 @@ export default function HealthPage() {
   const renderContent = () => {
     switch (activeTab) {
       case "injury":
-        return <InjuryList injuries={injuries} crewId={crewId} isLoading={isLoading} />;
+        return (
+          <InjuryList 
+            injuries={injuries} 
+            crewId={crewId} 
+            isLoading={isLoading}
+            activeMiniTab={activeTab}
+            onMiniTabChange={handleTabChange}
+          />
+        );
       case "medical_checkup":
-        return <MedicalCheckupList checkups={medicalCheckups} crewId={crewId} isLoading={isLoading} />;
+        return (
+          <MedicalCheckupList 
+            checkups={medicalCheckups} 
+            crewId={crewId} 
+            isLoading={isLoading}
+            activeMiniTab={activeTab}
+            onMiniTabChange={handleTabChange}
+          />
+        );
       case "disease":
-        return <DiseaseList diseases={diseases} crewId={crewId} isLoading={isLoading} />;
+        return (
+          <DiseaseList 
+            diseases={diseases} 
+            crewId={crewId} 
+            isLoading={isLoading}
+            activeMiniTab={activeTab}
+            onMiniTabChange={handleTabChange}
+          />
+        );
       default:
-        return <InjuryList injuries={injuries} crewId={crewId} isLoading={isLoading} />;
+        return (
+          <InjuryList 
+            injuries={injuries} 
+            crewId={crewId} 
+            isLoading={isLoading}
+            activeMiniTab={activeTab}
+            onMiniTabChange={handleTabChange}
+          />
+        );
     }
   };
 
@@ -114,7 +147,11 @@ export default function HealthPage() {
     );
   }
 
-  const activeLabel = HEALTH_TAB_LABELS[activeTab] || "Health";
+  const activeLabel = {
+    injury: "Injury",
+    medical_checkup: "Medical Checkup",
+    disease: "Disease",
+  }[activeTab] || "Health";
 
   const crewName = selectedCrew?.name_eng || selectedCrew?.name_kor || "";
   const crewCode = selectedCrew?.crew_code || "";
@@ -123,6 +160,7 @@ export default function HealthPage() {
 
   return (
     <div className="flex flex-col bg-white min-h-screen">
+      {/* SubHeader */}
       <SubHeader
         onBack={handleBack}
         isNew={false}
@@ -139,16 +177,14 @@ export default function HealthPage() {
         onAdd={handleAdd}
       />
 
+      {/* Main TabPill */}
       <TabPills 
-        activeTab="health"  
-        setActiveTab={() => {}}  
+        activeTab="health"
+        setActiveTab={() => {}}
         crewId={crewId}
       />
 
-      <div className="px-6 py-3 bg-gray-50/50 border-b border-gray-200">
-        <HealthTabs activeTab={activeTab} setActiveTab={handleTabChange} />
-      </div>
-
+      {/* Content */}
       <div className="flex-1 bg-white p-6">
         {renderContent()}
       </div>

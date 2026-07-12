@@ -133,14 +133,12 @@ const actions = {
         isLoading={isLoading}
         emptyMessage={t("no_qualifications") || "No qualifications found"}
         onRowClick={(item) => {
-          // ✅ Row ကိုနှိပ်ရင် Detail Page ကိုသွားမယ်
           navigate(`/crew/${crewId}/qualification/${item.id}`);
         }}
         filterOptions={filterOptions}
         filterValue={filterStatus}
         onFilterChange={setFilterStatus}
         filterLabel={t("status") || "Status"}
-        // ✅ Checkbox & Delete Props
         showCheckbox={true}
         selectedIds={selectedIds}
         onSelectAll={() => {
