@@ -31,6 +31,7 @@ import FamilyEditPage from "../features/family/pages/FamilyEditPage";
 import HealthPage from "../features/health/pages/HealthPage";
 import HealthCreatePage from "../features/health/pages/HealthCreatePage";
 import HealthEditPage from "../features/health/pages/HealthEditPage";
+import HealthDetailPage from "../features/health/pages/HealthDetailPage";
 
 const crewRoutes = [
   // ===== Crew Main Routes =====
@@ -47,19 +48,16 @@ const crewRoutes = [
   { path: "crew/:id/payment", element: <CrewDetailPage /> },
   { path: "crew/:id/family", element: <CrewDetailPage /> },
   { path: "crew/:id/injury", element: <CrewDetailPage /> },
-  { path: "crew/:id/health", element: <CrewDetailPage /> },
   { path: "crew/:id/experience", element: <CrewDetailPage /> },
   { path: "crew/:id/evaluation", element: <CrewDetailPage /> },
   { path: "crew/:id/accident", element: <CrewDetailPage /> },
 
-  // ===== Crew Edit - Tab Routes (Edit Mode) =====
   { path: "crew/:id/edit/qualifications", element: <CrewCreatePage /> },
   { path: "crew/:id/edit/appointment", element: <CrewCreatePage /> },
   { path: "crew/:id/edit/replacement", element: <CrewCreatePage /> },
   { path: "crew/:id/edit/payment", element: <CrewCreatePage /> },
   { path: "crew/:id/edit/family", element: <CrewCreatePage /> },
   { path: "crew/:id/edit/injury", element: <CrewCreatePage /> },
-  { path: "crew/:id/edit/health", element: <CrewCreatePage /> },
   { path: "crew/:id/edit/experience", element: <CrewCreatePage /> },
   { path: "crew/:id/edit/evaluation", element: <CrewCreatePage /> },
   { path: "crew/:id/edit/accident", element: <CrewCreatePage /> },
@@ -87,12 +85,14 @@ const crewRoutes = [
   { path: "crew/:crewId/payment/:id", element: <PaymentDetailPage /> },
   { path: "crew/:crewId/payment/:id/edit", element: <PaymentEditPage /> },
 
-  // ===== Family Routes ====
+  // ===== Family Routes =====
   { path: "crew/:crewId/family", element: <FamilyListPage /> },
   { path: "crew/:crewId/family/new", element: <FamilyCreatePage /> },
   { path: "crew/:crewId/family/:id", element: <FamilyDetailPage /> },
   { path: "crew/:crewId/family/:id/edit", element: <FamilyEditPage /> },
 
+  // ===== Health Routes =====
+  // List
   { path: "crew/:crewId/health", element: <HealthPage /> },
   { path: "crew/:crewId/health/injury", element: <HealthPage /> },
   { path: "crew/:crewId/health/medical-checkup", element: <HealthPage /> },
@@ -102,6 +102,11 @@ const crewRoutes = [
   { path: "crew/:crewId/health/injury/new", element: <HealthCreatePage /> },
   { path: "crew/:crewId/health/medical-checkup/new", element: <HealthCreatePage /> },
   { path: "crew/:crewId/health/disease/new", element: <HealthCreatePage /> },
+
+  // Detail
+  { path: "crew/:crewId/health/injury/:id", element: <HealthDetailPage /> },
+  { path: "crew/:crewId/health/medical-checkup/:id", element: <HealthDetailPage /> },
+  { path: "crew/:crewId/health/disease/:id", element: <HealthDetailPage /> },
 
   // Edit
   { path: "crew/:crewId/health/injury/:id/edit", element: <HealthEditPage /> },

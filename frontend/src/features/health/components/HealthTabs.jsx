@@ -14,8 +14,11 @@ export default function HealthTabs({ activeTab, setActiveTab }) {
   const { t } = useLanguage();
 
   return (
-    <div className="border-b border-gray-200 bg-gray-50/80 px-6 py-3">
-      <div className="flex gap-2">
+    <div className="flex items-center gap-6">
+      <span className="text-sm font-medium text-gray-500">
+        {t("view") || "View"}:
+      </span>
+      <div className="flex gap-1">
         {HEALTH_TAB_KEYS.map((key) => {
           const isActive = activeTab === key;
           const label = HEALTH_TAB_LABELS[key] || key;
@@ -24,10 +27,10 @@ export default function HealthTabs({ activeTab, setActiveTab }) {
             <button
               key={key}
               onClick={() => setActiveTab(key)}
-              className={`px-4 py-2 text-sm font-medium rounded-md transition-colors ${
+              className={`px-3 py-1.5 text-sm font-medium rounded-md transition-colors ${
                 isActive
                   ? "bg-blue-600 text-white shadow-sm"
-                  : "bg-white text-gray-600 hover:bg-gray-100 border border-gray-200"
+                  : "text-gray-600 hover:bg-gray-100 hover:text-gray-800"
               }`}
             >
               {t(key) || label}

@@ -12,8 +12,7 @@ import appointmentReducer from "../features/appointment/services/appointmentSlic
 import replacementReducer from "../features/replacement/services/replacementSlice"; 
 import paymentReducer from "../features/payment/services/paymentSlice";
 import familyReducer from "../features/family/services/familySlice";
- import injuryReducer from "../features/injury/services/injurySlice";
-// import healthReducer from "../features/health/services/healthSlice";
+import healthReducer from "../features/health/services/healthSlice";
 // import experienceReducer from "../features/experience/services/experienceSlice";
 // import evaluationReducer from "../features/evaluation/services/evaluationSlice";
 // import accidentReducer from "../features/accident/services/accidentSlice";
@@ -31,8 +30,7 @@ export const store = configureStore({
     replacement: replacementReducer,
     payment: paymentReducer,
     family: familyReducer,
-    injury: injuryReducer,
-    // health: healthReducer,
+    health: healthReducer,
     // experience: experienceReducer,
     // evaluation: evaluationReducer,
     // accident: accidentReducer,

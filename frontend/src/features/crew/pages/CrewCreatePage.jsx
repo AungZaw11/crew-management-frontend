@@ -12,7 +12,8 @@ import AppointmentForm from "../../appointment/components/AppointmentForm";
 import ReplacementForm from "../../replacement/components/ReplacementForm";
 import PaymentForm from "../../payment/components/PaymentForm";
 import FamilyForm from "../../family/components/FamilyForm";
-import InjuryForm from "../../injury/components/InjuryForm";
+// ❌ InjuryForm ကိုဖယ်ရှားပါ
+// import InjuryForm from "../../injury/components/InjuryForm";
 import HealthForm from "../../health/components/HealthForm";
 import ExperienceForm from "../../experience/components/ExperienceForm";
 import EvaluationForm from "../../evaluation/components/EvaluationForm";
@@ -94,13 +95,7 @@ export default function CrewCreatePage() {
     handleFamilyChange,
     handleFamilySave,
     handleFamilyCancel,
-    // Injury
-    injuryData,
-    injuryErrors,
-    handleInjuryChange,
-    handleInjurySave,
-    handleInjuryCancel,
-    // Health
+   
     healthData,
     healthErrors,
     handleHealthChange,
@@ -126,21 +121,18 @@ export default function CrewCreatePage() {
     handleAccidentCancel,
   } = useCrewCreate(isEditMode, selectedCrew);
 
-  // ✅ Edit Mode ဆိုရင် Data ကိုဆွဲပါ
   useEffect(() => {
     if (isEditMode && id) {
       dispatch(fetchCrewById(id));
     }
   }, [dispatch, id, isEditMode]);
 
-  // ✅ Data ရောက်ရင် Form ကိုထည့်ပါ
   useEffect(() => {
     if (isEditMode && selectedCrew) {
       setCrewMember(selectedCrew);
     }
   }, [isEditMode, selectedCrew, setCrewMember]);
 
-  // ✅ URL ကနေ Tab ကိုယူပြီး set လုပ်ပါ
   useEffect(() => {
     if (isEditMode) {
       const tabFromUrl = getActiveTabFromUrl();
@@ -150,7 +142,6 @@ export default function CrewCreatePage() {
     }
   }, [location.pathname, isEditMode]);
 
-  // ✅ Tab ပြောင်းရင် URL ကိုပြောင်းပါ (Edit Mode အတွက်)
   const handleTabChange = (tabKey) => {
     setActiveTab(tabKey);
     if (isEditMode && id) {
@@ -261,19 +252,9 @@ export default function CrewCreatePage() {
           />
         );
 
-      case TAB_KEYS[6]:
-        return (
-          <InjuryForm
-            formData={injuryData}
-            onChange={handleInjuryChange}
-            onSave={handleInjurySave}
-            onCancel={handleInjuryCancel}
-            errors={injuryErrors}
-            isLoading={isLoading}
-          />
-        );
+      
 
-      case TAB_KEYS[7]:
+      case TAB_KEYS[6]: // Health 
         return (
           <HealthForm
             formData={healthData}
@@ -285,7 +266,7 @@ export default function CrewCreatePage() {
           />
         );
 
-      case TAB_KEYS[8]:
+      case TAB_KEYS[7]: // Experience
         return (
           <ExperienceForm
             formData={experienceData}
@@ -297,7 +278,7 @@ export default function CrewCreatePage() {
           />
         );
 
-      case TAB_KEYS[9]:
+      case TAB_KEYS[8]: // Evaluation
         return (
           <EvaluationForm
             formData={evaluationData}
@@ -309,10 +290,10 @@ export default function CrewCreatePage() {
           />
         );
 
-      case TAB_KEYS[10]:
+      case TAB_KEYS[9]: // Certificates (OtherTab)
         return <OtherTab tabName="Certificates" />;
 
-      case TAB_KEYS[11]:
+      case TAB_KEYS[10]: // Accident
         return (
           <AccidentForm
             formData={accidentData}
@@ -338,7 +319,6 @@ export default function CrewCreatePage() {
         showAddNew={false}
       />
 
-      {/* ✅ TabPills - Edit Mode ဆိုရင် Route နဲ့ချိတ်ပါ */}
       <TabPills 
         activeTab={activeTab} 
         setActiveTab={handleTabChange}

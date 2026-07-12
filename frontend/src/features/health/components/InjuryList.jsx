@@ -8,6 +8,7 @@ import TableActions from "../../../common/components/Table/TableActions";
 import { deleteInjury } from "../services/healthSlice";
 import toastHelper from "../../../utils/toastHelper";
 
+// Mock Data
 const MOCK_INJURIES = [
   {
     id: 1,
@@ -45,6 +46,7 @@ export default function InjuryList({ injuries = [], crewId, isLoading = false })
 
   const displayData = injuries.length > 0 ? injuries : MOCK_INJURIES;
 
+  // ✅ Delete single
   const handleDelete = async (id) => {
     if (window.confirm(t("confirm_delete") || "Are you sure?")) {
       try {
@@ -53,6 +55,39 @@ export default function InjuryList({ injuries = [], crewId, isLoading = false })
       } catch (error) {
         toastHelper.error(error.message || "Failed to delete");
       }
+    }
+  };
+
+  // ✅ Delete Selected
+  const handleDeleteSelected = async (ids) => {
+    if (window.confirm(t("confirm_delete_selected") || "Delete selected items?")) {
+      try {
+        for (const id of ids) {
+          await dispatch(deleteInjury(id)).unwrap();
+        }
+        toastHelper.success("Selected items deleted!");
+        setSelectedIds([]);
+      } catch (error) {
+        toastHelper.error(error.message || "Failed to delete");
+      }
+    }
+  };
+
+  // ✅ Select All
+  const handleSelectAll = () => {
+    if (selectedIds.length === displayData.length) {
+      setSelectedIds([]);
+    } else {
+      setSelectedIds(displayData.map(item => item.id));
+    }
+  };
+
+  // ✅ Select Row
+  const handleSelectRow = (id) => {
+    if (selectedIds.includes(id)) {
+      setSelectedIds(selectedIds.filter(item => item.id !== id));
+    } else {
+      setSelectedIds([...selectedIds, id]);
     }
   };
 
@@ -89,8 +124,9 @@ export default function InjuryList({ injuries = [], crewId, isLoading = false })
       emptyMessage="No injuries found"
       showCheckbox={true}
       selectedIds={selectedIds}
-      onSelectAll={() => {}}
-      onSelectRow={(id) => {}}
+      onSelectAll={handleSelectAll}
+      onSelectRow={handleSelectRow}
+      onDeleteSelected={handleDeleteSelected}
     />
   );
 }

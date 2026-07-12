@@ -8,6 +8,7 @@ import TableActions from "../../../common/components/Table/TableActions";
 import { deleteMedicalCheckup } from "../services/healthSlice";
 import toastHelper from "../../../utils/toastHelper";
 
+// Mock Data
 const MOCK_CHECKUPS = [
   {
     id: 1,
@@ -39,6 +40,7 @@ export default function MedicalCheckupList({ checkups = [], crewId, isLoading = 
 
   const displayData = checkups.length > 0 ? checkups : MOCK_CHECKUPS;
 
+  // ✅ Delete single
   const handleDelete = async (id) => {
     if (window.confirm(t("confirm_delete") || "Are you sure?")) {
       try {
@@ -47,6 +49,39 @@ export default function MedicalCheckupList({ checkups = [], crewId, isLoading = 
       } catch (error) {
         toastHelper.error(error.message || "Failed to delete");
       }
+    }
+  };
+
+  // ✅ Delete Selected
+  const handleDeleteSelected = async (ids) => {
+    if (window.confirm(t("confirm_delete_selected") || "Delete selected items?")) {
+      try {
+        for (const id of ids) {
+          await dispatch(deleteMedicalCheckup(id)).unwrap();
+        }
+        toastHelper.success("Selected items deleted!");
+        setSelectedIds([]);
+      } catch (error) {
+        toastHelper.error(error.message || "Failed to delete");
+      }
+    }
+  };
+
+  // ✅ Select All
+  const handleSelectAll = () => {
+    if (selectedIds.length === displayData.length) {
+      setSelectedIds([]);
+    } else {
+      setSelectedIds(displayData.map(item => item.id));
+    }
+  };
+
+  // ✅ Select Row
+  const handleSelectRow = (id) => {
+    if (selectedIds.includes(id)) {
+      setSelectedIds(selectedIds.filter(item => item.id !== id));
+    } else {
+      setSelectedIds([...selectedIds, id]);
     }
   };
 
@@ -62,9 +97,11 @@ export default function MedicalCheckupList({ checkups = [], crewId, isLoading = 
       label: "Decision",
       render: (value) => (
         <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-          value === "Normal" 
-            ? "bg-green-100 text-green-700" 
-            : "bg-red-100 text-red-700"
+          value === "Normal" || value === "Fit"
+            ? "bg-green-100 text-green-700"
+            : value === "Abnormal" || value === "Unfit"
+            ? "bg-red-100 text-red-700"
+            : "bg-gray-100 text-gray-700"
         }`}>
           {value || "-"}
         </span>
@@ -92,8 +129,9 @@ export default function MedicalCheckupList({ checkups = [], crewId, isLoading = 
       emptyMessage="No medical checkups found"
       showCheckbox={true}
       selectedIds={selectedIds}
-      onSelectAll={() => {}}
-      onSelectRow={(id) => {}}
+      onSelectAll={handleSelectAll}
+      onSelectRow={handleSelectRow}
+      onDeleteSelected={handleDeleteSelected}
     />
   );
 }

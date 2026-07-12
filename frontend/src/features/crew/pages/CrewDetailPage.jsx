@@ -11,9 +11,8 @@ import PersonalInfoForm from "../../personal-info/components/PersonalInfoForm";
 import QualificationList from "../../qualification/components/QualificationList";
 import AppointmentList from "../../appointment/components/AppointmentList";
 import ReplacementList from "../../replacement/components/ReplacementList";
-import PaymentForm from "../../payment/components/PaymentForm";
-import FamilyForm from "../../family/components/FamilyForm";
-import InjuryForm from "../../injury/components/InjuryForm";
+import PaymentList from "../../payment/components/PaymentList";
+import FamilyList from "../../family/components/FamilyList";
 import HealthForm from "../../health/components/HealthForm";
 import ExperienceForm from "../../experience/components/ExperienceForm";
 import EvaluationForm from "../../evaluation/components/EvaluationForm";
@@ -22,9 +21,7 @@ import { useLanguage } from "../../../common/hooks/LanguageContext";
 import LoadingSpinner from "../../../common/components/LoadingSpinner";
 import toastHelper from "../../../utils/toastHelper";
 import { fetchPaymentsByCrewId } from "../../payment/services/paymentSlice";
-import PaymentList from "../../payment/components/PaymentList";
 import { fetchFamiliesByCrewId } from "../../family/services/familySlice";
-import FamilyList from "../../family/components/FamilyList";
 
 function OtherTab({ tabName }) {
   return (
@@ -240,18 +237,15 @@ export default function CrewDetailPage() {
         navigate(`/crew/${id}/family/new`);
         break;
       case TAB_KEYS[6]:
-        navigate(`/crew/${id}/injury/new`);
-        break;
-      case TAB_KEYS[7]:
         navigate(`/crew/${id}/health/new`);
         break;
-      case TAB_KEYS[8]:
+      case TAB_KEYS[7]:
         navigate(`/crew/${id}/experience/new`);
         break;
-      case TAB_KEYS[9]:
+      case TAB_KEYS[8]:
         navigate(`/crew/${id}/evaluation/new`);
         break;
-      case TAB_KEYS[10]:
+      case TAB_KEYS[9]:
         navigate(`/crew/${id}/accident/new`);
         break;
       default:
@@ -367,14 +361,15 @@ export default function CrewDetailPage() {
         );
 
       case TAB_KEYS[6]:
-        return <InjuryForm isEditing={false} />;
-      case TAB_KEYS[7]:
         return <HealthForm isEditing={false} />;
-      case TAB_KEYS[8]:
+        
+      case TAB_KEYS[7]:
         return <ExperienceForm isEditing={false} />;
-      case TAB_KEYS[9]:
+        
+      case TAB_KEYS[8]:
         return <EvaluationForm isEditing={false} />;
-      case TAB_KEYS[10]:
+        
+      case TAB_KEYS[9]:
         return <AccidentForm isEditing={false} />;
 
       default:

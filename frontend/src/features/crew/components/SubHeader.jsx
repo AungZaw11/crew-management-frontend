@@ -44,6 +44,34 @@ export default function SubHeader({
 
   const displayLabel = getSubHeaderLabel();
 
+  // ✅ Add button ကို ဘယ်လိုပြမလဲ ဆုံးဖြတ်ပါ
+  const shouldShowAddButton = () => {
+    // buttonType က "add" ဖြစ်ပြီး onAdd ရှိရင် ပြမယ်
+    if (buttonType === "add" && onAdd) {
+      return true;
+    }
+    // ဒါမှမဟုတ် showAddNew က true ဖြစ်ပြီး onAddNew ရှိရင် ပြမယ်
+    if (showAddNew && onAddNew) {
+      return true;
+    }
+    return false;
+  };
+
+  const handleAddClick = () => {
+    if (buttonType === "add" && onAdd) {
+      onAdd();
+    } else if (showAddNew && onAddNew) {
+      onAddNew();
+    }
+  };
+
+  const getAddButtonLabel = () => {
+    if (buttonType === "add" && addLabel) {
+      return addLabel;
+    }
+    return t("add_new") || "Add New";
+  };
+
   return (
     <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 bg-white">
       <div className="flex items-center gap-4">
@@ -59,6 +87,7 @@ export default function SubHeader({
       </div>
 
       <div className="flex items-center gap-3">
+        {/* Edit Button */}
         {buttonType === "edit" && showEdit && !isEditMode && (
           <button
             onClick={onEdit}
@@ -69,13 +98,13 @@ export default function SubHeader({
           </button>
         )}
 
-        {buttonType === "add" && onAdd && (
+        {shouldShowAddButton() && (
           <button
-            onClick={onAdd}
+            onClick={handleAddClick}
             className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors text-sm font-medium"
           >
             <Plus className="w-4 h-4" />
-            {addLabel || t("add_new") || "Add New"}
+            {getAddButtonLabel()}
           </button>
         )}
 
@@ -87,16 +116,6 @@ export default function SubHeader({
           >
             <Trash2 className="w-4 h-4" />
             {t("delete") || "Delete"}
-          </button>
-        )}
-        
-        {showAddNew && (
-          <button
-            onClick={onAddNew}
-            className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors text-sm font-medium"
-          >
-            <Plus className="w-4 h-4" />
-            {t("add_new") || "Add New"}
           </button>
         )}
       </div>

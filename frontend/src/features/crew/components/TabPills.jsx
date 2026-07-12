@@ -10,7 +10,6 @@ export const TAB_KEYS = [
   "replacement",
   "payment",
   "family",
-  "injury",
   "health",
   "experiences",
   "evaluation",
@@ -24,14 +23,12 @@ export const TAB_LABELS = {
   replacement: "Replacement",
   payment: "Payment",
   family: "Family",
-  injury: "Injury",
   health: "Health",
   experiences: "Experiences",
   evaluation: "Evaluation",
   accident: "Accident",
 };
 
-// ✅ Tab Key → Route Path Mapping
 export const TAB_ROUTE_MAP = {
   personal_info: "",
   qualifications: "qualifications",
@@ -39,14 +36,12 @@ export const TAB_ROUTE_MAP = {
   replacement: "replacement",
   payment: "payment",
   family: "family",
-  injury: "injury",
   health: "health",
   experiences: "experience",
   evaluation: "evaluation",
   accident: "accident",
 };
 
-// ✅ Route Path → Tab Key Mapping
 export const ROUTE_TAB_MAP = Object.fromEntries(
   Object.entries(TAB_ROUTE_MAP).map(([key, value]) => [value, key])
 );
@@ -68,14 +63,12 @@ export default function TabPills({
   const navigate = useNavigate();
   const location = useLocation();
 
-  // ✅ URL ကနေ Active Tab ကိုဆုံးဖြတ်ပါ
   const getActiveTabFromUrl = () => {
     const pathSegments = location.pathname.split('/');
     const lastSegment = pathSegments[pathSegments.length - 1];
     return ROUTE_TAB_MAP[lastSegment] || TAB_KEYS[0];
   };
 
-  // ✅ Tab ပြောင်းရင် URL ကိုပြောင်းပါ
   const handleTabChange = (tabKey) => {
     if (setActiveTab) {
       setActiveTab(tabKey);
