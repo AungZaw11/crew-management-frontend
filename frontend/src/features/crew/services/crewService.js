@@ -1,89 +1,85 @@
 // src/features/crew/services/crewService.js
-const mockCrews = [
-  {
-    id: 1,
-    crew_code: "CRW001",
-    name_eng: "Aung Ko Htet",
-    name_kor: "아웅코텟",
-    rank: "Chief Officer",
-    vessel: "Sun Rio",
-    status: "active",
-    hire_date: "2023-01-15",
-    email: "aung.ko@example.com",
-    phone: "+95 999 888 777",
-  },
-  {
-    id: 2,
-    crew_code: "CRW002",
-    name_eng: "Mg Mg Lwin",
-    name_kor: "엠지엠",
-    rank: "Engineer",
-    vessel: "Woori Sun",
-    status: "on_leave",
-    hire_date: "2023-03-20",
-    email: "mg.mg@example.com",
-    phone: "+95 999 888 778",
-  },
-  {
-    id: 3,
-    crew_code: "CRW002",
-    name_eng: "Mg Mg Lwin",
-    name_kor: "엠지엠",
-    rank: "Engineer",
-    vessel: "Woori Sun",
-    status: "on_leave",
-    hire_date: "2023-03-20",
-    email: "mg.mg@example.com",
-    phone: "+95 999 888 778",
-  },
-  {
-    id: 4,
-    crew_code: "CRW002",
-    name_eng: "Mg Mg Lwin",
-    name_kor: "엠지엠",
-    rank: "Engineer",
-    vessel: "Woori Sun",
-    status: "on_leave",
-    hire_date: "2023-03-20",
-    email: "mg.mg@example.com",
-    phone: "+95 999 888 778",
-  }
-];
+import api from "../../../services/api";
 
 export const crewService = {
+  // ===== GET ALL CREWS =====
   getAll: async () => {
-    await new Promise((resolve) => setTimeout(resolve, 500));
-    return { data: mockCrews };
+    try {
+      const response = await api.get("/crew");
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || { message: "Failed to fetch crews" };
+    }
   },
+
+  // ===== GET CREW BY ID =====
   getById: async (id) => {
-    await new Promise((resolve) => setTimeout(resolve, 300));
-    const crew = mockCrews.find((c) => c.id === parseInt(id));
-    if (!crew) throw new Error("Crew not found");
-    return { data: crew };
+    try {
+      const response = await api.get(`/crew/${id}`);
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || { message: "Failed to fetch crew" };
+    }
   },
+
+  // ===== CREATE CREW =====
   create: async (data) => {
-    await new Promise((resolve) => setTimeout(resolve, 500));
-    const newCrew = {
-      id: mockCrews.length + 1,
-      ...data,
-      status: "active",
-    };
-    mockCrews.push(newCrew);
-    return { data: newCrew };
+    try {
+      const response = await api.post("/crew", data);
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || { message: "Failed to create crew" };
+    }
   },
+
+  // ===== UPDATE CREW =====
   update: async (id, data) => {
-    await new Promise((resolve) => setTimeout(resolve, 500));
-    const index = mockCrews.findIndex((c) => c.id === parseInt(id));
-    if (index === -1) throw new Error("Crew not found");
-    mockCrews[index] = { ...mockCrews[index], ...data };
-    return { data: mockCrews[index] };
+    try {
+      const response = await api.put(`/crew/${id}`, data);
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || { message: "Failed to update crew" };
+    }
   },
+
+  // ===== DELETE CREW =====
   delete: async (id) => {
-    await new Promise((resolve) => setTimeout(resolve, 500));
-    const index = mockCrews.findIndex((c) => c.id === parseInt(id));
-    if (index === -1) throw new Error("Crew not found");
-    mockCrews.splice(index, 1);
-    return { data: { success: true } };
+    try {
+      const response = await api.delete(`/crew/${id}`);
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || { message: "Failed to delete crew" };
+    }
+  },
+
+  // ===== GET CREW STATS =====
+  getStats: async () => {
+    try {
+      const response = await api.get("/crew/stats");
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || { message: "Failed to fetch crew stats" };
+    }
+  },
+
+  // ===== SEARCH CREWS =====
+  search: async (query) => {
+    try {
+      const response = await api.get(`/crew/search?q=${query}`);
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || { message: "Failed to search crews" };
+    }
+  },
+
+  // ===== GET CREW BY VESSEL =====
+  getByVessel: async (vesselId) => {
+    try {
+      const response = await api.get(`/crew/vessel/${vesselId}`);
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || { message: "Failed to fetch crews by vessel" };
+    }
   },
 };
 

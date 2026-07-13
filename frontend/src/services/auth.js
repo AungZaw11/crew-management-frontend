@@ -57,7 +57,7 @@ export const authService = {
                 };
             }
         } catch (error) {
-            console.error('❌ Login Error:', error);
+            console.error(' Login Error:', error);
             
             let errorMessage = 'Login failed. Please try again.';
             

@@ -2,12 +2,12 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || "",
+  baseURL: import.meta.env.VITE_API_URL || "http://192.168.0.193:8080",
   headers: {
     "Content-Type": "application/json",
-    "Accept-Language": "en", // ← Default Language
+    "Accept-Language": "en", 
   },
-  timeout: 200,
+  timeout: 5000,
 });
 
 // ===== REQUEST INTERCEPTOR =====

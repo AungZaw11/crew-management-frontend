@@ -1,6 +1,6 @@
 // src/features/dashboard/hooks/useDashboard.js
 import { useDispatch, useSelector } from "react-redux";
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import { fetchDashboardData, clearError } from "../services/dashboardSlice";
 
 export const useDashboard = () => {
@@ -12,9 +12,10 @@ export const useDashboard = () => {
     totalCrews,
     signOn,
     signOff,
-    expiredData,
-    expireSoonData,
-    loading,
+    overdueCrews,
+    certificateExpiry,
+    pieChart,
+    isLoading,
     error,
   } = useSelector((state) => state.dashboard);
 
@@ -27,8 +28,13 @@ export const useDashboard = () => {
     dispatch(clearError());
   }, [dispatch]);
 
+  // ===== AUTO LOAD ON MOUNT =====
+  useEffect(() => {
+    loadDashboard();
+  }, [loadDashboard]);
+
   // ===== COMPUTED VALUES =====
-  const hasData = !loading && !error;
+  const hasData = !isLoading && !error && stats !== null;
   const isEmpty = hasData && totalCrews === 0;
 
   return {
@@ -37,11 +43,12 @@ export const useDashboard = () => {
     totalCrews,
     signOn,
     signOff,
-    expiredData,
-    expireSoonData,
+    overdueCrews,
+    certificateExpiry,
+    pieChart,
     
     // Status
-    loading,
+    isLoading,
     error,
     hasData,
     isEmpty,
